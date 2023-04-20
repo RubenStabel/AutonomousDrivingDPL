@@ -23,7 +23,7 @@ test_data_path = '/Users/rubenstabel/Documents/universiteit/AD_V0.2/deepproblog/
 
 
 train_data_path_vel_V1 = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/data_vel_3/img/train'
-output_data_path_vel_V1 = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/data_vel_3/output_data/output.txt'
+output_data_path_vel_V1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt'
 
 """
 Create balanced dataset of given path

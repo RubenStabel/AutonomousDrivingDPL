@@ -54,7 +54,7 @@ train_balanced_train_path = '/Users/rubenstabel/Documents/universiteit/AD_V0.2/d
 test_data_path = '/Users/rubenstabel/Documents/universiteit/AD_V0.2/deepproblog/src/deepproblog/examples/AD_V0/data/img/test'
 
 train_vel_path = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/data_vel_4/img/train'
-train_vel_balanced_path = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/data_vel_4/img/train_balanced'
+train_vel_balanced_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train'
 
 train_image_paths = []  # to store image paths in list
 classes = []  # to store class values

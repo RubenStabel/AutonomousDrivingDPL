@@ -45,7 +45,7 @@ def get_vel_img_id(idx, data_path):
     test = df.loc[idx]['velocity']
     print("test", test)
 
-get_vel_img_id(3, '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/data_vel_3/output_data/output.txt')
+get_vel_img_id(3, '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt')
 
 # print(parse_output_file("output_data/output.txt"))
 # print(output_to_class_id([[0,0,1], [1,0,0]]))

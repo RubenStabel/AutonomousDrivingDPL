@@ -1,6 +1,10 @@
+import array
+from deepproblog.examples.AD_V0.data.AD_dataset import AD_Dataset
 import signal
 import time
 from typing import List, Callable, Union
+
+from deepproblog.evaluate import get_confusion_matrix
 
 from deepproblog.dataset import DataLoader
 from deepproblog.model import Model
@@ -27,6 +31,8 @@ class TrainObject(object):
         self.interrupt = False
         self.hooks = []
         self.timing = [0, 0, 0]
+        self.accuracy = 0.0
+        self.test_set = None
 
     def get_loss(self, batch: List[Query], backpropagate_loss: Callable) -> float:
         """
@@ -85,6 +91,7 @@ class TrainObject(object):
         self,
         loader: DataLoader,
         stop_criterion: Union[int, StopCondition],
+        test_set: AD_Dataset,
         verbose: int = 1,
         loss_function_name: str = "cross_entropy",
         with_negatives: bool = False,
@@ -95,6 +102,9 @@ class TrainObject(object):
 
         self.previous_handler = signal.getsignal(signal.SIGINT)
         loss_function = getattr(self.model.solver.semiring, loss_function_name)
+
+        self.accuracy = 0.0
+        self.test_set = test_set
 
         self.accumulated_loss = 0
         self.timing = [0, 0, 0]
@@ -127,7 +137,6 @@ class TrainObject(object):
                 else:
                     loss = self.get_loss(batch, loss_function)
                 self.accumulated_loss += loss
-
                 self.model.optimizer.step()
                 self.log(verbose=verbose, log_iter=log_iter, **kwargs)
                 for j, hook in self.hooks:
@@ -161,12 +170,15 @@ class TrainObject(object):
             print("Writing snapshot to " + filename)
             self.model.save_state(filename)
         if verbose and self.i % log_iter == 0:
+            self.accuracy = get_confusion_matrix(self.model, self.test_set, verbose=1).accuracy()
             print(
                 "Iteration: ",
                 self.i,
                 "\ts:%.4f" % (iter_time - self.prev_iter_time),
                 "\tAverage Loss: ",
                 self.accumulated_loss / log_iter,
+                "\tAccuracy: ",
+                self.accuracy
             )
             if len(self.model.parameters):
                 print("\t".join(str(parameter) for parameter in self.model.parameters))
@@ -175,6 +187,7 @@ class TrainObject(object):
             self.logger.log("ground_time", self.i, self.timing[0] / log_iter)
             self.logger.log("compile_time", self.i, self.timing[1] / log_iter)
             self.logger.log("eval_time", self.i, self.timing[2] / log_iter)
+            self.logger.log("accuracy", self.i, self.accuracy)
             # for k in self.model.parameters:
             #     self.logger.log(str(k), self.i, self.model.parameters[k])
             #     print(str(k), self.model.parameters[k])
@@ -194,8 +207,9 @@ def train_model(
     model: Model,
     loader: DataLoader,
     stop_condition: Union[int, StopCondition],
+    test_set: AD_Dataset,
     **kwargs
 ) -> TrainObject:
     train_object = TrainObject(model)
-    train_object.train(loader, stop_condition, **kwargs)
+    train_object.train(loader, stop_condition, test_set, **kwargs)
     return train_object
