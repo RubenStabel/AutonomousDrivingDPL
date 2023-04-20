@@ -261,3 +261,9 @@ src/deepproblog/examples/Successor/data/MNIST/
 /build/
 /dist/
 *.whl
+
+src/data/
+
+src/.DS_Store
+
+.DS_Store
