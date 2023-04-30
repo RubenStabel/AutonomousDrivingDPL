@@ -1,3 +1,5 @@
+from deepproblog.examples.AD_V0.network import AD_V1_net
+
 """
 0 --> Drive sim with arrows
 1 --> Rule based driving (for data collection)
@@ -21,3 +23,4 @@ COLLECT_DATA = False
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.0.pl'
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_V1.0_2.pth'
 NN_NAME = 'perc_net_AD_V1'
+NETWORK = AD_V1_net()

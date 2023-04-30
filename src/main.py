@@ -26,6 +26,7 @@ from deepproblog.model import Model
 from deepproblog.network import Network
 
 from deepproblog.examples.AD_V0.load_model_test import get_nn_output
+from nn_based_self_driving import NNSelfDriving
 
 
 def create_grid_perception():
@@ -134,7 +135,6 @@ def move_player(player_car):
 
     if not moved:
         player_car.reduce_speed()
-
 
 
 def nn_driving(player_car, nn_model):
@@ -270,6 +270,7 @@ path = create_path(mask)
 print(path)
 
 pedestrian = Pedestrian(1, PEDESTRIAN_START_POS, path)
+self_driving = NNSelfDriving(player_car, AD_V1_net(), MODEL_PATH, NN_PATH, NN_NAME)
 
 grid_per = create_grid_perception()
 mask_per = create_grid_mask_cars(grid_per, static_cars_rect)
@@ -296,8 +297,9 @@ while run:
             output = rule_based_driving(player_car, occ, pedestrian)
         case 2:
             if player_car.y < (GRID_POSITION[1] + IMAGE_DIM):
-                model = get_nn_model()
-                nn_driving(player_car, model)
+                # model = get_nn_model()
+                # nn_driving(player_car, model)
+                self_driving.nn_driving()
             else:
                 rule_based_driving(player_car, occ, pedestrian)
 
