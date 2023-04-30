@@ -13,6 +13,8 @@ from pathfinding.finder.a_star import AStarFinder
 
 from pedestrian import Pedestrian
 from defs import *
+from simulation_settings import *
+from rule_based_self_driving import rule_based_driving
 from player_car import PlayerCar
 
 import torch
@@ -25,28 +27,6 @@ from deepproblog.network import Network
 
 from deepproblog.examples.AD_V0.load_model_test import get_nn_output
 
-# Baseline NeSy
-# MODEL_PATH = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl'
-# NN_PATH = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_baseline_4.pth'
-# NN_NAME = 'ad_baseline_net'
-
-# NeSy V1
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.0.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_V1.0_2.pth'
-NN_NAME = 'perc_net_AD_V1'
-"""
-0 --> Drive sim with arrows
-1 --> Rule based driving (for data collection)
-2 --> NN self driving
-"""
-MODE = 1
-RULE_BASED = True
-MAX_VEL = 8
-OCCLUSION_VIS = not True
-IMAGE_DIM = 360
-DATA_FOLDER = "test"
-PREFIX = '0'
-COLLECT_DATA = False
 
 def create_grid_perception():
     grid = []
@@ -163,7 +143,7 @@ def nn_driving(player_car, nn_model):
     sub = WIN.subsurface(rect)
     img = pygame.surfarray.array3d(sub)
 
-    #use transforms as in the other mac
+    #use transforms as in the DPL part
     # transform = transforms.Compose([transforms.ToTensor(),
     #                                 transforms.Resize((32,32)),
     #                                 transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))])
@@ -189,58 +169,6 @@ def nn_driving(player_car, nn_model):
             player_car.reduce_speed()
 
 
-
-
-def rule_based_driving(player_car, occ, pedestrian):
-
-    moved = False
-
-    # LEFT
-    # if keys[pygame.K_a]:
-    #    player_car.rotate(left=True)
-
-    # RIGHT
-    # if keys[pygame.K_d]:
-    #    player_car.rotate(right=True)
-
-    output = [0, 0, 1]
-
-    if occ:
-        if player_car.y < pedestrian.y:
-            player_car.set_max_vel(MAX_VEL)
-            moved = True
-            player_car.move_forward()
-        else:
-            player_car.set_max_vel(MAX_VEL/2)
-            moved = True
-            player_car.move_forward()
-        output = [1, 0, 0]
-    else:
-        player_car.set_max_vel(MAX_VEL)
-
-        # FORWARD
-        if no_obstacle_in_front(player_car, pedestrian):
-            moved = True
-            player_car.move_forward()
-            output = [1, 0, 0]
-
-        # BACKWARD / IDLE
-        else:
-            if player_car.get_vel() <= 0:
-                player_car.reduce_speed()
-                output = [0, 0, 1]
-            else:
-                moved = True
-                player_car.move_backward()
-                output = [0, 1, 0]
-
-    if not moved:
-        player_car.reduce_speed()
-        output = [0, 0, 1]
-
-    return output
-
-
 def get_nn_model():
     network = AD_V1_net()
     net = Network(network, NN_NAME, batching=True)
@@ -250,59 +178,6 @@ def get_nn_model():
     model.load_state(NN_PATH)
     model.eval()
     return model
-
-
-def no_obstacle_in_front(player_car, pedestrian):
-    x1 = pedestrian.get_path()[pedestrian.get_current_point()][0]
-    y1 = pedestrian.get_path()[pedestrian.get_current_point()][1]
-
-    if pedestrian.get_current_point() + 10 < len(pedestrian.get_path()):
-        x2 = pedestrian.get_path()[pedestrian.get_current_point() + 10][0]
-        y2 = pedestrian.get_path()[pedestrian.get_current_point() + 10][1]
-    else:
-        x2 = pedestrian.get_path()[len(pedestrian.get_path()) - 1][0]
-        y2 = pedestrian.get_path()[len(pedestrian.get_path()) - 1][1]
-
-    if in_car_window(player_car, x1 * BLOCK_SIZE, x2 * BLOCK_SIZE, y1 * BLOCK_SIZE, y2 * BLOCK_SIZE):
-        return False
-    else:
-        return True
-
-
-def in_car_window(player_car, x1, x2, y1, y2):
-    xc = range(round(player_car.x), round(player_car.x + RED_CAR.get_width()))
-    yc = range(round(player_car.y) - int(player_car.get_vel())*30, round(player_car.y + RED_CAR.get_height()/2))
-    xs = set(xc)
-    ys = set(yc)
-
-    xp = range(x2 - pedestrian.img.get_width(), x1 + pedestrian.img.get_width())
-    yp = range(y2 - pedestrian.img.get_height(), y1 + pedestrian.img.get_height())
-
-    x = xs.intersection(xp)
-    y = ys.intersection(yp)
-
-    return len(x) > 0 and len(y) > 0
-
-
-def obstacle_coming_from_left(player_car):
-    return False
-
-
-def obstacle_coming_from_right(player_car):
-    return False
-
-
-def move_pedestrian(pedestrian):
-    keys_pressed = pygame.key.get_pressed()
-
-    if keys_pressed[pygame.K_LEFT]:
-        pedestrian.move_left()
-    if keys_pressed[pygame.K_RIGHT]:
-        pedestrian.move_right()
-    if keys_pressed[pygame.K_UP]:
-        pedestrian.move_forward()
-    if keys_pressed[pygame.K_DOWN]:
-        pedestrian.move_backward()
 
 
 def create_static_cars(amount):
@@ -380,11 +255,6 @@ def occluded(player_car, static_cars_rect, pedestrian):
             occ = True
             occ_car.append(car)
 
-        # angle_1 = math.acos((x1 * x1 + y1 * yc) / (math.sqrt(x1**2 + y1**2) * math.sqrt(x1**2 + yc**2)))
-        # angle_2 = math.acos((x2 * x2 + y2 * yc) / (math.sqrt(x2**2 + y2**2) * math.sqrt(x2**2 + yc**2)))
-
-        # print(math.degrees(angle_1), math.degrees(angle_2), math.degrees(angle_p), length_p)
-
     return occ, occ_car
 
 
@@ -424,10 +294,6 @@ while run:
             move_player(player_car)
         case 1:
             output = rule_based_driving(player_car, occ, pedestrian)
-            # model = torch.load(
-            #     '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/deepproblog/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_baseline_1.pth')
-            # model = model.eval()
-            # nn_driving(model)
         case 2:
             if player_car.y < (GRID_POSITION[1] + IMAGE_DIM):
                 model = get_nn_model()
@@ -435,27 +301,15 @@ while run:
             else:
                 rule_based_driving(player_car, occ, pedestrian)
 
-
-    # if RULE_BASED:
-    #     output = rule_based_driving(player_car, occ, pedestrian)
-    #     # model = torch.load(
-    #     #     '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/deepproblog/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_baseline_1.pth')
-    #     # model = model.eval()
-    #     # nn_driving(model)
-    # else:
-    #     move_player(player_car)
     pedestrian.move()
     copy_mask_per = copy.deepcopy(mask_per)
 
     if frame % 10 == 0 and player_car.y < (GRID_POSITION[1] + IMAGE_DIM) and COLLECT_DATA:
-        # print(image_frame)
-        # print(output)
         output_class = output.index(1)
         rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         pygame.image.save(sub, "data/img/"+DATA_FOLDER+"/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iter, image_frame))
         mask_new = create_grid_mask_pedestrian(grid_per, pedestrian, copy_mask_per)
-        # print(create_grid_mask_autonomous_car(grid_per, player_car, mask_new))
 
         f = open("data/output_data/output.txt", "a")
         f.write("{} {} {} \n".format(iter, image_frame, output))
