@@ -1,12 +1,8 @@
 import copy
 
 import numpy as np
-import pygame
-import time
 import math
-import sys
 
-import torch
 from pathfinding.core.diagonal_movement import DiagonalMovement
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
@@ -17,48 +13,6 @@ from simulation_settings import *
 from rule_based_self_driving import rule_based_driving
 from player_car import PlayerCar
 from nn_based_self_driving import NNSelfDriving
-
-
-def create_grid_perception():
-    grid = []
-    for x in range(GRID_POSITION[0], IMAGE_DIM + GRID_POSITION[0], PER_BLOCK_SIZE):
-        for y in range(GRID_POSITION[1], IMAGE_DIM + GRID_POSITION[1], PER_BLOCK_SIZE):
-            square = pygame.Rect(x, y, PER_BLOCK_SIZE, PER_BLOCK_SIZE)  # Final arg should be 70??
-            grid.append(square)
-    return grid
-
-
-def create_grid_mask_cars(grid, cars_rect):
-    mask = np.zeros((6, 6), dtype=int)
-
-    for square in grid:
-        for i in cars_rect:
-            if i.colliderect(square):
-                x = ((square.x - GRID_POSITION[0]) // PER_BLOCK_SIZE)
-                y = ((square.y - GRID_POSITION[1]) // PER_BLOCK_SIZE)   # Adjust if 70 is used??
-                mask[y, x] = 1
-
-    return mask
-
-
-def create_grid_mask_pedestrian(grid, pedestrian, mask):
-    ped = pygame.Rect(pedestrian.x, pedestrian.y, PEDESTRIAN.get_width(), PEDESTRIAN.get_height())
-    for square in grid:
-        if ped.colliderect(square):
-            x = ((square.x - GRID_POSITION[0]) // PER_BLOCK_SIZE)
-            y = ((square.y - GRID_POSITION[1]) // PER_BLOCK_SIZE)   # Adjust if 70 is used??
-            mask[y, x] = 2
-    return mask
-
-
-def create_grid_mask_autonomous_car(grid, player_car, mask):
-    ped = pygame.Rect(player_car.x, player_car.y, RED_CAR.get_width(), RED_CAR.get_height())
-    for square in grid:
-        if ped.colliderect(square):
-            x = ((square.x - GRID_POSITION[0]) // PER_BLOCK_SIZE)
-            y = ((square.y - GRID_POSITION[1]) // PER_BLOCK_SIZE)   # Adjust if 70 is used??
-            mask[y, x] = 3
-    return mask
 
 
 def create_grid():
@@ -214,13 +168,10 @@ static_cars, static_cars_rect = create_static_cars(6)
 grid = create_grid()
 mask = create_grid_mask(grid, static_cars_rect)
 path = create_path(mask)
-print(path)
 
 pedestrian = Pedestrian(1, PEDESTRIAN_START_POS, path)
 self_driving = NNSelfDriving(player_car, NETWORK, MODEL_PATH, NN_PATH, NN_NAME)
 
-grid_per = create_grid_perception()
-mask_per = create_grid_mask_cars(grid_per, static_cars_rect)
 frame = 0
 image_frame = 0
 iter = 0
@@ -229,7 +180,6 @@ while run:
     clock.tick(FPS)
 
     occ, occ_car = occluded(player_car, static_cars_rect, pedestrian)
-    # print(occ, occ_car)
     draw(WIN, images, player_car, static_cars, occ)
 
     for event in pygame.event.get():
@@ -244,21 +194,17 @@ while run:
             output = rule_based_driving(player_car, occ, pedestrian)
         case 2:
             if player_car.y < (GRID_POSITION[1] + IMAGE_DIM):
-                # model = get_nn_model()
-                # nn_driving(player_car, model)
                 self_driving.nn_driving()
             else:
                 rule_based_driving(player_car, occ, pedestrian)
 
     pedestrian.move()
-    copy_mask_per = copy.deepcopy(mask_per)
 
     if frame % 10 == 0 and player_car.y < (GRID_POSITION[1] + IMAGE_DIM) and COLLECT_DATA:
         output_class = output.index(1)
         rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         pygame.image.save(sub, "data/img/"+DATA_FOLDER+"/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iter, image_frame))
-        mask_new = create_grid_mask_pedestrian(grid_per, pedestrian, copy_mask_per)
 
         f = open("data/output_data/output.txt", "a")
         f.write("{} {} {} \n".format(iter, image_frame, output))
@@ -275,9 +221,6 @@ while run:
         player_car.reset()
         PEDESTRIAN_START_POS, PEDESTRIAN_END_POS = create_new_pedestrian_targets()
         pedestrian, static_cars, static_cars_rect = create_new_env()
-        grid_per = create_grid_perception()
-        mask_per = create_grid_mask_cars(grid_per, static_cars_rect)
-
 
     road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK, *ROAD_BORDER_POSITION)
     if road_border_poi_collide is not None:
@@ -295,8 +238,6 @@ while run:
             player_car.reset()
             PEDESTRIAN_START_POS, PEDESTRIAN_END_POS = create_new_pedestrian_targets()
             pedestrian, static_cars, static_cars_rect = create_new_env()
-            grid_per = create_grid_perception()
-            mask_per = create_grid_mask_cars(grid_per, static_cars_rect)
 
     frame += 1
 
