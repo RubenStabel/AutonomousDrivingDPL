@@ -10,6 +10,7 @@ from pathfinding.finder.a_star import AStarFinder
 from pedestrian import Pedestrian
 from defs import *
 from simulation_settings import *
+from human_based_driving import human_based_driving
 from rule_based_self_driving import rule_based_driving
 from player_car import PlayerCar
 from nn_based_self_driving import NNSelfDriving
@@ -60,25 +61,6 @@ def draw(win, images, player_car, static_cars, occ):
     if not occ or OCCLUSION_VIS:
         pedestrian.draw(win)
     pygame.display.update()
-
-
-def move_player(player_car):
-    keys = pygame.key.get_pressed()
-    moved = False
-
-    if keys[pygame.K_a]:
-        player_car.rotate(left=True)
-    if keys[pygame.K_d]:
-        player_car.rotate(right=True)
-    if keys[pygame.K_w]:
-        moved = True
-        player_car.move_forward()
-    if keys[pygame.K_s]:
-        moved = True
-        player_car.move_backward()
-
-    if not moved:
-        player_car.reduce_speed()
 
 
 def create_static_cars(amount):
@@ -189,7 +171,7 @@ while run:
 
     match MODE:
         case 0:
-            move_player(player_car)
+            human_based_driving(player_car)
         case 1:
             output = rule_based_driving(player_car, occ, pedestrian)
         case 2:
