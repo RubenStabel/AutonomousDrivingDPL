@@ -12,8 +12,9 @@ from defs import *
 from simulation_settings import *
 from human_based_driving import human_based_driving
 from rule_based_self_driving import rule_based_driving
-from player_car import PlayerCar
 from nn_based_self_driving import NNSelfDriving
+from player_car import PlayerCar
+from static_cars import StaticCars
 
 
 def create_grid():
@@ -63,20 +64,6 @@ def draw(win, images, player_car, static_cars, occ):
     pygame.display.update()
 
 
-def create_static_cars(amount):
-    cars = []
-    cars_rect = []
-    x = GREEN_CAR.get_width()
-    y = GREEN_CAR.get_height()
-    for _ in range(amount):
-        pos = (random.choice([91, 248]), random.randrange(50, 700, 70))
-        car_color = random.choice(CAR_ARRAY)
-        cars.append((car_color, pos))
-        cars_rect.append(pygame.Rect(*pos, x, y))
-
-    return cars, cars_rect
-
-
 def create_new_pedestrian_targets():
     PEDESTRIAN_START_POS = (random.randrange(280, 350, 10), random.randrange(350, 700, 10))
     PEDESTRIAN_END_POS = (random.randrange(10, 70, 10), random.randrange(10, 500, 10))
@@ -84,12 +71,12 @@ def create_new_pedestrian_targets():
 
 
 def create_new_env():
-    static_cars, static_cars_rect = create_static_cars(6)
+    static_cars.create_static_cars()
     grid = create_grid()
-    mask = create_grid_mask(grid, static_cars_rect)
+    mask = create_grid_mask(grid, static_cars.get_static_cars_rect())
     path = create_path(mask)
     pedestrian = Pedestrian(1, PEDESTRIAN_START_POS, path)
-    return pedestrian, static_cars, static_cars_rect
+    return pedestrian
 
 
 def occluded(player_car, static_cars_rect, pedestrian):
@@ -146,9 +133,11 @@ clock = pygame.time.Clock()
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)
 
-static_cars, static_cars_rect = create_static_cars(6)
+static_cars = StaticCars(6)
+static_cars.create_static_cars()
+
 grid = create_grid()
-mask = create_grid_mask(grid, static_cars_rect)
+mask = create_grid_mask(grid, static_cars.get_static_cars_rect())
 path = create_path(mask)
 
 pedestrian = Pedestrian(1, PEDESTRIAN_START_POS, path)
@@ -161,8 +150,8 @@ iter = 0
 while run:
     clock.tick(FPS)
 
-    occ, occ_car = occluded(player_car, static_cars_rect, pedestrian)
-    draw(WIN, images, player_car, static_cars, occ)
+    occ, occ_car = occluded(player_car, static_cars.get_static_cars_rect(), pedestrian)
+    draw(WIN, images, player_car, static_cars.get_static_cars(), occ)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -202,7 +191,7 @@ while run:
         image_frame = 0
         player_car.reset()
         PEDESTRIAN_START_POS, PEDESTRIAN_END_POS = create_new_pedestrian_targets()
-        pedestrian, static_cars, static_cars_rect = create_new_env()
+        pedestrian = create_new_env()
 
     road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK, *ROAD_BORDER_POSITION)
     if road_border_poi_collide is not None:
@@ -219,7 +208,7 @@ while run:
             image_frame = 0
             player_car.reset()
             PEDESTRIAN_START_POS, PEDESTRIAN_END_POS = create_new_pedestrian_targets()
-            pedestrian, static_cars, static_cars_rect = create_new_env()
+            pedestrian = create_new_env()
 
     frame += 1
 

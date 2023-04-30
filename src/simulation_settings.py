@@ -5,7 +5,7 @@ from deepproblog.examples.AD_V0.network import AD_V1_net
 1 --> Rule based driving (for data collection)
 2 --> NN self driving
 """
-MODE = 2
+MODE = 1
 RULE_BASED = True
 MAX_VEL = 8
 OCCLUSION_VIS = not True
