@@ -22,3 +22,6 @@ class StaticCars:
 
     def get_static_cars_rect(self):
         return self.cars_rect
+
+    def reset(self):
+        self.create_static_cars()
