@@ -32,22 +32,6 @@ class NNSelfDriving:
         rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         img = pygame.surfarray.array3d(sub)
-
-        #use transforms as in the DPL part
-        # transform = transforms.Compose([transforms.ToTensor(),
-        #                                 transforms.Resize((32,32)),
-        #                                 transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))])
-        # img = transform(img)
-        #
-        # # transpose for channel first
-        # img = img.permute(2, 0, 1)
-
-
-        # p = nn_model(img)
-        # c = torch.argmax(p)
-        # output = torch.nn.functional.one_hot(c)
-        # print(output)
-
         result = int(get_nn_output(img, self.model))
 
         match result:

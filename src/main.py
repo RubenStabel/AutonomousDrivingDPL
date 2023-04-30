@@ -16,16 +16,6 @@ from defs import *
 from simulation_settings import *
 from rule_based_self_driving import rule_based_driving
 from player_car import PlayerCar
-
-import torch
-
-from deepproblog.engines import ExactEngine
-
-from deepproblog.examples.AD_V0.network import AD_V1_net
-from deepproblog.model import Model
-from deepproblog.network import Network
-
-from deepproblog.examples.AD_V0.load_model_test import get_nn_output
 from nn_based_self_driving import NNSelfDriving
 
 
@@ -137,49 +127,6 @@ def move_player(player_car):
         player_car.reduce_speed()
 
 
-def nn_driving(player_car, nn_model):
-
-    rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
-    sub = WIN.subsurface(rect)
-    img = pygame.surfarray.array3d(sub)
-
-    #use transforms as in the DPL part
-    # transform = transforms.Compose([transforms.ToTensor(),
-    #                                 transforms.Resize((32,32)),
-    #                                 transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))])
-    # img = transform(img)
-    #
-    # # transpose for channel first
-    # img = img.permute(2, 0, 1)
-
-
-    # p = nn_model(img)
-    # c = torch.argmax(p)
-    # output = torch.nn.functional.one_hot(c)
-    # print(output)
-
-    result = int(get_nn_output(img, nn_model))
-
-    match result:
-        case 0:
-            player_car.move_forward()
-        case 1:
-            player_car.move_backward()
-        case 2:
-            player_car.reduce_speed()
-
-
-def get_nn_model():
-    network = AD_V1_net()
-    net = Network(network, NN_NAME, batching=True)
-    net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
-    model = Model(MODEL_PATH, [net])
-    model.set_engine(ExactEngine(model), cache=True)
-    model.load_state(NN_PATH)
-    model.eval()
-    return model
-
-
 def create_static_cars(amount):
     cars = []
     cars_rect = []
@@ -270,7 +217,7 @@ path = create_path(mask)
 print(path)
 
 pedestrian = Pedestrian(1, PEDESTRIAN_START_POS, path)
-self_driving = NNSelfDriving(player_car, AD_V1_net(), MODEL_PATH, NN_PATH, NN_NAME)
+self_driving = NNSelfDriving(player_car, NETWORK, MODEL_PATH, NN_PATH, NN_NAME)
 
 grid_per = create_grid_perception()
 mask_per = create_grid_mask_cars(grid_per, static_cars_rect)
