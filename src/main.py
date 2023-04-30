@@ -15,14 +15,38 @@ from pedestrian import Pedestrian
 from defs import *
 from player_car import PlayerCar
 
-from torchvision import transforms
+import torch
 
+from deepproblog.engines import ExactEngine
+
+from deepproblog.examples.AD_V0.network import AD_V1_net
+from deepproblog.model import Model
+from deepproblog.network import Network
+
+from deepproblog.examples.AD_V0.load_model_test import get_nn_output
+
+# Baseline NeSy
+# MODEL_PATH = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_baseline_4.pth'
+# NN_NAME = 'ad_baseline_net'
+
+# NeSy V1
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.0.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_V1.0_2.pth'
+NN_NAME = 'perc_net_AD_V1'
+"""
+0 --> Drive sim with arrows
+1 --> Rule based driving (for data collection)
+2 --> NN self driving
+"""
+MODE = 1
 RULE_BASED = True
 MAX_VEL = 8
 OCCLUSION_VIS = not True
 IMAGE_DIM = 360
-DATA_FOLDER = "train"
-PREFIX = '2'
+DATA_FOLDER = "test"
+PREFIX = '0'
+COLLECT_DATA = False
 
 def create_grid_perception():
     grid = []
@@ -133,38 +157,41 @@ def move_player(player_car):
 
 
 
-def nn_driving(nn_model):
+def nn_driving(player_car, nn_model):
 
     rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
     sub = WIN.subsurface(rect)
     img = pygame.surfarray.array3d(sub)
 
     #use transforms as in the other mac
-    transform = transforms.Compose([transforms.ToTensor(),
-                                    transforms.Resize((32,32)),
-                                    transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))])
-    img = transform(img)
+    # transform = transforms.Compose([transforms.ToTensor(),
+    #                                 transforms.Resize((32,32)),
+    #                                 transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))])
+    # img = transform(img)
+    #
+    # # transpose for channel first
+    # img = img.permute(2, 0, 1)
 
-    # transpose for channel first
-    img = img.permute(2, 0, 1)
 
+    # p = nn_model(img)
+    # c = torch.argmax(p)
+    # output = torch.nn.functional.one_hot(c)
+    # print(output)
 
-    p = nn_model(img)
-    c = torch.argmax(p)
-    output = torch.nn.functional.one_hot(c)
-    print(output)
+    result = int(get_nn_output(img, nn_model))
+
+    match result:
+        case 0:
+            player_car.move_forward()
+        case 1:
+            player_car.move_backward()
+        case 2:
+            player_car.reduce_speed()
 
 
 
 
 def rule_based_driving(player_car, occ, pedestrian):
-
-
-
-
-
-
-
 
     moved = False
 
@@ -176,7 +203,7 @@ def rule_based_driving(player_car, occ, pedestrian):
     # if keys[pygame.K_d]:
     #    player_car.rotate(right=True)
 
-    output = [0,0,1]
+    output = [0, 0, 1]
 
     if occ:
         if player_car.y < pedestrian.y:
@@ -187,7 +214,7 @@ def rule_based_driving(player_car, occ, pedestrian):
             player_car.set_max_vel(MAX_VEL/2)
             moved = True
             player_car.move_forward()
-        output = [1,0,0]
+        output = [1, 0, 0]
     else:
         player_car.set_max_vel(MAX_VEL)
 
@@ -195,27 +222,35 @@ def rule_based_driving(player_car, occ, pedestrian):
         if no_obstacle_in_front(player_car, pedestrian):
             moved = True
             player_car.move_forward()
-            output = [1,0,0]
+            output = [1, 0, 0]
 
         # BACKWARD / IDLE
         else:
             if player_car.get_vel() <= 0:
                 player_car.reduce_speed()
-                output = [0,0,1]
+                output = [0, 0, 1]
             else:
                 moved = True
                 player_car.move_backward()
-                output = [0,1,0]
+                output = [0, 1, 0]
 
     if not moved:
         player_car.reduce_speed()
-        output = [0,0,1]
+        output = [0, 0, 1]
 
     return output
 
 
-def get_action_nn(nn_path):
-    pass
+def get_nn_model():
+    network = AD_V1_net()
+    net = Network(network, NN_NAME, batching=True)
+    net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
+    model = Model(MODEL_PATH, [net])
+    model.set_engine(ExactEngine(model), cache=True)
+    model.load_state(NN_PATH)
+    model.eval()
+    return model
+
 
 def no_obstacle_in_front(player_car, pedestrian):
     x1 = pedestrian.get_path()[pedestrian.get_current_point()][0]
@@ -353,15 +388,6 @@ def occluded(player_car, static_cars_rect, pedestrian):
     return occ, occ_car
 
 
-def calc_output_class(v_old, v_new):
-    if v_new - v_old > 0.7:
-        output_class = 0
-    elif v_old - v_new > 0.7:
-        output_class = 1
-    else:
-        output_class = 2
-    return output_class
-
 run = True
 clock = pygame.time.Clock()
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
@@ -379,11 +405,8 @@ grid_per = create_grid_perception()
 mask_per = create_grid_mask_cars(grid_per, static_cars_rect)
 frame = 0
 image_frame = 0
-idx = 0
 iter = 0
-v_old = 0
-f = open("data/output_data/output.txt", "a")
-f.write("idx iter image_frame output velocity x y\n")
+
 while run:
     clock.tick(FPS)
 
@@ -396,34 +419,49 @@ while run:
             run = False
             break
 
-    if RULE_BASED:
-        output = rule_based_driving(player_car, occ, pedestrian)
-    else:
-        move_player(player_car)
+    match MODE:
+        case 0:
+            move_player(player_car)
+        case 1:
+            output = rule_based_driving(player_car, occ, pedestrian)
+            # model = torch.load(
+            #     '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/deepproblog/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_baseline_1.pth')
+            # model = model.eval()
+            # nn_driving(model)
+        case 2:
+            if player_car.y < (GRID_POSITION[1] + IMAGE_DIM):
+                model = get_nn_model()
+                nn_driving(player_car, model)
+            else:
+                rule_based_driving(player_car, occ, pedestrian)
+
+
+    # if RULE_BASED:
+    #     output = rule_based_driving(player_car, occ, pedestrian)
+    #     # model = torch.load(
+    #     #     '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/deepproblog/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_baseline_1.pth')
+    #     # model = model.eval()
+    #     # nn_driving(model)
+    # else:
+    #     move_player(player_car)
     pedestrian.move()
     copy_mask_per = copy.deepcopy(mask_per)
 
-    if frame % 10 == 0 and player_car.y < (GRID_POSITION[1] + IMAGE_DIM):
+    if frame % 10 == 0 and player_car.y < (GRID_POSITION[1] + IMAGE_DIM) and COLLECT_DATA:
         # print(image_frame)
         # print(output)
-        if image_frame != 0:
-            # output_class = output.index(1)
-            output_class = calc_output_class(v_old, player_car.get_vel())
-            rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
-            sub = WIN.subsurface(rect)
-            pygame.image.save(sub, "data/img/"+DATA_FOLDER+"/{}/{}_{}_iter{}frame{}.png".format(output_class, PREFIX, idx, iter, image_frame))
-            mask_new = create_grid_mask_pedestrian(grid_per, pedestrian, copy_mask_per)
-            # print(create_grid_mask_autonomous_car(grid_per, player_car, mask_new))
+        output_class = output.index(1)
+        rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
+        sub = WIN.subsurface(rect)
+        pygame.image.save(sub, "data/img/"+DATA_FOLDER+"/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iter, image_frame))
+        mask_new = create_grid_mask_pedestrian(grid_per, pedestrian, copy_mask_per)
+        # print(create_grid_mask_autonomous_car(grid_per, player_car, mask_new))
 
-            f = open("data/output_data/output.txt", "a")
-            f.write("{} {} {} {} {} {} {}\n".format(idx, iter, image_frame, str(output).replace(" ", ""), player_car.get_vel(), player_car.x, player_car.y))
-            f.close()
+        f = open("data/output_data/output.txt", "a")
+        f.write("{} {} {} \n".format(iter, image_frame, output))
+        f.close()
 
-            idx += 1
-
-        v_old = player_car.get_vel()
         image_frame += 1
-
 
     pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
     if pedestrian_poi_collide is not None:

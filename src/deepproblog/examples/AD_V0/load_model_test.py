@@ -102,19 +102,24 @@ def get_nn_output(data, model):
 # image = transform(cv2.cvtColor(cv2.imread('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/deepproblog/src/deepproblog/examples/AD_V0/data/img/train1/0/iter0frame7.png'),cv2.COLOR_BGR2RGB))
 
 # x = ImageDataset(image)
+
+### TEST IMAGE PREDICTION AD_NeSy SIM ###
 # Initialise network used during training
-network = AD_V1_net()
-net = Network(network, "ad_baseline_net", batching=True)
-net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
+# network = AD_V1_net()
+# net = Network(network, "ad_baseline_net", batching=True)
+# net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
 
 # Load trained model an dset to eval mode
-model = Model('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl', [net])
-model.set_engine(ExactEngine(model), cache=True)
-model.load_state('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_baseline_1.pth')
+# model = Model('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl', [net])
+# model.set_engine(ExactEngine(model), cache=True)
+# model.load_state('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/snapshot/autonomous_driving_baseline_1.pth')
+
+# TENSOR STORE CODE NOT WORKING --> IN COMMENT
 # model.add_tensor_source("image_eval", Union[image, 0])
 # model.store_tensor(image)
-model.eval()
 
-data = cv2.imread('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/img/train_balanced/1/iter3frame2.png')
-get_nn_output(data, model)
+# Set model mode to eval
+# model.eval()
+# data = cv2.imread('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/img/train_balanced/1/iter3frame2.png')
+# get_nn_output(data, model)
 
