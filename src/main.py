@@ -85,6 +85,7 @@ def collect_data(output):
 
     image_frame += 1
 
+
 def reset_traffic_simulation():
     global iteration
     global frame

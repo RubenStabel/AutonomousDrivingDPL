@@ -1,5 +1,6 @@
 from defs import *
 
+
 class StaticCars:
     def __init__(self, number_of_cars):
         self.cars = []

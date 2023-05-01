@@ -1,8 +1,8 @@
 from defs import *
 from simulation_settings import *
 
-def rule_based_driving(player_car, occ, pedestrian):
 
+def rule_based_driving(player_car, occ, pedestrian):
     moved = False
 
     # LEFT
@@ -13,15 +13,13 @@ def rule_based_driving(player_car, occ, pedestrian):
     # if keys[pygame.K_d]:
     #    player_car.rotate(right=True)
 
-    output = [0, 0, 1]
-
     if occ:
         if player_car.y < pedestrian.y:
             player_car.set_max_vel(MAX_VEL)
             moved = True
             player_car.move_forward()
         else:
-            player_car.set_max_vel(MAX_VEL/2)
+            player_car.set_max_vel(MAX_VEL / 2)
             moved = True
             player_car.move_forward()
         output = [1, 0, 0]
@@ -50,6 +48,7 @@ def rule_based_driving(player_car, occ, pedestrian):
 
     return output
 
+
 def no_obstacle_in_front(player_car, pedestrian):
     x1 = pedestrian.get_path()[pedestrian.get_current_point()][0]
     y1 = pedestrian.get_path()[pedestrian.get_current_point()][1]
@@ -66,17 +65,18 @@ def no_obstacle_in_front(player_car, pedestrian):
     else:
         return True
 
-def obstacle_coming_from_left(player_car):
+
+def obstacle_coming_from_left():
     return False
 
 
-def obstacle_coming_from_right(player_car):
+def obstacle_coming_from_right():
     return False
 
 
 def in_car_window(player_car, x1, x2, y1, y2):
     xc = range(round(player_car.x), round(player_car.x + RED_CAR.get_width()))
-    yc = range(round(player_car.y) - int(player_car.get_vel())*30, round(player_car.y + RED_CAR.get_height()/2))
+    yc = range(round(player_car.y) - int(player_car.get_vel()) * 30, round(player_car.y + RED_CAR.get_height() / 2))
     xs = set(xc)
     ys = set(yc)
 

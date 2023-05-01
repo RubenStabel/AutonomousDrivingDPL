@@ -17,7 +17,6 @@ class NNSelfDriving:
         self.nn_name = nn_name
         self.model = self.get_nn_model()
 
-
     def get_nn_model(self):
         net = Network(self.network, self.nn_name, batching=True)
         net.optimizer = torch.optim.Adam(self.network.parameters(), lr=1e-3)

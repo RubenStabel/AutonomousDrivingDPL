@@ -6,6 +6,15 @@ from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 
 
+def create_grid():
+    grid = []
+    for x in range(0, WIDTH, BLOCK_SIZE):
+        for y in range(0, HEIGHT, BLOCK_SIZE):
+            square = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
+            grid.append(square)
+    return grid
+
+
 class Pedestrian:
     IMG = PEDESTRIAN
 
@@ -21,7 +30,7 @@ class Pedestrian:
         self.x_end = random.randrange(10, 70, 10)
         self.y_end = random.randrange(10, 500, 10)
         self.current_point = 0
-        self.grid = self.create_grid()
+        self.grid = create_grid()
         self.obstacles_rect = obstacles_rect
         self.mask = []
         self.path = []
@@ -69,14 +78,6 @@ class Pedestrian:
 
         if self.x == self.path[next_point][0]*BLOCK_SIZE and self.y == self.path[next_point][1]*BLOCK_SIZE:
             self.current_point = next_point
-
-    def create_grid(self):
-        grid = []
-        for x in range(0, WIDTH, BLOCK_SIZE):
-            for y in range(0, HEIGHT, BLOCK_SIZE):
-                square = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
-                grid.append(square)
-        return grid
 
     def create_grid_mask(self):
         self.mask = np.ones((HEIGHT // BLOCK_SIZE, WIDTH // BLOCK_SIZE + 1), dtype=int)
