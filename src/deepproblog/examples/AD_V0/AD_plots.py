@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+#######################################################
+#                SINGLE DATA CLASS PLOT
+#######################################################
+
 
 def plot_loss(data, filter=1, data_class='loss'):
     df = pd.DataFrame(data)
@@ -19,22 +23,6 @@ def plot_multiple_losses(data1, name1, data2, name2, filter=1, data_class='loss'
     df2.plot(ax=ax, x='i', y=data_class)
     ax.legend(["loss: {}".format(name1), "loss: {}".format(name2)])
     plt.show()
-
-
-def data_2_pd(data_path):
-    data = pd.read_csv(data_path, sep=",", header=2)
-    data.columns = ["i", "time", "loss", "ground_time", "compile_time", "eval_time"]
-    return data
-    # with open(data_path) as f:
-    #     for line in f:
-    #         fields = line.split(',')
-    #         print(fields)
-
-
-def data_2_pd_acc(data_path):
-    data = pd.read_csv(data_path, sep=",", header=2)
-    data.columns = ["i", "time", "loss", "ground_time", "compile_time", "eval_time", "accuracy"]
-    return data
 
 
 def running_loss(data, data_class='loss'):
@@ -58,6 +46,31 @@ def plot_multiple_running_losses(run_loss_1, name_1, run_loss_2, name_2, data_cl
     ax.legend(["running loss: {}".format(name_1), "running loss: {}".format(name_2)])
     plt.show()
 
+
+#######################################################
+#                        UTILS
+#######################################################
+
+
+def data_2_pd(data_path):
+    data = pd.read_csv(data_path, sep=",", header=2)
+    data.columns = ["i", "time", "loss", "ground_time", "compile_time", "eval_time"]
+    return data
+    # with open(data_path) as f:
+    #     for line in f:
+    #         fields = line.split(',')
+    #         print(fields)
+
+
+def data_2_pd_acc(data_path):
+    data = pd.read_csv(data_path, sep=",", header=2)
+    data.columns = ["i", "time", "loss", "ground_time", "compile_time", "eval_time", "accuracy"]
+    return data
+
+
+#######################################################
+#                 MULTIPLE DATA CLASS PLOT
+#######################################################
 
 def running_accuracy_loss(data_3, name_1):
     d1 = np.array(running_loss(data_3))
@@ -121,11 +134,11 @@ def multiple_running_accuracy_loss(data_1, name_1, data_2, name_2):
 # data_1 = data_2_pd('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/log/autonomous_driving_baseline_2.log')
 # data_2 = data_2_pd('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/log/autonomous_driving_V1.0_2.log')
 data_3 = data_2_pd_acc(
-    '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/log/autonomous_driving_baseline_3.log')
+    '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/autonomous_driving_baseline_3.log')
 data_4 = data_2_pd_acc(
-    '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/log/autonomous_driving_V1.0_2.log')
-multiple_accuracy_loss(data_3, "autonomous_driving_baseline_1",data_4,  "autonomous_driving_V1.0")
-# multiple_running_accuracy_loss(data_3, "autonomous_driving_baseline_1",data_4,  "autonomous_driving_V1.0")
+    '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/autonomous_driving_V1.0_2.log')
+#multiple_accuracy_loss(data_3, "autonomous_driving_baseline_1",data_4,  "autonomous_driving_V1.0")
+multiple_running_accuracy_loss(data_3, "autonomous_driving_baseline_1",data_4,  "autonomous_driving_V1.0")
 
 # accuracy_loss(data_3, "autonomous_driving_baseline_2")
 # plot_multiple_losses(data_1, "autonomous_driving_baseline_1", data_2, "autonomous_driving_V1.0", 5)

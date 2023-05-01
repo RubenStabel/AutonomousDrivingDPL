@@ -2,6 +2,7 @@ import torch
 from torch import nn as nn
 import torch.nn.functional as F
 
+
 class AD_V1_net(nn.Module):
     def __init__(self):
         super().__init__()
@@ -22,6 +23,7 @@ class AD_V1_net(nn.Module):
         x = self.fc3(x)
         x= self.softmax(x)
         return x
+
 
 class MNIST_CNN(nn.Module):
     def __init__(self):

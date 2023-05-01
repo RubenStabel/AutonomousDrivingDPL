@@ -11,6 +11,7 @@ from deepproblog.query import Query
 
 
 train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train'
+test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/test'
 
 ####################################################
 #       Create Train, Valid and Test sets
@@ -123,16 +124,22 @@ AD_valid = AD_Images("valid")
 #######################################################
 
 train_image_paths, valid_image_paths = create_train_and_valid_data_paths(train_data_path)
+test_image_path = create_test_dataset(test_data_path)
 
 datasets = {
     "train": AD_Dataset(train_image_paths, "train"),
     "valid": AD_Dataset(valid_image_paths, "valid"),  # test transforms are applied
-    # "test": AD_Dataset(test_image_paths, "test")
+    "test": AD_Dataset(test_image_path, "test")
 }
 
-train_dataset = datasets['train']
-valid_dataset = datasets['valid']  # test transforms are applied
-# test_dataset = AD_Dataset(test_image_paths, "test")
+def get_dataset(name:str):
+    match name:
+        case "train":
+            return datasets['train']
+        case "test":
+            return datasets['test']
+        case "valid":
+            return datasets['valid']
 
 
 print("###############    DATA LOADING DONE    ###############")

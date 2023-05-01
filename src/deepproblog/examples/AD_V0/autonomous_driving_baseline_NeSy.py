@@ -1,22 +1,21 @@
-from json import dumps
-
 import torch
 
+from json import dumps
 from deepproblog.dataset import DataLoader
 from deepproblog.engines import ExactEngine
 from deepproblog.evaluate import get_confusion_matrix
-from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import train_dataset, valid_dataset, AD_train, AD_valid
+from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset, AD_train, AD_valid
 from deepproblog.examples.AD_V0.network import AD_V1_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 4
+N = 1
 
-name = "autonomous_driving_baseline_{}".format(N)
+name = "autonomous_driving_baseline_NeSy_{}".format(N)
 
-train_set = train_dataset
-test_set = valid_dataset
+train_set = get_dataset("train")
+test_set = get_dataset("valid")
 
 print("###############    LOADING NETWORK    ###############")
 network = AD_V1_net()
@@ -32,10 +31,10 @@ model.add_tensor_source("valid", AD_valid)
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
 train = train_model(model, loader, 2, test_set, log_iter=50, profile=0)
-model.save_state("snapshot/" + name + ".pth")
+model.save_state("snapshot/baseline/" + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")
 train.logger.comment(dumps(model.get_hyperparameters()))
 train.logger.comment("Accuracy {}".format(get_confusion_matrix(model, test_set, verbose=1).accuracy()))
-train.logger.write_to_file("log/" + name)
+train.logger.write_to_file("log/baseline/" + name)
 

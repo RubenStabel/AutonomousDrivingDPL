@@ -14,6 +14,7 @@ from deepproblog.dataset import ImageDataset, Dataset
 from problog.logic import Term, list2term, Constant
 from deepproblog.query import Query
 
+
 class AD_Eval_Image(Dataset):
     def __init__(self, image, eval_name, transform=None):
         if transform is None:
@@ -27,7 +28,6 @@ class AD_Eval_Image(Dataset):
         self.eval_name = eval_name
         self.image = self.transform(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-
     def __len__(self):
         "How many queries there are"
         return 1
@@ -38,13 +38,11 @@ class AD_Eval_Image(Dataset):
 
         return self.image, 0
 
-
     def to_query(self, idx):
         return Query(
             Term("action", Term("tensor", Term(self.eval_name, Term("a"))), 0),
             substitution={Term("a"): Constant(idx)},
         )
-
 
 
 class AD_Eval_Images(object):
@@ -54,8 +52,6 @@ class AD_Eval_Images(object):
 
     def __getitem__(self, item):
         return self.datasets[self.subset][int(item[0])][0]
-
-
 
 
 def get_nn_output(data, model):

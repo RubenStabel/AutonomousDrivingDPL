@@ -65,7 +65,7 @@ def get_vel_img_id(idx):
     return vel
 
 #######################################################
-#               Define Dataset Class
+#               Define Dataset Class                  #
 #######################################################
 
 class AD_Dataset(Dataset):

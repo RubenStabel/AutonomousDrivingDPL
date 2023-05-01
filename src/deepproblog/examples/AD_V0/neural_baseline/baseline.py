@@ -1,14 +1,12 @@
 from multiprocessing import freeze_support
 
 import torch
-import torchvision
 import torchvision.transforms as transforms
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
 
 from baseline_models import AD_baseline_net
-from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import train_dataset, valid_dataset, test_dataset
+from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import train_dataset, valid_dataset
 
 transform = transforms.Compose(
     [transforms.ToTensor(),
@@ -19,8 +17,8 @@ batch_size = 4
 trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
                                           shuffle=True, num_workers=2)
 
-testloader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
-                                         shuffle=False, num_workers=2)
+# testloader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
+#                                          shuffle=False, num_workers=2)
 
 classes = (0,1,2)
 
