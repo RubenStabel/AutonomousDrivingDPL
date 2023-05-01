@@ -72,6 +72,31 @@ def occluded(player_car, static_cars_rect, pedestrian):
     return occ, occ_car
 
 
+def collect_data(output):
+    global image_frame
+    output_class = output.index(1)
+    rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
+    sub = WIN.subsurface(rect)
+    pygame.image.save(sub,"data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration,image_frame))
+
+    f = open("data/output_data/output.txt", "a")
+    f.write("{} {} {} \n".format(iteration, image_frame, output))
+    f.close()
+
+    image_frame += 1
+
+def reset_traffic_simulation():
+    global iteration
+    global frame
+    global image_frame
+    iteration += 1
+    frame = 0
+    image_frame = 0
+    player_car.reset()
+    static_cars.reset()
+    pedestrian.reset(static_cars.get_static_cars_rect())
+
+
 run = True
 clock = pygame.time.Clock()
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
@@ -111,26 +136,12 @@ while run:
     pedestrian.move()
 
     if frame % 10 == 0 and player_car.y < (GRID_POSITION[1] + IMAGE_DIM) and COLLECT_DATA:
-        output_class = output.index(1)
-        rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
-        sub = WIN.subsurface(rect)
-        pygame.image.save(sub, "data/img/" + DATA_FOLDER +"/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
-
-        f = open("data/output_data/output.txt", "a")
-        f.write("{} {} {} \n".format(iteration, image_frame, output))
-        f.close()
-
-        image_frame += 1
+        collect_data(output)
 
     pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
     if pedestrian_poi_collide is not None:
         print("COLLISION")
-        iteration += 1
-        frame = 0
-        image_frame = 0
-        player_car.reset()
-        static_cars.reset()
-        pedestrian.reset(static_cars.get_static_cars_rect())
+        reset_traffic_simulation()
 
     road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK, *ROAD_BORDER_POSITION)
     if road_border_poi_collide is not None:
@@ -142,12 +153,7 @@ while run:
             player_car.bounce()
         else:
             print("Finish")
-            iteration += 1
-            frame = 0
-            image_frame = 0
-            player_car.reset()
-            static_cars.reset()
-            pedestrian.reset(static_cars.get_static_cars_rect())
+            reset_traffic_simulation()
 
     frame += 1
 
