@@ -29,12 +29,12 @@ def reset_data(path):
 
 def reset_img_data(folder_name):
     for i in range(3):
-        path = "/Users/rubenstabel/Documents/Thesis/Implementation/Traffic_simulation_V0/data/img/{}/{}".format(folder_name,i)
+        path = "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}/{}".format(folder_name,i)
         reset_data(path)
 
 
 def reset_output_data():
-    with open('/Users/rubenstabel/Documents/Thesis/Implementation/Traffic_simulation_V0/data/output_data/output.txt', 'w'):
+    with open('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt', 'w'):
         pass
 
 

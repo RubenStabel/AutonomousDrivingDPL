@@ -91,7 +91,7 @@ class TrainObject(object):
         self,
         loader: DataLoader,
         stop_criterion: Union[int, StopCondition],
-        test_set: AD_Dataset,
+        test_set: AD_Dataset = None,
         verbose: int = 1,
         loss_function_name: str = "cross_entropy",
         with_negatives: bool = False,
@@ -170,16 +170,26 @@ class TrainObject(object):
             print("Writing snapshot to " + filename)
             self.model.save_state(filename)
         if verbose and self.i % log_iter == 0:
-            self.accuracy = get_confusion_matrix(self.model, self.test_set, verbose=1).accuracy()
-            print(
-                "Iteration: ",
-                self.i,
-                "\ts:%.4f" % (iter_time - self.prev_iter_time),
-                "\tAverage Loss: ",
-                self.accumulated_loss / log_iter,
-                "\tAccuracy: ",
-                self.accuracy
-            )
+            if self.test_set is not None:
+                self.accuracy = get_confusion_matrix(self.model, self.test_set, verbose=0).accuracy()
+                print(
+                    "Iteration: ",
+                    self.i,
+                    "\ts:%.4f" % (iter_time - self.prev_iter_time),
+                    "\tAverage Loss: ",
+                    self.accumulated_loss / log_iter,
+                    "\tAccuracy: ",
+                    self.accuracy
+                )
+
+            else:
+                print(
+                    "Iteration: ",
+                    self.i,
+                    "\ts:%.4f" % (iter_time - self.prev_iter_time),
+                    "\tAverage Loss: ",
+                    self.accumulated_loss / log_iter
+                )
             if len(self.model.parameters):
                 print("\t".join(str(parameter) for parameter in self.model.parameters))
             self.logger.log("time", self.i, iter_time - self.start)
@@ -187,7 +197,8 @@ class TrainObject(object):
             self.logger.log("ground_time", self.i, self.timing[0] / log_iter)
             self.logger.log("compile_time", self.i, self.timing[1] / log_iter)
             self.logger.log("eval_time", self.i, self.timing[2] / log_iter)
-            self.logger.log("accuracy", self.i, self.accuracy)
+            if self.test_set is not None:
+                self.logger.log("accuracy", self.i, self.accuracy)
             # for k in self.model.parameters:
             #     self.logger.log(str(k), self.i, self.model.parameters[k])
             #     print(str(k), self.model.parameters[k])
@@ -207,9 +218,8 @@ def train_model(
     model: Model,
     loader: DataLoader,
     stop_condition: Union[int, StopCondition],
-    test_set: AD_Dataset,
     **kwargs
 ) -> TrainObject:
     train_object = TrainObject(model)
-    train_object.train(loader, stop_condition, test_set, **kwargs)
+    train_object.train(loader, stop_condition, **kwargs)
     return train_object

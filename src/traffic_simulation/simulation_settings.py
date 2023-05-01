@@ -8,11 +8,11 @@ from deepproblog.examples.AD_V0.network import AD_V1_net
 MODE = 1
 RULE_BASED = True
 MAX_VEL = 8
-OCCLUSION_VIS = not True
+OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
-DATA_FOLDER = "test"
+DATA_FOLDER = "train"
 PREFIX = '0'
-COLLECT_DATA = False
+COLLECT_DATA = True
 
 # Baseline NeSy
 # MODEL_PATH = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl'

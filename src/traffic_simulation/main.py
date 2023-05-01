@@ -18,7 +18,7 @@ def draw(win, images, player_car, static_cars, occ):
         win.blit(car, pos)
 
     player_car.draw(win)
-    if not occ or OCCLUSION_VIS:
+    if not occ or OCCLUDED_OBJ_VISIBLE:
         pedestrian.draw(win)
     pygame.display.update()
 
@@ -77,9 +77,9 @@ def collect_data(output):
     output_class = output.index(1)
     rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
     sub = WIN.subsurface(rect)
-    pygame.image.save(sub,"data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration,image_frame))
+    pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
 
-    f = open("../data/output_data/output.txt", "a")
+    f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt", "a")
     f.write("{} {} {} \n".format(iteration, image_frame, output))
     f.close()
 

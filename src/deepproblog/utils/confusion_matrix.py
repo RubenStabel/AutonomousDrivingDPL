@@ -51,5 +51,5 @@ class ConfusionMatrix(object):
             correct += self.matrix[i, i]
         total = self.matrix.sum()
         acc = correct / total
-        print("Accuracy: ", acc)
+        # print("Accuracy: ", acc)
         return acc
