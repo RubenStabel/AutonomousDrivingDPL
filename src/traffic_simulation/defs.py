@@ -1,6 +1,7 @@
 import pygame
 import random
-from utils import scale_image, blit_rotate_center
+
+from traffic_simulation.utils import scale_image, blit_rotate_center
 
 # IMAGES
 GRASS = pygame.image.load("imgs/grass.jpg")

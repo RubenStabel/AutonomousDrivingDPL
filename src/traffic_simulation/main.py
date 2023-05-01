@@ -1,13 +1,13 @@
 import math
 
-from pedestrian import Pedestrian
+from traffic_simulation.agents.pedestrian import Pedestrian
 from defs import *
 from simulation_settings import *
-from human_based_driving import human_based_driving
-from rule_based_self_driving import rule_based_driving
-from nn_based_self_driving import NNSelfDriving
-from player_car import PlayerCar
-from static_cars import StaticCars
+from traffic_simulation.driving.human_based_driving import human_based_driving
+from traffic_simulation.driving.rule_based_self_driving import rule_based_driving
+from traffic_simulation.driving.nn_based_self_driving import NNSelfDriving
+from traffic_simulation.agents.player_car import PlayerCar
+from traffic_simulation.agents.static_cars import StaticCars
 
 
 def draw(win, images, player_car, static_cars, occ):
@@ -79,7 +79,7 @@ def collect_data(output):
     sub = WIN.subsurface(rect)
     pygame.image.save(sub,"data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration,image_frame))
 
-    f = open("data/output_data/output.txt", "a")
+    f = open("../data/output_data/output.txt", "a")
     f.write("{} {} {} \n".format(iteration, image_frame, output))
     f.close()
 

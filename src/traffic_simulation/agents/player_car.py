@@ -1,5 +1,5 @@
-from abstract_car import AbstractCar
-from defs import *
+from traffic_simulation.agents.abstract_car import AbstractCar
+from traffic_simulation.defs import *
 
 
 class PlayerCar(AbstractCar):

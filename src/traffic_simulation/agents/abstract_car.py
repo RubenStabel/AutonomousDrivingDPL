@@ -1,7 +1,5 @@
-import pygame
-import time
 import math
-from defs import *
+from traffic_simulation.defs import *
 
 
 class AbstractCar:

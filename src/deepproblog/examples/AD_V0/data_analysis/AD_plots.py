@@ -134,9 +134,9 @@ def multiple_running_accuracy_loss(data_1, name_1, data_2, name_2):
 # data_1 = data_2_pd('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/log/autonomous_driving_baseline_2.log')
 # data_2 = data_2_pd('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/log/autonomous_driving_V1.0_2.log')
 data_3 = data_2_pd_acc(
-    '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/autonomous_driving_baseline_3.log')
+    '/deepproblog/examples/AD_V0/log/autonomous_driving_baseline_3.log')
 data_4 = data_2_pd_acc(
-    '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/autonomous_driving_V1.0_2.log')
+    '/deepproblog/examples/AD_V0/log/autonomous_driving_V1.0_2.log')
 #multiple_accuracy_loss(data_3, "autonomous_driving_baseline_1",data_4,  "autonomous_driving_V1.0")
 multiple_running_accuracy_loss(data_3, "autonomous_driving_baseline_1",data_4,  "autonomous_driving_V1.0")
 
