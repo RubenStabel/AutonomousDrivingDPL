@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 from baseline_models import AD_baseline_net
-from deepproblog.examples.AD_V0.data.AD_dataset import train_dataset, valid_dataset, test_dataset
+from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import train_dataset, valid_dataset, test_dataset
 
 transform = transforms.Compose(
     [transforms.ToTensor(),

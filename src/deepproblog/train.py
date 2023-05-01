@@ -1,5 +1,5 @@
 import array
-from deepproblog.examples.AD_V0.data.AD_dataset import AD_Dataset
+from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import AD_Dataset
 import signal
 import time
 from typing import List, Callable, Union

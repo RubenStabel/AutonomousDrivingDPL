@@ -2,45 +2,21 @@ from pandas.core.common import flatten
 
 import cv2
 import glob
-import shutil, random, os
+import random
 import pandas as pd
 
-from torchvision import datasets, transforms, models
-from problog.logic import Term, list2term, Constant
+from torchvision import datasets, transforms
+from problog.logic import Term, Constant
 from deepproblog.dataset import Dataset
 from deepproblog.query import Query
-
-
-####################################################
-#       Create Train, Valid and Test sets
-####################################################
-
-train_data_path_V1 = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/img/train'
-train_balanced_path_V1 = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/img/train_balanced_V1'
-train_data_path = '/Users/rubenstabel/Documents/universiteit/AD_V0.2/deepproblog/src/deepproblog/examples/AD_V0/data/img/train1'
-train_balanced_train_path = '/Users/rubenstabel/Documents/universiteit/AD_V0.2/deepproblog/src/deepproblog/examples/AD_V0/data/img/train_balanced'
-test_data_path = '/Users/rubenstabel/Documents/universiteit/AD_V0.2/deepproblog/src/deepproblog/examples/AD_V0/data/img/test'
 
 
 train_data_path_vel_V1 = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/data_vel_3/img/train'
 output_data_path_vel_V1 = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/data_vel_3/output_data/output.txt'
 
-"""
-Create balanced dataset of given path
-Param:
-    Path
-    Amount of images
-
-EXTRA: only run once --> otherwise in comment
-"""
-def generate_balced_dataset(train_path, balanced_path):
-    for i in range(3):
-        class_path = train_path + '/{}'.format(i)
-        filenames = random.sample(os.listdir(class_path), 4085)
-        for fname in filenames:
-            srcpath = os.path.join(class_path, fname)
-            shutil.copy(srcpath, balanced_path + '/{}'.format(i))
-
+####################################################
+#       Create Train, Valid and Test sets
+####################################################
 
 """
 Create train and valid dataset paths
@@ -50,9 +26,7 @@ Param:
 """
 def create_train_and_valid_dataset(path):
     train_image_paths = []
-    classes = []
     for data_path in glob.glob(path + '/*'):
-        classes.append(data_path.split('/')[-1])
         train_image_paths.append(glob.glob(data_path + '/*'))
 
     # Shuffle image paths
@@ -84,6 +58,7 @@ def data_2_pd_acc():
     data = pd.read_csv(output_data_path_vel_V1, delim_whitespace=True)
     data.columns = ["idx", "iter", "image_frame", "output", "velocity", "x", "y"]
     return data
+
 
 def get_vel_img_id(idx):
     df = pd.DataFrame(data_2_pd_acc())
@@ -177,12 +152,9 @@ datasets = {
     # "test": AD_Dataset(test_image_paths, "test")
 }
 
-# generate_balced_dataset(train_data_path_V1, train_balanced_path_V1)
-
 train_dataset = datasets['train']
 valid_dataset = datasets['valid']  # test transforms are applied
 # test_dataset = AD_Dataset(test_image_paths, "test")
 
-print(train_dataset._get_label(1))
 
 print("###############    DATA LOADING DONE    ###############")

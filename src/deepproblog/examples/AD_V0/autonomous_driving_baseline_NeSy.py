@@ -5,8 +5,8 @@ import torch
 from deepproblog.dataset import DataLoader
 from deepproblog.engines import ExactEngine
 from deepproblog.evaluate import get_confusion_matrix
-from deepproblog.examples.AD_V0.data.AD_dataset import train_dataset, valid_dataset, AD_train, AD_valid
-from deepproblog.examples.AD_V0.network import MNIST_Net, AD_V1_net
+from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import train_dataset, valid_dataset, AD_train, AD_valid
+from deepproblog.examples.AD_V0.network import AD_V1_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model

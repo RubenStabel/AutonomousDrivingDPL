@@ -1,30 +1,30 @@
-import cv2
 import glob
-import shutil, random, os
-import pandas as pd
+import random
 
+import cv2
 from pandas.core.common import flatten
+from problog.logic import Term, Constant
 from torchvision import datasets, transforms
 
-from problog.logic import Term, Constant
 from deepproblog.dataset import Dataset
 from deepproblog.query import Query
 
 
-train_data_path_vel_V1 = '/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/data_vel_3/img/train'
-output_data_path_vel_V1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt'
+train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train'
 
 ####################################################
 #       Create Train, Valid and Test sets
 ####################################################
 
 """
-Create train and valid dataset paths
-
+Create balanced dataset of given path
 Param:
     Path
+    Amount of images
+
+EXTRA: only run once --> otherwise in comment
 """
-def create_train_and_valid_dataset(path):
+def create_train_and_valid_data_paths(path):
     train_image_paths = []
     for data_path in glob.glob(path + '/*'):
         train_image_paths.append(glob.glob(data_path + '/*'))
@@ -53,16 +53,6 @@ def create_test_dataset(path):
 
     return test_image_paths
 
-
-def data_2_pd_acc():
-    data = pd.read_csv(output_data_path_vel_V1, delim_whitespace=True)
-    data.columns = ["idx", "iter", "image_frame", "output", "velocity", "x", "y"]
-    return data
-
-def get_vel_img_id(idx):
-    df = output_data_df
-    vel = int(round(df.iloc[[idx]]['velocity']))
-    return vel
 
 #######################################################
 #               Define Dataset Class
@@ -97,8 +87,7 @@ class AD_Dataset(Dataset):
 
     def _get_label(self, idx: int):
         image_filepath = self.image_paths[idx]
-        img_id = image_filepath.split('_')[-2]
-        label = get_vel_img_id(img_id)
+        label = image_filepath.split('/')[-2]
         return label
 
     def _get_image(self, idx: int):
@@ -133,7 +122,8 @@ AD_valid = AD_Images("valid")
 #                  Create Dataset
 #######################################################
 
-train_image_paths, valid_image_paths = create_train_and_valid_dataset(train_data_path_vel_V1)
+train_image_paths, valid_image_paths = create_train_and_valid_data_paths(train_data_path)
+
 datasets = {
     "train": AD_Dataset(train_image_paths, "train"),
     "valid": AD_Dataset(valid_image_paths, "valid"),  # test transforms are applied
@@ -144,7 +134,5 @@ train_dataset = datasets['train']
 valid_dataset = datasets['valid']  # test transforms are applied
 # test_dataset = AD_Dataset(test_image_paths, "test")
 
-output_data_df = data_2_pd_acc()
-print(train_dataset._get_label(1))
 
 print("###############    DATA LOADING DONE    ###############")
