@@ -17,6 +17,8 @@ name = "autonomous_driving_baseline_NeSy_{}".format(N)
 train_set = get_dataset("train")
 test_set = get_dataset("valid")
 
+# train_set = train_dataset
+# test_set = valid_dataset
 
 print("###############    LOADING NETWORK    ###############")
 network = AD_V1_net()
@@ -31,7 +33,7 @@ model.add_tensor_source("valid", AD_valid)
 
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 4, log_iter=10, profile=0)
+train = train_model(model, loader, 4, test_set=test_set, log_iter=10, profile=0)
 model.save_state("../snapshot/baseline/" + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")
