@@ -1,5 +1,5 @@
-from defs import *
-from simulation_settings import *
+from traffic_simulation.defs import *
+from traffic_simulation.simulation_settings import *
 
 
 def rule_based_driving(player_car, occ, pedestrian):

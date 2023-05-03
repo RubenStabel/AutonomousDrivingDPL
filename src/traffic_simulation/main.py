@@ -5,6 +5,7 @@ from defs import *
 from simulation_settings import *
 from traffic_simulation.driving.human_based_driving import human_based_driving
 from traffic_simulation.driving.rule_based_self_driving import rule_based_driving
+from traffic_simulation.driving.simple_rule_based_self_driving import simple_rule_based_driving
 from traffic_simulation.driving.nn_based_self_driving import NNSelfDriving
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.static_cars import StaticCars
@@ -134,6 +135,8 @@ while run:
                 self_driving.nn_driving()
             else:
                 rule_based_driving(player_car, occ, pedestrian)
+        case 3:
+            output = simple_rule_based_driving(player_car, pedestrian)
 
     pedestrian.move()
 
