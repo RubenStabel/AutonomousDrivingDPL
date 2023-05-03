@@ -1,3 +1,5 @@
+import glob
+
 import cv2
 import json
 import os
@@ -5,6 +7,7 @@ import shutil
 import random
 
 import pandas as pd
+from pandas.core.common import flatten
 
 
 def png_to_np(img_path):
@@ -51,16 +54,21 @@ def get_vel_img_id(idx, data_path):
     test = df.loc[idx]['velocity']
 
 
-def generate_balced_dataset(train_path, balanced_path, number_of_classes):
+
+def generate_balanced_dataset(train_path, balanced_path, number_of_classes):
+    train_path_list = []
+    for data_path in glob.glob(train_path + '/1'):
+        train_path_list.append(glob.glob(data_path + '/*'))
+
     for i in range(number_of_classes):
         class_path = train_path + '/{}'.format(i)
-        filenames = random.sample(os.listdir(class_path), 1000)
+        filenames = random.sample(os.listdir(class_path), len(list(flatten(train_path_list))))
         for fname in filenames:
             srcpath = os.path.join(class_path, fname)
             shutil.copy(srcpath, balanced_path + '/{}'.format(i))
 
 # get_vel_img_id(3, '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt')
-# generate_balanced_dataset(train_vel_path, train_vel_balanced_path)
+generate_balanced_dataset('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train', '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced_train',3)
 
 # print(parse_output_file("output_data/output.txt"))
 # print(output_to_class_id([[0,0,1], [1,0,0]]))
