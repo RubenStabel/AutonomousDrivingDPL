@@ -72,10 +72,11 @@ def occluded(player_car, static_cars_rect, pedestrian):
     return occ, occ_car
 
 
-def collect_data(output):
+def collect_data(output, player_car):
     global image_frame
     output_class = output.index(1)
-    rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
+    y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
+    rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
     sub = WIN.subsurface(rect)
     pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
 
@@ -136,8 +137,8 @@ while run:
 
     pedestrian.move()
 
-    if frame % 10 == 0 and player_car.y < (GRID_POSITION[1] + IMAGE_DIM) and COLLECT_DATA:
-        collect_data(output)
+    if frame % 10 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and COLLECT_DATA:
+        collect_data(output, player_car)
 
     pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
     if pedestrian_poi_collide is not None:

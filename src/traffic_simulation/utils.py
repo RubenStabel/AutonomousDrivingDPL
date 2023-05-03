@@ -39,4 +39,5 @@ def reset_output_data():
 
 
 reset_img_data('train')
+reset_img_data('test')
 reset_output_data()
