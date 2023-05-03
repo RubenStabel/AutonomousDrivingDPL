@@ -131,10 +131,7 @@ while run:
         case 1:
             output = rule_based_driving(player_car, occ, pedestrian)
         case 2:
-            if player_car.y < (GRID_POSITION[1] + IMAGE_DIM):
-                self_driving.nn_driving()
-            else:
-                rule_based_driving(player_car, occ, pedestrian)
+            self_driving.nn_driving()
         case 3:
             output = simple_rule_based_driving(player_car, pedestrian)
 

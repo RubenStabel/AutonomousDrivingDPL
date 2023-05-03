@@ -11,7 +11,7 @@ from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 1
+N = 2
 
 name = "autonomous_driving_NeSy_{}".format(N)
 
@@ -31,7 +31,7 @@ model.add_tensor_source("valid", AD_valid)
 
 print("###############    TRAINING MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 2, test_set, log_iter=50, profile=0)
+train = train_model(model, loader, 4, test_set=test_set, log_iter=30, profile=0)
 model.save_state("../snapshot/neuro_symbolic/" + name + ".pth")
 
 print("###############    LOGGING DATA    ###############")

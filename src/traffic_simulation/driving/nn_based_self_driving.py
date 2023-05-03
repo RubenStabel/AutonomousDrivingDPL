@@ -1,7 +1,7 @@
 import torch
 
-from defs import *
-from simulation_settings import *
+from traffic_simulation.defs import *
+from traffic_simulation.simulation_settings import *
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.engines import ExactEngine
@@ -28,7 +28,8 @@ class NNSelfDriving:
 
     def nn_driving(self):
 
-        rect = pygame.Rect(GRID_POSITION[0], GRID_POSITION[1], IMAGE_DIM, IMAGE_DIM)
+        y = self.player_car.y - IMAGE_DIM + self.player_car.IMG.get_height()
+        rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         img = pygame.surfarray.array3d(sub)
         result = int(get_nn_output(img, self.model))
