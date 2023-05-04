@@ -4,13 +4,13 @@ from json import dumps
 from deepproblog.dataset import DataLoader
 from deepproblog.engines import ExactEngine
 from deepproblog.evaluate import get_confusion_matrix
-from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset, AD_train, AD_valid
+from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset, AD_train, AD_valid, AD_test
 from deepproblog.examples.AD_V0.network import AD_V1_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 4
+N = 6
 
 name = "autonomous_driving_baseline_NeSy_{}".format(N)
 
@@ -31,10 +31,11 @@ model = Model("../models/autonomous_driving_baseline.pl", [net])
 model.set_engine(ExactEngine(model), cache=True)
 model.add_tensor_source("train", AD_train)
 model.add_tensor_source("valid", AD_valid)
+model.add_tensor_source("test", AD_test)
 
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 4, test_set=valid_set, log_iter=20, profile=0)
+train = train_model(model, loader, 10, test_set=valid_set, log_iter=50, profile=0)
 model.save_state("../snapshot/baseline/" + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")

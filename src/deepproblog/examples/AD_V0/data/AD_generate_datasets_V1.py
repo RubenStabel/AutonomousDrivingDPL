@@ -11,7 +11,7 @@ from deepproblog.query import Query
 
 
 train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced_train'
-test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/test'
+test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced_test'
 
 ####################################################
 #       Create Train, Valid and Test sets
@@ -123,7 +123,7 @@ class AD_Images(object):
         return datasets[self.subset][int(item[0])][0]
 
 AD_train = AD_Images("train")
-# AD_test = AD_Images("test")
+AD_test = AD_Images("test")
 AD_valid = AD_Images("valid")
 # AD_eval_image = AD_Images("eval_image")
 

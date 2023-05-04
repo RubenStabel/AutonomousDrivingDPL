@@ -32,7 +32,13 @@ class NNSelfDriving:
         rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         img = pygame.surfarray.array3d(sub)
+
+
         result = int(get_nn_output(img, self.model))
+
+        pygame.image.save(sub,
+                          "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/" + MODEL_NAME + "/{}_y{}.png".format(
+                              result, self.player_car.get_vel()))
 
         match result:
             case 0:

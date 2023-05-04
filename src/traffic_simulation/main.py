@@ -131,13 +131,17 @@ while run:
         case 1:
             output = rule_based_driving(player_car, occ, pedestrian)
         case 2:
-            self_driving.nn_driving()
+            if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
+                self_driving.nn_driving()
+            else:
+                simple_rule_based_driving(player_car, pedestrian)
+
         case 3:
             output = simple_rule_based_driving(player_car, pedestrian)
 
     pedestrian.move()
 
-    if frame % 10 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and COLLECT_DATA:
+    if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and COLLECT_DATA:
         collect_data(output, player_car)
 
     pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
