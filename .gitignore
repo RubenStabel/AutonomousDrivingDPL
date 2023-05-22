@@ -1,7 +1,6 @@
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
-*.log
 *.lot
 *.fls
 *.out
@@ -227,7 +226,6 @@ deepproblog.egg-info/
 *.gv
 *.mdl
 *.pdf
-*.pth
 *.pyc
 
 *.ipynb
