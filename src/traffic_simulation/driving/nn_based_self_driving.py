@@ -1,4 +1,8 @@
+import cv2
 import torch
+import numpy as np
+import io
+from PIL import Image
 
 from traffic_simulation.defs import *
 from traffic_simulation.simulation_settings import *
@@ -26,19 +30,17 @@ class NNSelfDriving:
         model.eval()
         return model
 
-    def nn_driving(self):
+    def nn_driving(self, frame):
 
         y = self.player_car.y - IMAGE_DIM + self.player_car.IMG.get_height()
         rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         img = pygame.surfarray.array3d(sub)
-
+        img = img.swapaxes(0, 1)
 
         result = int(get_nn_output(img, self.model))
 
-        pygame.image.save(sub,
-                          "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/" + MODEL_NAME + "/{}_y{}.png".format(
-                              result, self.player_car.get_vel()))
+        # pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/" + MODEL_NAME + "/{}/{}.png".format(result, frame))
 
         match result:
             case 0:
