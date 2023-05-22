@@ -26,7 +26,9 @@ class AD_Eval_Image(Dataset):
         else:
             self.transform = transform
         self.eval_name = eval_name
-        self.image = self.transform(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        # self.image = self.transform(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        self.image = self.transform(image)
+
 
     def __len__(self):
         "How many queries there are"
@@ -73,8 +75,8 @@ def get_nn_output(data, model):
     max_ans = max(answer.result, key=lambda x: answer.result[x])
     # p = answer.result[max_ans]
     predicted = str(max_ans.args[image.output_ind[0]])
-    print(answer)
-    print(predicted)
+    # print(answer)
+    # print(predicted)
     return predicted
     # predicted = str(max_ans.args[image.output_nr[0]])
 
