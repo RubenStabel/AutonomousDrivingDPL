@@ -135,17 +135,18 @@ def multiple_running_accuracy_loss(data_1, name_1, data_2, name_2):
 #                 EXPERIMENTS
 #######################################################
 
-# data_1 = data_2_pd_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/baseline/test/autonomous_driving_baseline_NeSy_9.log')
-data_2 = data_2_pd_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/neuro_symbolic/test/autonomous_driving_NeSy_6.log')
+data_1 = data_2_pd_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/baseline/test/autonomous_driving_baseline_NeSy_9.log')
+data_2 = data_2_pd_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/neuro_symbolic/test/autonomous_driving_NeSy_12.log')
 # data_3 = data_2_pd_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/baseline/train/autonomous_driving_baseline_NeSy_10.log')
-# data_4 = data_2_pd_acc('/deepproblog/examples/AD_V0/log/autonomous_driving_V1.0_2.log')
+# data_4 = data_2_pd_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/log/neuro_symbolic/train/autonomous_driving_NeSy_13.log')
 # multiple_accuracy_loss(data_3, "autonomous_driving_baseline_1",data_4,  "autonomous_driving_V1.0")
 # multiple_running_accuracy_loss(data_1,"Baseline",data_2,"NeSy")
 
-# multiple_running_accuracy_loss(data_3, 'Train', data_1, 'Test')
-# accuracy_loss(data_2, "NeSy")
+# multiple_running_accuracy_loss(data_2, 'Test NeSy', data_1, 'Test Baseline')
+multiple_accuracy_loss(data_2, 'Test NeSy', data_1, 'Test Baseline')
+# accuracy_loss(data_4, "NeSy")
 # plot_multiple_losses(data_1, "autonomous_driving_baseline_1", data_2, "autonomous_driving_V1.0", 5)
-running_accuracy_loss(data_2, "NeSy")
+# running_accuracy_loss(data_4, "NeSy")
 # accuracy_loss(data_2, "NeSy")
 # running_accuracy_loss(data_2, "NeSy")
 # plot_multiple_running_losses(running_loss(data_1), "autonomous_driving_baseline_1", running_loss(data_2), "autonomous_driving_V1.0")
