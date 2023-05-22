@@ -11,7 +11,8 @@ from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 5
+N = 6
+folder = folder = "train/"
 
 name = "autonomous_driving_NeSy_{}".format(N)
 
@@ -33,11 +34,11 @@ model.add_tensor_source("test", AD_test)
 
 print("###############    TRAINING MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 10, test_set=valid_set, log_iter=50, profile=0)
+train = train_model(model, loader, 20, test_set=valid_set, log_iter=20, profile=0)
 model.save_state("../snapshot/neuro_symbolic/" + name + ".pth")
 
 print("###############    LOGGING DATA    ###############")
 train.logger.comment(dumps(model.get_hyperparameters()))
 train.logger.comment("Accuracy {}".format(get_confusion_matrix(model, test_set, verbose=1).accuracy()))
-train.logger.write_to_file("../log/neuro_symbolic/" + name)
+train.logger.write_to_file("../log/neuro_symbolic/" + folder + name)
 
