@@ -41,5 +41,5 @@ def reset_output_data():
 # reset_img_data('train')
 # reset_img_data('test')
 # reset_img_data('balanced_train')
-# reset_img_data('balanced_test')
+# reset_img_data('train_simple_yellow_balanced_1')
 # reset_output_data()

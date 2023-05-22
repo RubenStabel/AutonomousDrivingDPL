@@ -29,10 +29,12 @@ PURPLE_CAR = scale_image(pygame.image.load("imgs/purple-car.png"), 0.8)
 WHITE_CAR = scale_image(pygame.image.load("imgs/white-car.png"), 0.8)
 CAR_ARRAY = [RED_CAR, GREY_CAR, GREY_CAR, PURPLE_CAR, WHITE_CAR]
 
-PEDESTRIAN = scale_image(pygame.image.load("imgs/pedastrian.png"), 0.9)
+# PEDESTRIAN = scale_image(pygame.image.load("imgs/pedastrian.png"), 0.9)
+PEDESTRIAN = scale_image(pygame.image.load("imgs/yellow-rect.png"), 0.03)
 PEDESTRIAN_MASK = pygame.mask.from_surface(PEDESTRIAN)
 PEDESTRIAN_START_POS = (random.randrange(280, 350, 10), random.randrange(350, 700, 10))
 PEDESTRIAN_END_POS = (random.randrange(10, 70, 10), random.randrange(10, 500, 10))
+
 
 
 # COLORS
@@ -46,3 +48,5 @@ BLOCK_SIZE = 10  # Set the size of the grid block
 
 # GAME SETTINGS
 FPS = 60
+
+print(PEDESTRIAN.get_width(), PEDESTRIAN.get_height())
