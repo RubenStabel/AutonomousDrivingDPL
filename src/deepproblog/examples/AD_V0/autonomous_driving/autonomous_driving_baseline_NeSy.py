@@ -10,7 +10,7 @@ from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 6
+N = 9
 
 name = "autonomous_driving_baseline_NeSy_{}".format(N)
 
@@ -35,7 +35,7 @@ model.add_tensor_source("test", AD_test)
 
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 10, test_set=valid_set, log_iter=50, profile=0)
+train = train_model(model, loader, 20, test_set=valid_set, log_iter=20, profile=0)
 model.save_state("../snapshot/baseline/" + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")

@@ -102,9 +102,9 @@ def get_nn_model():
     model.eval()
     return model
 
-path1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced_train/0/0_iter7frame0.png'
+path1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/NN/0/'
 path2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train/0/0_iter0frame8.png'
-result = int(get_nn_output(path2, get_nn_model()))
+result = int(get_nn_output(path1, get_nn_model()))
 print(NN_NAME)
 print(result)
 # transform = transforms.Compose([

@@ -9,6 +9,8 @@ from traffic_simulation.driving.simple_rule_based_self_driving import simple_rul
 from traffic_simulation.driving.nn_based_self_driving import NNSelfDriving
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.static_cars import StaticCars
+import random
+
 
 
 def draw(win, images, player_car, static_cars, occ):
@@ -89,6 +91,7 @@ def collect_data(output, player_car):
 
 
 def reset_traffic_simulation():
+    # random.seed(0) --> Every iteration in the simulation is the same
     global iteration
     global frame
     global image_frame
@@ -105,7 +108,7 @@ clock = pygame.time.Clock()
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)
 
-static_cars = StaticCars(6)
+static_cars = StaticCars(NUMBER_STATIC_CARS)
 static_cars.create_static_cars()
 pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
 self_driving = NNSelfDriving(player_car, NETWORK, MODEL_PATH, NN_PATH, NN_NAME)
@@ -132,7 +135,7 @@ while run:
             output = rule_based_driving(player_car, occ, pedestrian)
         case 2:
             if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
-                self_driving.nn_driving()
+                self_driving.nn_driving(frame)
             else:
                 simple_rule_based_driving(player_car, pedestrian)
 
