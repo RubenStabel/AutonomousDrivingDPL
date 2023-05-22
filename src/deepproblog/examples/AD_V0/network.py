@@ -25,23 +25,40 @@ class AD_V1_net(nn.Module):
         return x
 
 
-class MNIST_CNN(nn.Module):
-    def __init__(self):
-        super(MNIST_CNN, self).__init__()
-        self.encoder = nn.Sequential(
-            nn.Conv2d(1, 6, 5),
-            nn.MaxPool2d(2, 2),  # 6 24 24 -> 6 12 12
-            nn.ReLU(True),
-            nn.Conv2d(6, 16, 5),  # 6 12 12 -> 16 8 8
-            nn.MaxPool2d(2, 2),  # 16 8 8 -> 16 4 4
-            nn.ReLU(True),
-        )
 
-    def forward(self, x):
-        x = x.unsqueeze(0)
-        x = self.encoder(x)
-        x = x.view(-1, 16 * 4 * 4)
-        return x
+# class AD_V1_net(nn.Module):
+#     def __init__(self):
+#         super().__init__()
+#         self.fc1 = nn.Linear(32*32*3,32)
+#         self.fc2 = nn.Linear(32, 10)
+#         self.fc3 = nn.Linear(10, 3)
+#         self.softmax = nn.Softmax(-1)
+#
+#     def forward(self, x):
+#         x = torch.flatten(x, 1) # flatten all dimensions except batch
+#         x = F.relu(self.fc1(x))
+#         x = F.relu(self.fc2(x))
+#         x = self.fc3(x)
+#         x= self.softmax(x)
+#         return x
+#
+# class MNIST_CNN(nn.Module):
+#     def __init__(self):
+#         super(MNIST_CNN, self).__init__()
+#         self.encoder = nn.Sequential(
+#             nn.Conv2d(1, 6, 5),
+#             nn.MaxPool2d(2, 2),  # 6 24 24 -> 6 12 12
+#             nn.ReLU(True),
+#             nn.Conv2d(6, 16, 5),  # 6 12 12 -> 16 8 8
+#             nn.MaxPool2d(2, 2),  # 16 8 8 -> 16 4 4
+#             nn.ReLU(True),
+#         )
+#
+#     def forward(self, x):
+#         x = x.unsqueeze(0)
+#         x = self.encoder(x)
+#         x = x.view(-1, 16 * 4 * 4)
+#         return x
 
 
 class MNIST_Classifier(nn.Module):
