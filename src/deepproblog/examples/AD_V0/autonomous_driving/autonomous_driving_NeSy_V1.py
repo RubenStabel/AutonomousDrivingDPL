@@ -11,14 +11,14 @@ from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 13
-folder = "train/"
+N = 15
+folder = "test/"
 
 name = "autonomous_driving_NeSy_{}".format(N)
 
 train_set = get_dataset("train")
-valid_set = get_dataset("train")
-test_set = get_dataset("train")
+valid_set = get_dataset("valid")
+test_set = get_dataset("test")
 
 print("###############    LOADING NETWORK    ###############")
 network = AD_V1_net()
@@ -26,7 +26,7 @@ net = Network(network, "perc_net_AD_V1", batching=True)
 net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
 
 print("###############    LOADING MODEL    ###############")
-model = Model("../models/autonomous_driving_V0.0.pl", [net])
+model = Model("../models/autonomous_driving_V1.0.pl", [net])
 model.set_engine(ExactEngine(model), cache=True)
 model.add_tensor_source("train", AD_train)
 model.add_tensor_source("valid", AD_valid)

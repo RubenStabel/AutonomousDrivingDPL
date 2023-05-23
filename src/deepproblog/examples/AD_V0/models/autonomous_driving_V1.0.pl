@@ -1,6 +1,6 @@
 % Init
 coord(X) :- X = 0; X = 1; X = 2; X = 3; X = 4; X = 5; X = 6; X = 7; X = 8; X = 9.
-coord(Y) :- Y = 0; Y = 1; Y = 2.
+coord(Y) :- Y = 0; Y = 1.
 admissible_cells(X,Y) :- coord(X), coord(Y).
 
 
@@ -9,12 +9,12 @@ nn(perc_net_AD_V1,[Img, X,Y],Z,[human,nothing]) :: cell(Img,X,Y,Z).
 
 
 % Prediction
-attention_boundary(X,Y) :- X==0, (Y==0; Y==1).
+attention_boundary(X,Y) :- X==0, (Y==0).
 % attention_boundary(X,Y) :- X==1.
 
-enlarged_boundary(X,Y) :- X==2, (Y==0; Y==1).
-enlarged_boundary(X,Y) :- X==3, (Y==0; Y==1).
-enlarged_boundary(X,Y) :- X==4, (Y==0; Y==1).
+enlarged_boundary(X,Y) :- X==2, (Y==0).
+enlarged_boundary(X,Y) :- X==3, (Y==0).
+enlarged_boundary(X,Y) :- X==4, (Y==0).
 
 
 % Control
