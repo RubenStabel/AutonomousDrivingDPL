@@ -1,3 +1,4 @@
+import pandas as pd
 import torch
 
 from deepproblog.engines import ExactEngine
@@ -23,5 +24,34 @@ def get_nn_model(network, nn_name, model_path, nn_path):
     model.eval()
     return model
 
+
+def data_2_pd_img_idx(data_path):
+    data = pd.read_csv(data_path, sep="  ")
+    data.columns = ["idx", "result", "query"]
+    return data
+
+
+def idx_to_file_name(data):
+    df = pd.DataFrame(data)
+    for _, j in df.iterrows():
+        file_id = j['idx']
+        f = open(
+            "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples"
+            "/AD_V0/data_analysis/errors/false_predictions",
+            "a")
+        f.write("{} \n".format(
+            str(test_set.image_paths[file_id]).split('/')[-1]
+        ))
+        f.close()
+
+def reset_false_predictions():
+    with open('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions', 'w'):
+        pass
+
+reset_false_predictions()
 test_set = get_dataset("test")
-get_confusion_matrix(get_nn_model(NETWORK, NN_NAME, MODEL_PATH,NN_PATH), test_set, verbose=1).accuracy()
+get_confusion_matrix(get_nn_model(NETWORK, NN_NAME, MODEL_PATH,NN_PATH), test_set, verbose=2).accuracy()
+data = data_2_pd_img_idx('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions')
+idx_to_file_name(data)
+
+

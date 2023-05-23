@@ -8,7 +8,7 @@ from deepproblog.utils.confusion_matrix import ConfusionMatrix
 
 
 def get_confusion_matrix(
-    model: Model, dataset: Dataset, verbose: int = 0, eps: Optional[float] = None
+        model: Model, dataset: Dataset, verbose: int = 0, eps: Optional[float] = None
 ) -> ConfusionMatrix:
     """
 
@@ -41,11 +41,19 @@ def get_confusion_matrix(
                 if abs(actual - predicted) < eps:
                     predicted = actual
             if verbose > 1 and actual != predicted:
-                print(
-                    "{} {} vs {}::{} for query {}".format(
-                        i, actual, p, predicted, test_query
-                    )
-                )
+                f = open(
+                    "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples"
+                    "/AD_V0/data_analysis/errors/false_predictions",
+                    "a")
+                f.write("{}  {} vs {}::{} for query  {} \n".format(
+                    i, actual, p, predicted, test_query
+                ))
+                f.close()
+                # print(
+                #     "{} {} vs {}::{} for query {}".format(
+                #         i, actual, p, predicted, test_query
+                #     )
+                # )
         confusion_matrix.add_item(predicted, actual)
 
     if verbose > 0:
@@ -56,11 +64,11 @@ def get_confusion_matrix(
 
 
 def get_fact_accuracy(
-    model: Model,
-    dataset: Dataset,
-    verbose: int = 0,
-    threshold: float = 0.5,
-    empty_answer: str = "false",
+        model: Model,
+        dataset: Dataset,
+        verbose: int = 0,
+        threshold: float = 0.5,
+        empty_answer: str = "false",
 ) -> ConfusionMatrix:
     """
 
@@ -95,7 +103,6 @@ def get_fact_accuracy(
         print("Accuracy", confusion_matrix.accuracy())
 
     return confusion_matrix
-
 
 # def multi_class_accuracy(model, data, test=False, verbose=1, inds=None):
 #     if inds is None:
