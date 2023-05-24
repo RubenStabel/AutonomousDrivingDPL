@@ -11,6 +11,7 @@ from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.static_cars import StaticCars
 import random
 
+from traffic_simulation.utils import reset_img_data
 
 
 def draw(win, images, player_car, static_cars, occ):
@@ -105,6 +106,10 @@ def reset_traffic_simulation():
 
 run = True
 clock = pygame.time.Clock()
+
+if DATA_ANALYSIS:
+    reset_img_data('driving_test/{}'.format(MODEL_NAME))
+
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)
 

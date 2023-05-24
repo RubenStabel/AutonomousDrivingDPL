@@ -40,7 +40,8 @@ class NNSelfDriving:
 
         result = int(get_nn_output(img, self.model))
 
-        # pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/" + MODEL_NAME + "/{}/{}.png".format(result, frame))
+        if DATA_ANALYSIS and frame % 5 == 0:
+            pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/" + MODEL_NAME + "/{}/{}.png".format(result, frame))
 
         match result:
             case 0:
