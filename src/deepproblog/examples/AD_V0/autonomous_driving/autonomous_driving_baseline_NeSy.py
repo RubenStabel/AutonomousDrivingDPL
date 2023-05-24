@@ -10,7 +10,7 @@ from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 10
+N = 11
 
 name = "autonomous_driving_baseline_NeSy_{}".format(N)
 folder = "train/"
@@ -28,7 +28,7 @@ net = Network(network, "ad_baseline_net", batching=True)
 net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
 
 print("###############    LOADING MODEL    ###############")
-model = Model("../models/autonomous_driving_baseline.pl", [net])
+model = Model("../models/test.pl", [net])
 model.set_engine(ExactEngine(model), cache=True)
 model.add_tensor_source("train", AD_train)
 model.add_tensor_source("valid", AD_valid)
