@@ -45,7 +45,7 @@ def get_confusion_matrix(
                     "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples"
                     "/AD_V0/data_analysis/errors/false_predictions",
                     "a")
-                f.write("{}  {} vs {}::{} for query  {} \n".format(
+                f.write("{}  {} vs {}::{}   for query {} \n".format(
                     i, actual, p, predicted, test_query
                 ))
                 f.close()
