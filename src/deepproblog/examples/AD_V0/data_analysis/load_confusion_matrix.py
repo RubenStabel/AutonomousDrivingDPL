@@ -49,10 +49,12 @@ def idx_to_file_name(data, test_set):
     for i, j in df.iterrows():
         file_id = j['idx']
         img_path = str(test_set.image_paths[file_id]).split('src')[1]
-        query_output = j['result']
+        query_output = str(j['result']).split(' ')
+        actual = query_output[0]
+        predicted = query_output[2]
         f = open(HTML_FIL_PATH, "a")
-        f.write("<img src='../../../../..{}' height='360' width='360' alt=''/>\n<br>\n{}\n<br>\n<br>\n".format(img_path,
-                                                                                                               query_output))
+        f.write("<img src='../../../../..{}' height='360' width='360' alt=''/>\n<br>\n<b>Predicted:</b> {}\n<br>\n<b>Actual:</b> {}\n<br>\n<br>\n".format(img_path,
+                                                                                                               predicted, actual))
         f.close()
 
 
