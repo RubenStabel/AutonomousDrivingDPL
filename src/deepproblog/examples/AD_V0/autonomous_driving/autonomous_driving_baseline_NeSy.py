@@ -10,14 +10,14 @@ from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 11
+N = 12
 folder = "train/"
 
 name = "autonomous_driving_baseline_NeSy_{}".format(N)
 
 train_set = get_dataset("train")
-valid_set = get_dataset("train")
-test_set = get_dataset("train")
+valid_set = get_dataset("valid")
+test_set = get_dataset("test")
 
 print("###############    LOADING NETWORK    ###############")
 network = AD_V1_net()

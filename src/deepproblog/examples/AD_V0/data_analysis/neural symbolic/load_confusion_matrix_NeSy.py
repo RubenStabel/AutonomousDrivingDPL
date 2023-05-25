@@ -24,7 +24,7 @@ NN_NAME = 'perc_net_AD_V1'
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/autonomous_driving_baseline_NeSy_10.pth'
 # NN_NAME = 'ad_baseline_net'
 
-HTML_FIL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/data_analysis.html'
+HTML_FIL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/data_analysis_NeSy.html'
 
 
 def get_nn_model(network, nn_name, model_path, nn_path):
@@ -63,8 +63,7 @@ def generate_html_data_analysis():
     test_set = get_dataset("test")
     get_confusion_matrix(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), test_set, verbose=2).accuracy()
     data = data_2_pd_img_idx(
-        '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0'
-        '/data_analysis/errors/false_predictions')
+        '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_NeSy')
 
     f = open(HTML_FIL_PATH, "w")
     f.write(
@@ -78,8 +77,7 @@ def generate_html_data_analysis():
 
 def reset_false_predictions():
     f = open(
-        '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0'
-        '/data_analysis/errors/false_predictions',
+        '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_NeSy',
         'w')
     f.write("idx  result  query \n")
     f.close()

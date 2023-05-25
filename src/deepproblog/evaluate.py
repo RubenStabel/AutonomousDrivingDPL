@@ -42,8 +42,7 @@ def get_confusion_matrix(
                     predicted = actual
             if verbose > 1 and actual != predicted:
                 f = open(
-                    "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples"
-                    "/AD_V0/data_analysis/errors/false_predictions",
+                    "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_NeSy",
                     "a")
                 f.write("{}  {} vs {}::{}   for query {} \n".format(
                     i, actual, p, predicted, test_query
