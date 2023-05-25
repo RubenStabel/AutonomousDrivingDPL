@@ -21,39 +21,35 @@ def correct(predictions, labels):
 
 
 train_set = get_dataset("train")
-valid_set = get_dataset("train")
-test_set = get_dataset("train")
-
-transform = transforms.Compose(
-    [transforms.ToTensor(),
-     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+valid_set = get_dataset("valid")
+test_set = get_dataset("test")
 
 batch_size = 2
+classes = ('Accelerate', 'Brake', 'Idle')
 
-trainloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size,
-                                          shuffle=True)
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size,
+                                           shuffle=True)
 
-validloader = torch.utils.data.DataLoader(valid_set, batch_size=1,
+valid_loader = torch.utils.data.DataLoader(valid_set, batch_size=1,
+                                           shuffle=False)
+
+test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size,
                                           shuffle=False)
 
-testloader = torch.utils.data.DataLoader(test_set, batch_size=batch_size,
-                                         shuffle=False)
-
-net = AD_baseline_net()
+model = AD_baseline_net()
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.95)
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
 
-if __name__ == '__main__':
-    freeze_support()
-    epochs = 20
-    accuracy = 0.0
+
+def train_baseline_model_V0():
+    epochs = 5
     running_loss = 0.0
     correct_var = 0.0
 
     for epoch in range(epochs):  # loop over the dataset multiple times
         print('Epoch-{0} lr: {1}'.format(epoch + 1, optimizer.param_groups[0]['lr']))
-        for i, data in enumerate(trainloader, 0):
+        for i, data in enumerate(train_loader, 0):
 
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
@@ -62,7 +58,7 @@ if __name__ == '__main__':
             optimizer.zero_grad()
 
             # forward + backward + optimize
-            outputs = net(inputs)
+            outputs = model(inputs)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
@@ -72,8 +68,8 @@ if __name__ == '__main__':
             # correct_var += correct(outputs, labels)
             if i % print_rate == 0 and i != 0:  # print every 2000 mini-batches
 
-                for valid_inputs, valid_labels in validloader:
-                    valid_outputs = net(valid_inputs)  # Feed Network
+                for valid_inputs, valid_labels in valid_loader:
+                    valid_outputs = model(valid_inputs)  # Feed Network
 
                     valid_outputs = (torch.max(torch.exp(valid_outputs), 1)[1]).data.cpu().numpy()
                     valid_labels = valid_labels.data.cpu().numpy()
@@ -81,17 +77,13 @@ if __name__ == '__main__':
                     if valid_outputs == valid_labels:
                         correct_var += 1
 
-                print("Iteration:  {}    Average Loss:  {}    Accuracy:  {}".format(epoch * len(trainloader)//print_rate * print_rate + i,
+                print("Iteration:  {}    Average Loss:  {}    Accuracy:  {}".format(epoch * len(train_loader) // print_rate * print_rate + i,
                                                                                     round(running_loss / 20, 10),
-                                                                                    correct_var / len(validloader)))
+                                                                                    correct_var / len(valid_loader)))
                 running_loss = 0.0
                 correct_var = 0.0
 
-        # accuracy = correct_var / len(trainloader)
-        # print("Accuracy = {}".format(accuracy))
-
-
-classes = ('Accelerate', 'Brake', 'Idle')
+    torch.save(model.state_dict(), 'baseline_model_V0.pth')
 
 
 def accuracy(matrix, classes):
@@ -100,7 +92,6 @@ def accuracy(matrix, classes):
         correct += matrix[i, i]
     total = matrix.sum()
     acc = correct / total
-    # print("Accuracy: ", acc)
     return acc
 
 
@@ -134,5 +125,12 @@ def show_confusion_matrix_baseline(network, data, classes, show_plot=False):
         plt.show()
     # plt.savefig('output.png')
 
-show_confusion_matrix_baseline(net, testloader, classes)
+
+train_baseline_model_V0()
+trained_model = AD_baseline_net()
+trained_model.load_state_dict(torch.load('baseline_model_V0.pth'))
+trained_model.eval()
+show_confusion_matrix_baseline(trained_model, test_loader, classes)
+
+
 print('DONE')
