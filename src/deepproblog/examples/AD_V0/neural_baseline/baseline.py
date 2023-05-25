@@ -48,17 +48,11 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
 
 
 def train_baseline_model_V0():
-    epochs = 5
+    epochs = 20
     running_loss = 0.0
-    correct_var = 0.0
 
     start = time.time()
-
-    f = open("../log/baseline/" + folder + name, "w")
-    f.write("#Param_groups\t{}\n".format(optimizer.state_dict()['param_groups']))
-    f.write("#Accuracy {}\n".format(generate_confusion_matrix_baseline(model, test_loader, verbose=0).accuracy()))
-    f.write("i,time,loss,accuracy\n")
-    f.close()
+    log = ""
 
     for epoch in range(epochs):  # loop over the dataset multiple times
         print('Epoch-{0} lr: {1}'.format(epoch + 1, optimizer.param_groups[0]['lr']))
@@ -81,29 +75,20 @@ def train_baseline_model_V0():
             # correct_var += correct(outputs, labels)
             if i % print_rate == 0 and i != 0:  # print every 2000 mini-batches
                 iter_time = time.time()
-                for valid_inputs, valid_labels in valid_loader:
-                    valid_outputs = model(valid_inputs)  # Feed Network
+                acc = generate_confusion_matrix_baseline(model, valid_loader, verbose=0).accuracy()
 
-                    valid_outputs = (torch.max(torch.exp(valid_outputs), 1)[1]).data.cpu().numpy()
-                    valid_labels = valid_labels.data.cpu().numpy()
-
-                    if valid_outputs == valid_labels:
-                        correct_var += 1
-
-                f = open("../log/baseline/" + folder + name, "a")
-                f.write("{},{},{},{}\n".format(i, iter_time-start, loss, correct_var / len(valid_loader)))
-                f.close()
+                log += "{},{},{},{}\n".format(epoch * len(train_loader) // print_rate * print_rate + i, iter_time-start, loss, acc)
 
                 print("Iteration:  {}    Average Loss:  {}    Accuracy:  {}".format(epoch * len(train_loader) // print_rate * print_rate + i,
-                                                                                    round(running_loss / 20, 10),
-                                                                                    correct_var / len(valid_loader)))
+                                                                                    round(running_loss / 20, 10),acc))
                 running_loss = 0.0
-                correct_var = 0.0
 
-
-    # print("Optimizer's state_dict:")
-    # for var_name in optimizer.state_dict():
-
+    f = open("../log/baseline/" + folder + name, "w")
+    f.write("#Param_groups\t{}\n".format(optimizer.state_dict()['param_groups']))
+    f.write("#Accuracy {}\n".format(generate_confusion_matrix_baseline(model, test_loader, verbose=0).accuracy()))
+    f.write("i,time,loss,accuracy\n")
+    f.write(log)
+    f.close()
 
 train_baseline_model_V0()
 print('DONE')
