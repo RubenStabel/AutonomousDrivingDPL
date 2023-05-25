@@ -40,7 +40,15 @@ def idx_to_file_name(data, test_set):
         actual = result[0]
         predicted = result[2]
         f = open(HTML_FILE_PATH, "a")
-        f.write("<img src='../../../../..{}' height='360' width='360' alt=''/>\n<br>\n<b>Predicted:</b> {}\n<br>\n<b>Actual:</b> {}\n<br>\n<br>\n".format(img_path,
+        f.write(""
+                "<img src='../../../../..{}' height='360' width='360' alt=''/>\n"
+                "<br>\n"
+                "<b>Predicted:</b> {}\n"
+                "<br>\n"
+                "<b>Actual:</b> {}\n"
+                "<br>\n"
+                "<br>\n"
+                "".format(img_path,
                                                                                                                predicted, actual))
         f.close()
 
@@ -61,13 +69,25 @@ def generate_html_data_analysis():
     data = data_2_pd_img_idx(DATA_FILE_PATH)
 
     f = open(HTML_FILE_PATH, "w")
-    f.write("<!DOCTYPE html>\n<html lang='en'>\n<head>\n<meta charset='UTF-8'>\n<title>Data analysis</title>\n</head>\n<body>\n<h2>{} DATA ANALYSIS</h2>\n<hr>\n".format(MODEL_NAME))
+    f.write(""
+            "<!DOCTYPE html>\n"
+            "<html lang='en'>\n"
+            "<head>\n"
+            "<meta charset='UTF-8'>\n"
+            "<title>Data analysis</title>\n"
+            "</head>\n"
+            "<body>\n"
+            "<h2>{} DATA ANALYSIS</h2>\n"
+            "<hr>\n"
+            "".format(MODEL_NAME))
     f.close()
 
     idx_to_file_name(data, test_set)
 
     f = open(HTML_FILE_PATH, "a")
-    f.write("</body>\n</html>")
+    f.write(""
+            "</body>\n"
+            "</html>")
     f.close()
 
 
