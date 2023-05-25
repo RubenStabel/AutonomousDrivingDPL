@@ -11,16 +11,13 @@ from deepproblog.network import Network
 from deepproblog.train import train_model
 
 N = 11
+folder = "train/"
 
 name = "autonomous_driving_baseline_NeSy_{}".format(N)
-folder = "train/"
 
 train_set = get_dataset("train")
 valid_set = get_dataset("train")
 test_set = get_dataset("train")
-
-# train_set = train_dataset
-# test_set = valid_dataset
 
 print("###############    LOADING NETWORK    ###############")
 network = AD_V1_net()
@@ -43,4 +40,3 @@ print("###############    LOGGING DATA MODEL    ###############")
 train.logger.comment(dumps(model.get_hyperparameters()))
 train.logger.comment("Accuracy {}".format(get_confusion_matrix(model, test_set, verbose=1).accuracy()))
 train.logger.write_to_file("../log/baseline/" + folder + name)
-

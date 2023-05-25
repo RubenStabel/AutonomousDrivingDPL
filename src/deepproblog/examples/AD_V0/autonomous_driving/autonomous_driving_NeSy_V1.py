@@ -41,4 +41,3 @@ print("###############    LOGGING DATA    ###############")
 train.logger.comment(dumps(model.get_hyperparameters()))
 train.logger.comment("Accuracy {}".format(get_confusion_matrix(model, test_set, verbose=1).accuracy()))
 train.logger.write_to_file("../log/neuro_symbolic/" + folder + name)
-
