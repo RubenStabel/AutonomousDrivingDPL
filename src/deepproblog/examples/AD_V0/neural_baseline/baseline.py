@@ -1,27 +1,17 @@
 import time
-from multiprocessing import freeze_support
-
-import numpy as np
 import torch
-import torchvision.transforms as transforms
+
 import torch.nn as nn
 import torch.optim as optim
-from matplotlib import pyplot as plt
-from torch.utils.data import DataLoader
 
+from torch.utils.data import DataLoader
 from baseline_network import AD_baseline_net
 from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset
-
-from sklearn.metrics import confusion_matrix
-import seaborn as sn
-import pandas as pd
-
-from deepproblog.examples.AD_V0.data_analysis.baseline.evaluate_baseline import generate_confusion_matrix_baseline, \
-    plot_confusion_matrix_baseline
+from deepproblog.examples.AD_V0.data_analysis.baseline.evaluate_baseline import generate_confusion_matrix_baseline
 
 print_rate = 20
 
-N = 0
+N = 1
 folder = "test/"
 name = "autonomous_driving_baseline_V0_{}.log".format(N)
 
@@ -48,7 +38,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
 
 
 def train_baseline_model_V0():
-    epochs = 20
+    epochs = 5
     running_loss = 0.0
 
     start = time.time()
@@ -89,6 +79,8 @@ def train_baseline_model_V0():
     f.write("i,time,loss,accuracy\n")
     f.write(log)
     f.close()
+
+    torch.save(model.state_dict(), "../snapshot/baseline/" + folder + name + ".pth")
 
 train_baseline_model_V0()
 print('DONE')
