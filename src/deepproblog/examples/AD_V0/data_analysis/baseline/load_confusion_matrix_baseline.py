@@ -2,7 +2,8 @@ import pandas as pd
 import torch
 
 from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset, AD_test, AD_Dataset
-from deepproblog.examples.AD_V0.data_analysis.baseline.evaluate_baseline import generate_confusion_matrix_baseline
+from deepproblog.examples.AD_V0.data_analysis.baseline.evaluate_baseline import generate_confusion_matrix_baseline, \
+    plot_confusion_matrix_baseline
 from deepproblog.examples.AD_V0.network import AD_V1_net
 
 
@@ -14,6 +15,7 @@ HTML_FILE_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousD
 DATA_FILE_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_baseline'
 
 CLASSES = ('Accelerate', 'Brake', 'Idle')
+DATA = get_dataset("test")
 
 
 def get_baseline_model(nn_path):
@@ -53,7 +55,7 @@ def reset_false_predictions():
 
 def generate_html_data_analysis():
     reset_false_predictions()
-    test_set = get_dataset("test")
+    test_set = DATA
     test_loader = torch.utils.data.DataLoader(test_set, batch_size=1,shuffle=False)
     generate_confusion_matrix_baseline(get_baseline_model(NN_PATH), test_loader, verbose=2)
     data = data_2_pd_img_idx(DATA_FILE_PATH)
@@ -69,4 +71,12 @@ def generate_html_data_analysis():
     f.close()
 
 
+def generate_confusion_matrix_plot():
+    test_set = DATA
+    test_loader = torch.utils.data.DataLoader(test_set, batch_size=1, shuffle=False)
+    plot_confusion_matrix_baseline(get_baseline_model(NN_PATH), test_loader, CLASSES)
+
+
 generate_html_data_analysis()
+generate_confusion_matrix_plot()
+

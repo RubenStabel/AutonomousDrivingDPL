@@ -1,4 +1,9 @@
+import numpy as np
+import pandas as pd
 import torch
+import seaborn as sn
+from matplotlib import pyplot as plt
+from sklearn.metrics import confusion_matrix
 
 from deepproblog.utils.confusion_matrix import ConfusionMatrix
 
@@ -41,3 +46,29 @@ def generate_confusion_matrix_baseline(model, dataset, verbose: int = 0) -> Conf
         print("Accuracy", confusion_matrix.accuracy())
 
     return confusion_matrix
+
+
+def plot_confusion_matrix_baseline(model, dataset, classes):
+
+    y_pred = []
+    y_true = []
+
+    # iterate over test data
+    for i, (inputs, label) in enumerate(dataset, 0):
+        output = model(inputs)  # Feed Network
+
+        output_pred = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
+        y_pred.extend(output_pred)  # Save Prediction
+
+        label = label.data.cpu().numpy()
+        y_true.extend(label)  # Save Truth
+
+
+    cf_matrix = confusion_matrix(y_true, y_pred)
+    df_cm = pd.DataFrame(cf_matrix / np.sum(cf_matrix, axis=1)[:, None], index=[i for i in classes],columns=[i for i in classes])
+
+
+    plt.figure(figsize=(12, 7))
+    sn.heatmap(df_cm, annot=True)
+    plt.show()
+    # plt.savefig('output.png')

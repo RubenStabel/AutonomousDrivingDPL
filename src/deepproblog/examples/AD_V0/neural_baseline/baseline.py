@@ -15,7 +15,8 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sn
 import pandas as pd
 
-from deepproblog.examples.AD_V0.data_analysis.baseline.evaluate_baseline import generate_confusion_matrix_baseline
+from deepproblog.examples.AD_V0.data_analysis.baseline.evaluate_baseline import generate_confusion_matrix_baseline, \
+    plot_confusion_matrix_baseline
 
 print_rate = 20
 
@@ -89,71 +90,12 @@ def train_baseline_model_V0():
     torch.save(model.state_dict(), "../snapshot/baseline/" + folder + name + ".pth")
 
 
-# def correct(predictions, labels):
-#     classes = torch.argmax(predictions, dim=1)
-#     return torch.mean((classes == labels).float())
-
-def accuracy(matrix, classes):
-    correct = 0
-    for i in range(len(classes)):
-        correct += matrix[i, i]
-    total = matrix.sum()
-    acc = correct / total
-    return acc
-
-
-def show_confusion_matrix_baseline(network, data, classes, verbose: int=1, show_plot=False):
-
-    y_pred = []
-    y_true = []
-
-    # iterate over test data
-    for i, (inputs, label) in enumerate(data, 0):
-        output = network(inputs)  # Feed Network
-
-        output_pred = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
-        y_pred.extend(output_pred)  # Save Prediction
-
-        label = label.data.cpu().numpy()
-        y_true.extend(label)  # Save Truth
-        # print(output.data)
-        # print("Probability of {}: ".format(torch.argmax(output.data[0]).item()), torch.max(output.data[0]).item())
-
-        if verbose > 1 and output_pred != label:
-            # print("Probability of {}: ".format(torch.argmax(output.data[0]).item()), torch.max(output.data[0]).item())
-            # print("Actual: ", label.item())
-            # print(i)
-
-            f = open(
-                "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_baseline",
-                "a")
-            f.write("{}  {} vs {}::{}   for query {} \n".format(
-                i, label.item(), torch.max(output.data[0]).item(), torch.argmax(output.data[0]).item(), ""
-            ))
-            f.close()
-    # constant for classes
-
-
-    # Build confusion matrix
-    cf_matrix = confusion_matrix(y_true, y_pred)
-    # df_cm = pd.DataFrame(cf_matrix / np.sum(cf_matrix, axis=1)[:, None], index=[i for i in classes],
-    #                      columns=[i for i in classes])
-    df_cm = pd.DataFrame(cf_matrix, index=[i for i in classes],
-                         columns=[i for i in classes])
-    print(df_cm)
-    print("Accuracy: {}".format(accuracy(cf_matrix, classes)))
-    if show_plot:
-        plt.figure(figsize=(12, 7))
-        sn.heatmap(df_cm, annot=True)
-        plt.show()
-    # plt.savefig('output.png')
-
 
 # train_baseline_model_V0()
 trained_model = AD_baseline_net()
 trained_model.load_state_dict(torch.load('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'))
 trained_model.eval()
-generate_confusion_matrix_baseline(trained_model, test_loader, verbose=2)
-# show_confusion_matrix_baseline(trained_model, test_loader, classes)
+# generate_confusion_matrix_baseline(trained_model, test_loader, verbose=2)
+plot_confusion_matrix_baseline(trained_model, test_loader, classes)
 
 print('DONE')
