@@ -6,7 +6,7 @@ from deepproblog.engines import ExactEngine
 import cv2
 from torchvision import transforms, models
 
-from deepproblog.examples.AD_V0.network import MNIST_Net, AD_V1_net
+from deepproblog.examples.AD_V0.network import MNIST_Net, AD_V1_net, AD_V0_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.dataset import ImageDataset, Dataset
@@ -31,7 +31,6 @@ class AD_Eval_Image(Dataset):
             self.transform = transform
         self.eval_name = eval_name
         self.image = self.transform(cv2.cvtColor(cv2.imread(self.image_path), cv2.COLOR_BGR2RGB))
-        print(self.image)
 
     def __len__(self):
         "How many queries there are"
@@ -78,8 +77,8 @@ def get_nn_output(data, model):
     max_ans = max(answer.result, key=lambda x: answer.result[x])
     # p = answer.result[max_ans]
     predicted = str(max_ans.args[image.output_ind[0]])
-    print(answer)
-    print(predicted)
+    # print(answer)
+    # print(predicted)
     return predicted
     # predicted = str(max_ans.args[image.output_nr[0]])
 
@@ -102,11 +101,18 @@ def get_nn_model():
     model.eval()
     return model
 
-path1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/NN/0/'
+# NeSy V1
+NETWORK = AD_V0_net()
+MODEL_NAME = "NeSy"
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V0.1.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/autonomous_driving_NeSy_V0.1_19.pth'
+NN_NAME = 'perc_net_AD_V0'
+
+path1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_balanced_1/1/0_iter0frame17.png'
 path2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train/0/0_iter0frame8.png'
 result = int(get_nn_output(path1, get_nn_model()))
-print(NN_NAME)
-print(result)
+# print(NN_NAME)
+# print(result)
 # transform = transforms.Compose([
 #     transforms.ToTensor(),
 #     transforms.Resize((32, 32)),

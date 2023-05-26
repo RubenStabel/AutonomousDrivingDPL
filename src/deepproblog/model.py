@@ -101,6 +101,7 @@ class Model(object):
                     self.solver.engine.tensor_store.store(out[i], tensor_name)
                 else:
                     result[(net, k)] = out[i]
+
         return result
 
     def set_engine(self, engine: Engine, **kwargs):

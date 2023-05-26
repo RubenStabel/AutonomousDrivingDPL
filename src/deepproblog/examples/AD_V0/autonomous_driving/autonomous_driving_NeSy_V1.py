@@ -11,14 +11,14 @@ from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
 
-N = 19
+N = 20
 folder = "test/"
 
 name = "autonomous_driving_NeSy_V0.1_{}".format(N)
 
 train_set = get_dataset("train")
-valid_set = get_dataset("valid")
-test_set = get_dataset("test")
+valid_set = get_dataset("train")
+test_set = get_dataset("train")
 
 print("###############    LOADING NETWORK    ###############")
 network = AD_V0_net()
@@ -35,7 +35,7 @@ model.add_tensor_source("test", AD_test)
 print("###############    TRAINING MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
 train = train_model(model, loader, 20, test_set=valid_set, log_iter=20, profile=0)
-model.save_state("../snapshot/neuro_symbolic/" + name + ".pth")
+model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA    ###############")
 train.logger.comment(dumps(model.get_hyperparameters()))

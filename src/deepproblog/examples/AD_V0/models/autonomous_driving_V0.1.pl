@@ -1,8 +1,3 @@
-% Init
-%coord(X) :- X = 0; X = 1; X = 2; X = 3; X = 4; X = 5; X = 6; X = 7; X = 8; X = 9.
-%admissible_cells(X) :- coord(X).
-
-
 % Perception
 nn(perc_net_AD_V0,[Img],X,[0,1,2,3,4,5,6,7,8,9]) :: cell(Img,X).
 
@@ -13,10 +8,12 @@ attention_boundary(X) :- X==5.
 attention_boundary(X) :- X==6.
 
 
-% ---> 50 pixels
+% Prediction ---> 50 pixels
 enlarged_boundary(X) :- X==7.
 enlarged_boundary(X) :- X==8.
 
+% Prediction ---> ... pixels
+out_of_view(X) :- X==0; X==1; X==2; X==3; X==9.
 
 % Control
 % 0 --> accelerate
@@ -25,4 +22,4 @@ enlarged_boundary(X) :- X==8.
 
 action(Img,1) :- cell(Img,X1), attention_boundary(X1).
 action(Img,2)  :-  cell(Img,X2), enlarged_boundary(X2), \+ action(Img,1).
-action(Img,0) :-  \+ action(Img,2), \+ action(Img,1).
+action(Img,0) :-  cell(Img,X3), out_of_view(X3), \+ action(Img,2), \+ action(Img,1).

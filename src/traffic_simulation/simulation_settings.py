@@ -18,12 +18,12 @@ COLLECT_DATA = False
 NUMBER_STATIC_CARS = 0
 DATA_ANALYSIS = False
 
-# # Baseline
-# NETWORK = AD_V1_net()
-# MODEL_NAME = "NN"
-# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl'
-# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/autonomous_driving_baseline_NeSy_9.pth'
-# NN_NAME = 'ad_baseline_net'
+# Baseline
+NETWORK = AD_V1_net()
+MODEL_NAME = "NN"
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/autonomous_driving_baseline_NeSy_9.pth'
+NN_NAME = 'ad_baseline_net'
 
 # NeSy V1
 # NETWORK = AD_V1_net()
@@ -32,9 +32,9 @@ DATA_ANALYSIS = False
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/autonomous_driving_NeSy_15.pth'
 # NN_NAME = 'perc_net_AD_V1'
 
-# # Baseline PyTorch
-NETWORK = AD_V1_net()
-MODEL_NAME = "NN"
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'
-MODEL_PATH = ''
-NN_NAME = ''
+# # # Baseline PyTorch
+# NETWORK = AD_V1_net()
+# MODEL_NAME = "NN"
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'
+# MODEL_PATH = ''
+# NN_NAME = ''
