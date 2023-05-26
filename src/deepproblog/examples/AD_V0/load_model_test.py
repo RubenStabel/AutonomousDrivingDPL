@@ -121,3 +121,14 @@ def get_nn_output(data, model):
 # data = cv2.imread('/Users/rubenstabel/Documents/universiteit/AD_V0.2 kopie/Traffic_simulation_V0/deepproblog/src/deepproblog/examples/AD_V0/data/img/train_balanced/1/iter3frame2.png')
 # get_nn_output(data, model)
 
+def get_baseline_output(image, model):
+    datasets = {
+        "eval_image": AD_Eval_Image(image, "eval_image"),  # test transforms are applied
+    }
+    eval_dataset = datasets['eval_image']
+    eval_loader = torch.utils.data.DataLoader(eval_dataset, batch_size=1, shuffle=False)
+    for i, (inputs, label) in enumerate(eval_loader, 0):
+        output = model(inputs)  # Feed Network
+        predicted = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
+
+    return predicted

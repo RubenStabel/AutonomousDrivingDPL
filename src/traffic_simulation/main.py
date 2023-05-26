@@ -116,7 +116,11 @@ player_car = PlayerCar(MAX_VEL, 4)
 static_cars = StaticCars(NUMBER_STATIC_CARS)
 static_cars.create_static_cars()
 pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
-self_driving = NNSelfDriving(player_car, NETWORK, MODEL_PATH, NN_PATH, NN_NAME)
+
+if MODE == 2:
+    self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
+elif MODE == 4:
+    self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH)
 
 frame = 0
 image_frame = 0
@@ -146,6 +150,12 @@ while run:
 
         case 3:
             output = simple_rule_based_driving(player_car, pedestrian)
+
+        case 4:
+            if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
+                self_driving.nn_driving(frame)
+            else:
+                simple_rule_based_driving(player_car, pedestrian)
 
     pedestrian.move()
 

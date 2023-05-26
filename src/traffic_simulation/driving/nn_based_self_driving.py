@@ -9,17 +9,20 @@ from traffic_simulation.simulation_settings import *
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.engines import ExactEngine
-from deepproblog.examples.AD_V0.load_model_test import get_nn_output
+from deepproblog.examples.AD_V0.load_model_test import get_nn_output, get_baseline_output
 
 
 class NNSelfDriving:
-    def __init__(self, player_car, network, model_path, nn_path, nn_name):
+    def __init__(self, player_car, network, nn_path, nn_name=None, model_path=None):
         self.player_car = player_car
         self.network = network
         self.model_path = model_path
         self.nn_path = nn_path
         self.nn_name = nn_name
-        self.model = self.get_nn_model()
+        if model_path is not None:
+            self.model = self.get_nn_model()
+        else:
+            self.model = self.get_baseline_model(self.nn_path)
 
     def get_nn_model(self):
         net = Network(self.network, self.nn_name, batching=True)
@@ -30,6 +33,12 @@ class NNSelfDriving:
         model.eval()
         return model
 
+    def get_baseline_model(self, nn_path):
+        trained_model = NETWORK
+        trained_model.load_state_dict(torch.load(nn_path))
+        trained_model.eval()
+        return trained_model
+
     def nn_driving(self, frame):
 
         y = self.player_car.y - IMAGE_DIM + self.player_car.IMG.get_height()
@@ -38,7 +47,10 @@ class NNSelfDriving:
         img = pygame.surfarray.array3d(sub)
         img = img.swapaxes(0, 1)
 
-        result = int(get_nn_output(img, self.model))
+        if MODE == 2:
+            result = int(get_nn_output(img, self.model))
+        elif MODE == 4:
+            result = int(get_baseline_output(img, self.model))
 
         if DATA_ANALYSIS and frame % 5 == 0:
             pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/" + MODEL_NAME + "/{}/{}.png".format(result, frame))
