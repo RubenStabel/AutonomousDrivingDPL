@@ -7,7 +7,7 @@ from deepproblog.examples.AD_V0.network import AD_V1_net
 3 --> Simple rule based driving (for data collection)
 4 --> Baseline NN self driving
 """
-MODE = 4
+MODE = 3
 RULE_BASED = True
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True

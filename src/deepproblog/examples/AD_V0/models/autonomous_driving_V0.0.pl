@@ -7,13 +7,15 @@ admissible_cells(X) :- coord(X).
 nn(perc_net_AD_V1,[Img, X],Z,[human,nothing]) :: cell(Img,X,Z).
 
 
-% Prediction
-attention_boundary(X) :- X==0.
-% attention_boundary(X) :- X==1.
+% Prediction --> 80 pixels
+attention_boundary(X) :- X==4.
+attention_boundary(X) :- X==5.
+attention_boundary(X) :- X==6.
 
-enlarged_boundary(X) :- X==2.
-enlarged_boundary(X) :- X==3.
-enlarged_boundary(X) :- X==4.
+% ---> 50 pixels
+enlarged_boundary(X) :- X==7.
+enlarged_boundary(X) :- X==8.
+%enlarged_boundary(X) :- X==4.
 
 
 % Control

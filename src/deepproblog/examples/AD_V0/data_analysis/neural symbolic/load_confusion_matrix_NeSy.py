@@ -10,19 +10,19 @@ from deepproblog.examples.AD_V0.network import AD_V1_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 
-# NeSy V1
-NETWORK = AD_V1_net()
-MODEL_NAME = "NeSy"
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V0.0.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/autonomous_driving_NeSy_15.pth'
-NN_NAME = 'perc_net_AD_V1'
-
-# # Baseline NeSy
+# # NeSy V1
 # NETWORK = AD_V1_net()
-# MODEL_NAME = "NN"
-# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl'
-# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/autonomous_driving_baseline_NeSy_10.pth'
-# NN_NAME = 'ad_baseline_net'
+# MODEL_NAME = "NeSy"
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V0.0.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/autonomous_driving_NeSy_15.pth'
+# NN_NAME = 'perc_net_AD_V1'
+
+# Baseline NeSy
+NETWORK = AD_V1_net()
+MODEL_NAME = "NN"
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/autonomous_driving_baseline_NeSy_10.pth'
+NN_NAME = 'ad_baseline_net'
 
 HTML_FIL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/data_analysis_NeSy.html'
 

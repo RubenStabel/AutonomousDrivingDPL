@@ -11,6 +11,7 @@ from deepproblog.examples.AD_V0.network import AD_V1_net
 NETWORK = AD_V1_net()
 MODEL_NAME = "Baseline"
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'
+
 HTML_FILE_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/data_analysis_baseline.html'
 DATA_FILE_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_baseline'
 
