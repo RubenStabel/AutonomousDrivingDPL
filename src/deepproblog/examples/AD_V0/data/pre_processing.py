@@ -68,7 +68,7 @@ def generate_balanced_dataset(train_path, balanced_path, number_of_classes):
             shutil.copy(srcpath, balanced_path + '/{}'.format(i))
 
 # get_vel_img_id(3, '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt')
-# generate_balanced_dataset('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_1', '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_balanced_1',3)
+# generate_balanced_dataset('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_1', '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_balanced_small',3)
 
 # print(parse_output_file("output_data/output.txt"))
 # print(output_to_class_id([[0,0,1], [1,0,0]]))
