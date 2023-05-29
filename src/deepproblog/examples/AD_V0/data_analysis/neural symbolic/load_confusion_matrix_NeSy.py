@@ -9,6 +9,7 @@ from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset,
 from deepproblog.examples.AD_V0.network import AD_V1_net, AD_V0_net, AD_V2_net
 from deepproblog.model import Model
 from deepproblog.network import Network
+from traffic_simulation.utils import reset_img_data
 
 # NeSy V1
 NETWORK = [AD_V0_net(), AD_V2_net()]
@@ -59,14 +60,30 @@ def generate_false_prediction_data(data, test_set):
         query_output = str(j['model_result']).split(' ')
         actual = query_output[0]
         model_predicted = query_output[2]
-        nn_html = ""
+        nn_html_text = ""
+        nn_html_imgs = ""
         for n in range(len(NETWORK)):
             nn_name = str(j['nn_name_{}'.format(n)])
             nn_prediction = str(j['nn_result_{}'.format(n)])
-            nn_html = nn_html + "<b>{}:</b> {}\n<br>\n".format(nn_name, nn_prediction)
+            nn_html_text = nn_html_text + "<b>{}:</b> {}\n<br>\n".format(nn_name, nn_prediction)
+            nn_html_imgs = nn_html_imgs + """
+            <div class="column">
+              <img src="histogram_NeSy/{}/{}.png" alt="{}" style="width:100%">
+            </div>
+            """.format(n, file_id,  "{}_{}".format(nn_name, file_id))
+
+        html_imgs = """
+        <div class="row">
+          <div class="column">
+            <img src='../../../../..{}' alt="" height="360" width="360">
+          </div>
+          {}
+        </div>
+        """.format(img_path, nn_html_imgs)
+
         f = open(HTML_FIL_PATH, "a")
         f.write(
-            "<img src='../../../../..{}' height='360' width='360' alt=''/>\n"
+            "{}\n"
             "<br>\n"
             "<b>Model predicted:</b> {}\n"
             "<br>\n"
@@ -74,8 +91,12 @@ def generate_false_prediction_data(data, test_set):
             "<b>Actual:</b> {}\n"
             "<br>\n"
             "<br>\n"
-            "".format(img_path, model_predicted, nn_html, actual))
+            "".format(html_imgs, model_predicted, nn_html_text, actual))
         f.close()
+
+
+
+
 
 
 def generate_html_data_analysis():
@@ -83,18 +104,36 @@ def generate_html_data_analysis():
     test_set = get_dataset("test")
     get_confusion_matrix(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), test_set, verbose=2).accuracy()
     data = data_2_pd_img_idx(DATA_FILE)
+    style = """
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    .row {
+      display: flex;
+    }
+    
+    /* Create three equal columns that sits next to each other */
+    .column {
+      flex: 33.33%;
+      padding: 5px;
+    }
+    </style>
+    """
     f = open(HTML_FIL_PATH, "w")
     f.write(
         "<!DOCTYPE html>\n"
         "<html lang='en'>\n"
         "<head>\n"
         "<meta charset='UTF-8'>\n"
+        "{}\n"
         "<title>Data analysis</title>\n"
         "</head>\n"
         "<body>\n"
         "<h2>{} DATA ANALYSIS</h2>\n"
         "<hr>\n"
-        "".format(MODEL_NAME))
+        "".format(style, MODEL_NAME))
     f.close()
     generate_false_prediction_data(data, test_set)
     f = open(HTML_FIL_PATH, "a")
@@ -111,6 +150,7 @@ def reset_false_predictions():
     f = open(DATA_FILE, 'w')
     f.write("idx  model_result  {}  query \n".format(NN_str))
     f.close()
+    reset_img_data("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/histogram_NeSy", 2)
 
 
 generate_html_data_analysis()

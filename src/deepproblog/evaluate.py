@@ -5,6 +5,7 @@ from typing import Optional
 import torch
 
 from deepproblog.dataset import Dataset
+from deepproblog.examples.AD_V0.data_analysis.data_analysis_plots import generate_bar_graph_idx
 from deepproblog.model import Model
 from deepproblog.utils.confusion_matrix import ConfusionMatrix
 
@@ -49,6 +50,9 @@ def get_confusion_matrix(
                     NN_prediction_class = str(torch.argmax(list(answer.semiring.values.values())[j]).item())
                     NN_prediction_probability = str(torch.max(list(answer.semiring.values.values())[j]).item())
                     NN_outputs = NN_outputs + NN_name + '  ' + NN_prediction_probability + '::' + NN_prediction_class
+
+                    generate_bar_graph_idx(list(answer.semiring.values.values())[j].tolist(), j, i)
+
                     if j < len(model.networks) - 1:
                         NN_outputs = NN_outputs + '  '
 

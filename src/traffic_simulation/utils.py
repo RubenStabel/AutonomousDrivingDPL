@@ -27,9 +27,9 @@ def reset_data(path):
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 
-def reset_img_data(folder_name):
-    for i in range(3):
-        path = "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}/{}".format(folder_name,i)
+def reset_img_data(folder_path, num_folders):
+    for i in range(num_folders):
+        path = "{}/{}".format(folder_path, i)
         reset_data(path)
 
 
