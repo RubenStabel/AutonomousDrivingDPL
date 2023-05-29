@@ -137,9 +137,8 @@ while run:
             run = False
             break
 
-    if player_car.y - player_car.IMG.get_height() >= HEIGHT:
-        print(player_car.y - player_car.IMG.get_height())
-        print(HEIGHT)
+    if player_car.y + player_car.IMG.get_height() >= HEIGHT:
+        rule_based_driving(player_car, occ, pedestrian)
     else:
         match MODE:
             case 0:
@@ -163,7 +162,8 @@ while run:
 
     pedestrian.move()
 
-    if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and COLLECT_DATA:
+    if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and \
+            player_car.y + player_car.IMG.get_height() < HEIGHT and COLLECT_DATA:
         collect_data(output, player_car)
 
     pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
