@@ -43,14 +43,20 @@ def get_confusion_matrix(
                 if abs(actual - predicted) < eps:
                     predicted = actual
             if verbose > 1 and actual != predicted:
-                NN_prediction_class = torch.argmax(list(answer.semiring.values.values())[0]).item()
-                NN_prediction_probability = torch.max(list(answer.semiring.values.values())[0]).item()
+                NN_outputs = ""
+                for j in range(len(model.networks)):
+                    NN_name = str(list(answer.semiring.values.items())[j][0][0])
+                    NN_prediction_class = str(torch.argmax(list(answer.semiring.values.values())[j]).item())
+                    NN_prediction_probability = str(torch.max(list(answer.semiring.values.values())[j]).item())
+                    NN_outputs = NN_outputs + NN_name + '  ' + NN_prediction_probability + '::' + NN_prediction_class
+                    if j < len(model.networks) - 1:
+                        NN_outputs = NN_outputs + '  '
 
                 f = open(
                     "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_NeSy",
                     "a")
-                f.write("{}  {} vs {}::{}  {}::{}  for query {} \n".format(
-                    i, actual, p, predicted, NN_prediction_probability, NN_prediction_class, test_query
+                f.write("{}  {} vs {}::{}  {}  for query {} \n".format(
+                    i, actual, p, predicted, NN_outputs, test_query
                 ))
                 f.close()
                 # print(

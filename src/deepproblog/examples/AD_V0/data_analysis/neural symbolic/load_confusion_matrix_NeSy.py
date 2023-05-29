@@ -6,16 +6,16 @@ from pytesseract import image_to_string
 from deepproblog.engines import ExactEngine
 from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset, AD_test
-from deepproblog.examples.AD_V0.network import AD_V1_net, AD_V0_net
+from deepproblog.examples.AD_V0.network import AD_V1_net, AD_V0_net, AD_V2_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 
 # NeSy V1
-NETWORK = AD_V0_net()
+NETWORK = [AD_V0_net(), AD_V2_net()]
 MODEL_NAME = "NeSy"
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V0.1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/train/autonomous_driving_NeSy_V0.1_20.pth'
-NN_NAME = 'perc_net_AD_V0'
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.1.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'
+NN_NAME = ['perc_net_AD_V1X', 'perc_net_AD_V1Y']
 
 # # Baseline NeSy
 # NETWORK = AD_V1_net()
@@ -25,12 +25,16 @@ NN_NAME = 'perc_net_AD_V0'
 # NN_NAME = 'ad_baseline_net'
 
 HTML_FIL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/data_analysis_NeSy.html'
+DATA_FILE = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_NeSy'
 
 
-def get_nn_model(network, nn_name, model_path, nn_path):
-    net = Network(network, nn_name, batching=True)
-    net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
-    model = Model(model_path, [net])
+def get_nn_model(networks, nn_name, model_path, nn_path):
+    nn = []
+    for i, network in enumerate(networks, 0):
+        net = Network(network, nn_name[i], batching=True)
+        net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
+        nn.append(net)
+    model = Model(model_path, nn)
     model.add_tensor_source("test", AD_test)
     model.set_engine(ExactEngine(model), cache=True)
     model.load_state(nn_path)
@@ -40,7 +44,10 @@ def get_nn_model(network, nn_name, model_path, nn_path):
 
 def data_2_pd_img_idx(data_path):
     data = pd.read_csv(data_path, sep="  ")
-    data.columns = ["idx", "model_result", "nn_result", "query"]
+    nn_cols = []
+    for i in range(len(NETWORK)):
+        nn_cols = nn_cols + ["nn_name_{}".format(i)] + ["nn_result_{}".format(i)]
+    data.columns = ["idx", "model_result"] + nn_cols + ["query"]
     return data
 
 
@@ -52,19 +59,22 @@ def generate_false_prediction_data(data, test_set):
         query_output = str(j['model_result']).split(' ')
         actual = query_output[0]
         model_predicted = query_output[2]
-        nn_prediction = str(j['nn_result'])
+        nn_html = ""
+        for n in range(len(NETWORK)):
+            nn_name = str(j['nn_name_{}'.format(n)])
+            nn_prediction = str(j['nn_result_{}'.format(n)])
+            nn_html = nn_html + "<b>{}:</b> {}\n<br>\n".format(nn_name, nn_prediction)
         f = open(HTML_FIL_PATH, "a")
         f.write(
             "<img src='../../../../..{}' height='360' width='360' alt=''/>\n"
             "<br>\n"
             "<b>Model predicted:</b> {}\n"
             "<br>\n"
-            "<b>Neural predicted:</b> {}\n"
-            "<br>\n"
+            "{}"
             "<b>Actual:</b> {}\n"
             "<br>\n"
             "<br>\n"
-            "".format(img_path, model_predicted, nn_prediction, actual))
+            "".format(img_path, model_predicted, nn_html, actual))
         f.close()
 
 
@@ -72,9 +82,7 @@ def generate_html_data_analysis():
     reset_false_predictions()
     test_set = get_dataset("test")
     get_confusion_matrix(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), test_set, verbose=2).accuracy()
-    data = data_2_pd_img_idx(
-        '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_NeSy')
-
+    data = data_2_pd_img_idx(DATA_FILE)
     f = open(HTML_FIL_PATH, "w")
     f.write(
         "<!DOCTYPE html>\n"
@@ -95,12 +103,14 @@ def generate_html_data_analysis():
 
 
 def reset_false_predictions():
-    f = open(
-        '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_NeSy',
-        'w')
-    f.write("idx  model_result  nn_result  query \n")
+    NN_str = ""
+    for i in range(len(NETWORK)):
+        NN_str = NN_str + 'nn_name_{}  '.format(i) + 'nn_result_{}'.format(i)
+        if i < len(NETWORK) - 1:
+            NN_str = NN_str + '  '
+    f = open(DATA_FILE, 'w')
+    f.write("idx  model_result  {}  query \n".format(NN_str))
     f.close()
-    pass
 
 
 generate_html_data_analysis()
