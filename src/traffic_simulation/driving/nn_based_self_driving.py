@@ -25,9 +25,12 @@ class NNSelfDriving:
             self.model = self.get_baseline_model(self.nn_path)
 
     def get_nn_model(self):
-        net = Network(self.network, self.nn_name, batching=True)
-        net.optimizer = torch.optim.Adam(self.network.parameters(), lr=1e-3)
-        model = Model(self.model_path, [net])
+        net = []
+        for i in range(len(self.network)):
+            net_i = Network(self.network[i], self.nn_name[i], batching=True)
+            net_i.optimizer = torch.optim.Adam(self.network[i].parameters(), lr=1e-3)
+            net.append(net_i)
+        model = Model(self.model_path, net)
         model.set_engine(ExactEngine(model), cache=True)
         model.load_state(self.nn_path)
         model.eval()
@@ -42,6 +45,11 @@ class NNSelfDriving:
     def nn_driving(self, frame):
 
         y = self.player_car.y - IMAGE_DIM + self.player_car.IMG.get_height()
+        if frame % 10 == 0:
+            print(y)
+
+        if y > WIDTH - IMAGE_DIM:
+            pass
         rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         img = pygame.surfarray.array3d(sub)

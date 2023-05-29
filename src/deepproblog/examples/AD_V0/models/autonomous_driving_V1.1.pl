@@ -4,14 +4,14 @@ nn(perc_net_AD_V1Y,[Img],Y,[0,1]) :: cell_y(Img,Y).
 
 
 % Prediction --> 80 pixels
-attention_boundary(X,y) :- X==4, Y==0.
-attention_boundary(X,Y) :- X==5, Y==0.
-attention_boundary(X,Y) :- X==6, Y==0.
+attention_boundary(X,y) :- X==4, Y=0.
+attention_boundary(X,Y) :- X==5, Y=0.
+attention_boundary(X,Y) :- X==6, Y=0.
 
 
 % Prediction ---> 50 pixels
-enlarged_boundary(X,Y) :- X==7, Y==0.
-enlarged_boundary(X,Y) :- X==8, Y==0.
+enlarged_boundary(X,Y) :- X==7, Y=0.
+enlarged_boundary(X,Y) :- X==8, Y=0.
 
 % Prediction ---> ... pixels
 out_of_view(X,Y) :- X==0; X==1; X==2; X==3; X==9; Y==1.

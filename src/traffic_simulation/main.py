@@ -108,7 +108,7 @@ run = True
 clock = pygame.time.Clock()
 
 if DATA_ANALYSIS:
-    reset_img_data('driving_test/{}'.format(MODEL_NAME))
+    reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/{}'.format(MODEL_NAME), 3)
 
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)

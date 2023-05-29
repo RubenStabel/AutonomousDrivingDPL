@@ -92,27 +92,31 @@ def get_nn_output(data, model):
     # print(p)
     # print(predicted)
 
+
 def get_nn_model():
-    net = Network(NETWORK, NN_NAME, batching=True)
-    net.optimizer = torch.optim.Adam(NETWORK.parameters(), lr=1e-3)
-    model = Model(MODEL_PATH, [net])
+    net = []
+    for i in range(len(NETWORK)):
+        net_i = Network(NETWORK[i], NN_NAME[i], batching=True)
+        net_i.optimizer = torch.optim.Adam(NETWORK[i].parameters(), lr=1e-3)
+        net.append(net_i)
+    model = Model(MODEL_PATH, net)
     model.set_engine(ExactEngine(model), cache=True)
     model.load_state(NN_PATH)
     model.eval()
     return model
 
-# NeSy V1
-NETWORK = AD_V0_net()
+# NeSy V1.1
+NETWORK = [AD_V0_net(), AD_V2_net()]
 MODEL_NAME = "NeSy"
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V0.1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/autonomous_driving_NeSy_V0.1_19.pth'
-NN_NAME = 'perc_net_AD_V0'
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.1.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'
+NN_NAME = ['perc_net_AD_V1X', 'perc_net_AD_V1Y']
 
 path1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_balanced_1/1/0_iter0frame17.png'
 path2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train/0/0_iter0frame8.png'
 result = int(get_nn_output(path1, get_nn_model()))
 # print(NN_NAME)
-# print(result)
+print(result)
 # transform = transforms.Compose([
 #     transforms.ToTensor(),
 #     transforms.Resize((32, 32)),

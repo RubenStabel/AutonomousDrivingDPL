@@ -38,7 +38,7 @@ model.add_tensor_source("test", AD_test)
 
 print("###############    TRAINING MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 10, test_set=valid_set, log_iter=5, profile=0)
+train = train_model(model, loader, 20, test_set=valid_set, log_iter=5, profile=0)
 model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA    ###############")

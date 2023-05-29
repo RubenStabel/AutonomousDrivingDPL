@@ -33,10 +33,10 @@ model.add_tensor_source("test", AD_test)
 
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 10, test_set=valid_set, log_iter=5, profile=0)
-model.save_state("../snapshot/baseline/" + name + ".pth")
+train = train_model(model, loader, 20, test_set=valid_set, log_iter=5, profile=0)
+# model.save_state("../snapshot/baseline/" + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")
 train.logger.comment(dumps(model.get_hyperparameters()))
 train.logger.comment("Accuracy {}".format(get_confusion_matrix(model, test_set, verbose=1).accuracy()))
-train.logger.write_to_file("../log/baseline/" + folder + name)
+# train.logger.write_to_file("../log/baseline/" + folder + name)
