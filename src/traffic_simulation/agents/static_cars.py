@@ -1,4 +1,4 @@
-from defs import *
+from traffic_simulation.defs import *
 
 
 class StaticCars:

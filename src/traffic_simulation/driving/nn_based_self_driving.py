@@ -45,11 +45,6 @@ class NNSelfDriving:
     def nn_driving(self, frame):
 
         y = self.player_car.y - IMAGE_DIM + self.player_car.IMG.get_height()
-        if frame % 10 == 0:
-            print(y)
-
-        if y > WIDTH - IMAGE_DIM:
-            pass
         rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         img = pygame.surfarray.array3d(sub)

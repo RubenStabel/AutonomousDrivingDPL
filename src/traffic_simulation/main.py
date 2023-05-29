@@ -137,25 +137,29 @@ while run:
             run = False
             break
 
-    match MODE:
-        case 0:
-            human_based_driving(player_car)
-        case 1:
-            output = rule_based_driving(player_car, occ, pedestrian)
-        case 2:
-            if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
-                self_driving.nn_driving(frame)
-            else:
-                simple_rule_based_driving(player_car, pedestrian)
+    if player_car.y - player_car.IMG.get_height() >= HEIGHT:
+        print(player_car.y - player_car.IMG.get_height())
+        print(HEIGHT)
+    else:
+        match MODE:
+            case 0:
+                human_based_driving(player_car)
+            case 1:
+                output = rule_based_driving(player_car, occ, pedestrian)
+            case 2:
+                if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
+                    self_driving.nn_driving(frame)
+                else:
+                    simple_rule_based_driving(player_car, pedestrian)
 
-        case 3:
-            output = simple_rule_based_driving(player_car, pedestrian)
+            case 3:
+                output = simple_rule_based_driving(player_car, pedestrian)
 
-        case 4:
-            if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
-                self_driving.nn_driving(frame)
-            else:
-                simple_rule_based_driving(player_car, pedestrian)
+            case 4:
+                if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
+                    self_driving.nn_driving(frame)
+                else:
+                    simple_rule_based_driving(player_car, pedestrian)
 
     pedestrian.move()
 

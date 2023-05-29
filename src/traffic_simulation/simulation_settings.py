@@ -17,6 +17,12 @@ PREFIX = '0'
 COLLECT_DATA = False
 NUMBER_STATIC_CARS = 0
 DATA_ANALYSIS = False
+SCENARIO_MODE = True
+
+SCENARIO = {
+    'low pass': [(30, 70), (29, 69), (28, 68), (27, 67), (26, 66), (25, 65), (24, 64), (23, 63), (22, 62), (21, 61), (20, 61), (19, 60), (18, 59), (17, 58), (16, 57), (15, 57), (14, 56), (13, 56), (12, 55), (11, 54), (10, 53), (9, 52), (8, 51), (7, 50)]
+
+}
 
 # # Baseline NeSy
 # NETWORK = [AD_V1_net()]

@@ -1,6 +1,7 @@
 import numpy as np
 
 from traffic_simulation.defs import *
+from traffic_simulation.simulation_settings import *
 from pathfinding.core.diagonal_movement import DiagonalMovement
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
@@ -25,23 +26,32 @@ class Pedestrian:
         self.rect = self.img.get_rect()
         self.max_vel = max_vel
         self.vel = max_vel
-        self.x = random.randrange(280, 350, 10)
-        self.y = random.randrange(350, 700, 10)
-        self.x_end = random.randrange(10, 70, 10)
-        self.y_end = random.randrange(10, 500, 10)
+        if SCENARIO_MODE:
+            self.set_path(path=SCENARIO.get('low pass'))
+            self.x = SCENARIO.get('low pass')[0][0] * BLOCK_SIZE
+            self.y = SCENARIO.get('low pass')[0][1] * BLOCK_SIZE
+        else:
+            self.x = random.randrange(280, 350, 10)
+            self.y = random.randrange(350, 700, 10)
+            self.x_end = random.randrange(10, 70, 10)
+            self.y_end = random.randrange(10, 500, 10)
+            self.grid = create_grid()
+            self.obstacles_rect = obstacles_rect
+            self.mask = []
+            self.path = []
+            self.create_grid_mask()
+            self.create_path()
+
         self.current_point = 0
-        self.grid = create_grid()
-        self.obstacles_rect = obstacles_rect
-        self.mask = []
-        self.path = []
-        self.create_grid_mask()
-        self.create_path()
 
     def get_current_point(self):
         return self.current_point
 
     def get_path(self):
         return self.path
+
+    def set_path(self, path):
+        self.path = path
 
     def draw(self, win):
         blit_rotate_center(win, self.img, (self.x, self.y), 0)
@@ -104,9 +114,27 @@ class Pedestrian:
         self.x_end = random.randrange(10, 70, 10)
         self.y_end = random.randrange(10, 500, 10)
 
+    def set_targets_pedestrian(self, x, y, x_end, y_end):
+        self.x = x
+        self.y = y
+        self.x_end = x_end
+        self.y_end = y_end
+
     def reset(self, obstacles_rect):
-        self.obstacles_rect = obstacles_rect
-        self.create_new_pedestrian_targets()
-        self.create_grid_mask()
-        self.create_path()
+        if SCENARIO_MODE:
+            self.set_path(path=SCENARIO.get('low pass'))
+            self.x = SCENARIO.get('low pass')[0][0] * BLOCK_SIZE
+            self.y = SCENARIO.get('low pass')[0][1] * BLOCK_SIZE
+        else:
+            self.obstacles_rect = obstacles_rect
+            self.create_new_pedestrian_targets()
+            self.create_grid_mask()
+            self.create_path()
         self.current_point = 0
+
+
+# pedestrian = Pedestrian(1, [])
+# pedestrian.set_targets_pedestrian(300, 700, 70, 500)
+# pedestrian.create_grid_mask()
+# pedestrian.create_path()
+# print(pedestrian.path)
