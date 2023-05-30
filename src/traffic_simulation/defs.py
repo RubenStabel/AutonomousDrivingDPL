@@ -49,6 +49,6 @@ BLOCK_SIZE = 10  # Set the size of the grid block
 # GAME SETTINGS
 FPS = 60
 
-print(ROAD_BORDER.get_width(), ROAD_BORDER.get_height())
-print(RED_CAR.get_width(), RED_CAR.get_height())
-print(PEDESTRIAN.get_width(), PEDESTRIAN.get_height())
+# print(ROAD_BORDER.get_width(), ROAD_BORDER.get_height())
+# print(RED_CAR.get_width(), RED_CAR.get_height())
+# print(PEDESTRIAN.get_width(), PEDESTRIAN.get_height())
