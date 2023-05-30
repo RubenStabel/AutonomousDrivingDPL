@@ -11,6 +11,7 @@ from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.static_cars import StaticCars
 import random
 
+from traffic_simulation.driving.speed_simple_rule_based_self_driving import speed_simple_rule_based_self_driving
 from traffic_simulation.utils import reset_img_data
 
 
@@ -84,7 +85,7 @@ def collect_data(output, player_car):
     sub = WIN.subsurface(rect)
     pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
 
-    f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt", "a")
+    f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "a")
     f.write("{} {} {} \n".format(iteration, image_frame, output))
     f.close()
 
@@ -117,10 +118,12 @@ static_cars = StaticCars(NUMBER_STATIC_CARS)
 static_cars.create_static_cars()
 pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
 
+self_driving = None
 if MODE == 2:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
 elif MODE == 4:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH)
+output = None
 
 frame = 0
 image_frame = 0
@@ -138,7 +141,8 @@ while run:
             break
 
     if player_car.y + player_car.IMG.get_height() >= HEIGHT:
-        rule_based_driving(player_car, occ, pedestrian)
+        player_car.bounce()
+        player_car.y -= 1
     else:
         match MODE:
             case 0:
@@ -159,6 +163,8 @@ while run:
                     self_driving.nn_driving(frame)
                 else:
                     simple_rule_based_driving(player_car, pedestrian)
+            case 5:
+                output = speed_simple_rule_based_self_driving(player_car, pedestrian)
 
     pedestrian.move()
 

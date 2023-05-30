@@ -6,13 +6,13 @@ from deepproblog.examples.AD_V0.network import AD_V1_net, AD_V0_net, AD_V2_net
 2 --> NN self driving
 3 --> Simple rule based driving (for data collection)
 4 --> Baseline NN self driving
+5 --> Speed simple rule based self driving
 """
-MODE = 2
-RULE_BASED = True
+MODE = 5
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
-DATA_FOLDER = "train_simple_yellow_1"
+DATA_FOLDER = "train_simple_speed_1"
 PREFIX = '0'
 COLLECT_DATA = False
 NUMBER_STATIC_CARS = 0

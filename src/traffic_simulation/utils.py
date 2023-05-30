@@ -33,8 +33,8 @@ def reset_img_data(folder_path, num_folders):
         reset_data(path)
 
 
-def reset_output_data():
-    with open('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt', 'w'):
+def reset_output_data(mode):
+    with open('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt'.format(mode), 'w'):
         pass
 
 
@@ -42,4 +42,4 @@ def reset_output_data():
 # reset_img_data('test')
 # reset_img_data('balanced_train')
 # reset_img_data('train_simple_yellow_balanced_1')
-# reset_output_data()
+# reset_output_data(5)
