@@ -27,9 +27,10 @@ class Pedestrian:
         self.max_vel = max_vel
         self.vel = max_vel
         if SCENARIO_MODE:
-            self.set_path(path=SCENARIO.get('low pass'))
-            self.x = SCENARIO.get('low pass')[0][0] * BLOCK_SIZE
-            self.y = SCENARIO.get('low pass')[0][1] * BLOCK_SIZE
+            self.scenario_num = 0
+            self.set_path(path=list(SCENARIO.values())[self.scenario_num])
+            self.x = list(SCENARIO.values())[self.scenario_num][0][0] * BLOCK_SIZE
+            self.y = list(SCENARIO.values())[self.scenario_num][0][1] * BLOCK_SIZE
         else:
             self.x = random.randrange(280, 350, 10)
             self.y = random.randrange(350, 700, 10)
@@ -122,9 +123,14 @@ class Pedestrian:
 
     def reset(self, obstacles_rect):
         if SCENARIO_MODE:
-            self.set_path(path=SCENARIO.get('low pass'))
-            self.x = SCENARIO.get('low pass')[0][0] * BLOCK_SIZE
-            self.y = SCENARIO.get('low pass')[0][1] * BLOCK_SIZE
+            if self.scenario_num < len(SCENARIO) - 1:
+                self.scenario_num += 1
+            else:
+                self.scenario_num = 0
+
+            self.set_path(path=list(SCENARIO.values())[self.scenario_num])
+            self.x = list(SCENARIO.values())[self.scenario_num][0][0] * BLOCK_SIZE
+            self.y = list(SCENARIO.values())[self.scenario_num][0][1] * BLOCK_SIZE
         else:
             self.obstacles_rect = obstacles_rect
             self.create_new_pedestrian_targets()
@@ -133,8 +139,9 @@ class Pedestrian:
         self.current_point = 0
 
 
+# # Create scenario for pedestrian
 # pedestrian = Pedestrian(1, [])
-# pedestrian.set_targets_pedestrian(300, 700, 70, 500)
+# pedestrian.set_targets_pedestrian(340, 350, 50, 500)
 # pedestrian.create_grid_mask()
 # pedestrian.create_path()
 # print(pedestrian.path)
