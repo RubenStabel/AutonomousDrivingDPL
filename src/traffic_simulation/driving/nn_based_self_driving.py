@@ -4,6 +4,7 @@ import numpy as np
 import io
 from PIL import Image
 
+from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.defs import *
 from traffic_simulation.simulation_settings import *
 from deepproblog.model import Model
@@ -13,7 +14,7 @@ from deepproblog.examples.AD_V0.load_model_test import get_nn_output, get_baseli
 
 
 class NNSelfDriving:
-    def __init__(self, player_car, network, nn_path, nn_name=None, model_path=None):
+    def __init__(self, player_car: PlayerCar, network, nn_path, nn_name=None, model_path=None):
         self.player_car = player_car
         self.network = network
         self.model_path = model_path
@@ -65,4 +66,6 @@ class NNSelfDriving:
                 self.player_car.move_backward()
             case 2:
                 self.player_car.reduce_speed()
+            case 3:
+                self.player_car.match_speed()
 

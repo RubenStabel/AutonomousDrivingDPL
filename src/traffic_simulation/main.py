@@ -11,17 +11,19 @@ from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.static_cars import StaticCars
 import random
 
+from traffic_simulation.driving.speed_rule_based_self_driving import speed_rule_based_self_driving
 from traffic_simulation.driving.speed_simple_rule_based_self_driving import speed_simple_rule_based_self_driving
-from traffic_simulation.utils import reset_img_data
+from traffic_simulation.utils import reset_img_data, reset_output_data
 
 
-def draw(win, images, player_car, static_cars, occ):
+def draw(win, images, player_car, static_cars, occ, text):
     for img, pos in images:
         win.blit(img, pos)
 
     for car, pos in static_cars:
         win.blit(car, pos)
 
+    win.blit(text, (10, 10))
     player_car.draw(win)
     if not occ or OCCLUDED_OBJ_VISIBLE:
         pedestrian.draw(win)
@@ -77,6 +79,10 @@ def occluded(player_car, static_cars_rect, pedestrian):
     return occ, occ_car
 
 
+def get_speed_level(speed):
+    return round(speed)
+
+
 def collect_data(output, player_car):
     global image_frame
     output_class = output.index(1)
@@ -86,7 +92,7 @@ def collect_data(output, player_car):
     pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
 
     f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "a")
-    f.write("{} {} {} \n".format(iteration, image_frame, output))
+    f.write("{} {} {} {}\n".format(iteration, image_frame, output, get_speed_level(player_car.get_vel())))
     f.close()
 
     image_frame += 1
@@ -108,8 +114,15 @@ def reset_traffic_simulation():
 run = True
 clock = pygame.time.Clock()
 
+pygame.font.init()
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
+
 if DATA_ANALYSIS:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/{}'.format(MODEL_NAME), 3)
+
+if COLLECT_DATA:
+    reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}/{}'.format(DATA_FOLDER, MODEL_NAME), 3)
+    reset_output_data(MODE)
 
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)
@@ -123,7 +136,7 @@ if MODE == 2:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
 elif MODE == 4:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH)
-output = None
+output = [1]
 
 frame = 0
 image_frame = 0
@@ -132,8 +145,10 @@ iteration = 0
 while run:
     clock.tick(FPS)
 
+    text_surface = my_font.render(str(output.index(1)), False, (0, 0, 0))
+
     occ, occ_car = occluded(player_car, static_cars.get_static_cars_rect(), pedestrian)
-    draw(WIN, images, player_car, static_cars.get_static_cars(), occ)
+    draw(WIN, images, player_car, static_cars.get_static_cars(), occ, text_surface)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -164,7 +179,7 @@ while run:
                 else:
                     simple_rule_based_driving(player_car, pedestrian)
             case 5:
-                output = speed_simple_rule_based_self_driving(player_car, pedestrian)
+                output = speed_rule_based_self_driving(player_car, pedestrian)
 
     pedestrian.move()
 
