@@ -32,10 +32,10 @@ class Pedestrian:
             self.x = list(SCENARIO.values())[self.scenario_num][0][0] * BLOCK_SIZE
             self.y = list(SCENARIO.values())[self.scenario_num][0][1] * BLOCK_SIZE
         else:
-            self.x = random.randrange(280, 350, 10)
-            self.y = random.randrange(350, 700, 10)
+            self.x = random.randrange(280, 340, 10)
+            self.y = random.randrange(abs(round((HEIGHT/2)/10)*10), abs(round(START_POS_CAR[1]/10)*10) - 100, 10)
             self.x_end = random.randrange(10, 70, 10)
-            self.y_end = random.randrange(10, 500, 10)
+            self.y_end = random.randrange(abs(round(FINISH_POSITION[1]/10)*10) + abs(round(HEIGHT/10)), round((HEIGHT/2)/10)*10+abs(round(HEIGHT/10)), 10)
             self.grid = create_grid()
             self.obstacles_rect = obstacles_rect
             self.mask = []
@@ -110,10 +110,11 @@ class Pedestrian:
         self.path, _ = finder.find_path(start, end, grid)
 
     def create_new_pedestrian_targets(self):
-        self.x = random.randrange(280, 350, 10)
-        self.y = random.randrange(350, 700, 10)
+        self.x = random.randrange(280, 340, 10)
+        self.y = random.randrange(abs(round((HEIGHT / 2) / 10) * 10), abs(round(START_POS_CAR[1] / 10) * 10) - 100, 10)
         self.x_end = random.randrange(10, 70, 10)
-        self.y_end = random.randrange(10, 500, 10)
+        self.y_end = random.randrange(abs(round(FINISH_POSITION[1] / 10) * 10) + abs(round(HEIGHT / 10)),
+                                      round((HEIGHT / 2) / 10) * 10 + abs(round(HEIGHT / 10)), 10)
 
     def set_targets_pedestrian(self, x, y, x_end, y_end):
         self.x = x

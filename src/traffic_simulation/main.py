@@ -23,8 +23,8 @@ def draw(win, images, player_car, static_cars, occ, text, traffic_light):
     for img, pos in images:
         win.blit(img, (pos[0] - x, pos[1] - y))
 
-    static_cars.draw(win)
-    traffic_light.draw(win)
+    static_cars.draw(win, x, y)
+    traffic_light.draw(win, x, y)
     player_car.draw(win, x, y)
     win.blit(text, (10, 10))
 
@@ -132,13 +132,16 @@ if COLLECT_DATA:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}/{}'.format(DATA_FOLDER, MODEL_NAME), 3)
     reset_output_data(MODE)
 
-images = [(ROAD_EXTENDED, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER_EXTENDED, ROAD_BORDER_POSITION_EXTENDED)]
+images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)
 
 static_cars = StaticCars(NUMBER_STATIC_CARS)
 static_cars.create_static_cars()
 pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
 traffic_light = TrafficLight()
+
+if TRAFFIC_LIGHT:
+    traffic_light.set_light('green')
 
 self_driving = None
 if MODE == 2:
@@ -154,7 +157,7 @@ iteration = 0
 while run:
     clock.tick(FPS)
 
-    text_surface = my_font.render(str(player_car.y), False, (0, 0, 0))
+    text_surface = my_font.render(str(output.index(1)), False, (0, 0, 0))
 
     occ, occ_car = occluded(player_car, static_cars.get_static_cars_rect(), pedestrian)
     draw(WIN, images, player_car, static_cars, occ, text_surface, traffic_light)
@@ -201,7 +204,7 @@ while run:
         print("COLLISION")
         reset_traffic_simulation()
 
-    road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK_EXTENDED, *ROAD_BORDER_POSITION_EXTENDED)
+    road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK, *ROAD_BORDER_POSITION)
     if road_border_poi_collide is not None:
         player_car.road_infraction()
 

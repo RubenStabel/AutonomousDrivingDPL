@@ -20,9 +20,9 @@ class TrafficLight:
     def get_light(self):
         return self.img
 
-    def draw(self, win):
+    def draw(self, win, x_offset, y_offset):
         if self.img is not None:
-            win.blit(self.img, self.position)
+            win.blit(self.img, (self.position[0] - x_offset, self.position[1] - y_offset))
 
     def reset(self):
         self.img = GREEN_LIGHT

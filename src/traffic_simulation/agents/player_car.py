@@ -4,7 +4,7 @@ from traffic_simulation.defs import *
 
 class PlayerCar(AbstractCar):
     IMG = RED_CAR
-    START_POS = (200, HEIGHT - IMG.get_height())
+    START_POS = START_POS_CAR
 
     def road_infraction(self):
         print("road border infraction")
