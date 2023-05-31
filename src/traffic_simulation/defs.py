@@ -12,13 +12,18 @@ ROAD_BORDER = scale_image(pygame.image.load(path+"road_border.png"), 0.9)
 ROAD_BORDER_POSITION = (125, 0)
 ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD_BORDER)
 
+ROAD_EXTENDED = scale_image(pygame.image.load(path+"road_extended.png"), 0.9)
+ROAD_BORDER_EXTENDED = scale_image(pygame.image.load(path+"road_border_extended.png"), 0.9)
+ROAD_BORDER_POSITION_EXTENDED = (125, 0)
+ROAD_BORDER_MASK_EXTENDED = pygame.mask.from_surface(ROAD_BORDER_EXTENDED)
+
 TRACK = scale_image(pygame.image.load(path+"track.png"), 0.9)
 TRACK_BORDER = scale_image(pygame.image.load(path+"track-border.png"), 0.9)
 TRACK_BORDER_MASK = pygame.mask.from_surface(TRACK_BORDER)
 
 FINISH = scale_image(pygame.image.load(path+"finish.png"), 1.15)
 FINISH_MASK = pygame.mask.from_surface(FINISH)
-FINISH_POSITION = (128, 40)
+FINISH_POSITION = (128, IMAGE_DIM)
 
 GRID_POSITION = (5, 190)
 PER_BLOCK_SIZE = 60
@@ -48,7 +53,7 @@ PEDESTRIAN_END_POS = (random.randrange(10, 70, 10), random.randrange(10, 500, 10
 WHITE = (0, 0, 0)
 
 # DIMENSIONS
-WIDTH, HEIGHT = ROAD.get_width(), ROAD.get_height()
+WIDTH, HEIGHT = ROAD_EXTENDED.get_width(), ROAD_EXTENDED.get_height()
 WIN = pygame.display.set_mode((360, 360))
 pygame.display.set_caption("Traffic simulation")
 BLOCK_SIZE = 10  # Set the size of the grid block

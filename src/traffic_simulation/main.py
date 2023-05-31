@@ -132,7 +132,7 @@ if COLLECT_DATA:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}/{}'.format(DATA_FOLDER, MODEL_NAME), 3)
     reset_output_data(MODE)
 
-images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
+images = [(ROAD_EXTENDED, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER_EXTENDED, ROAD_BORDER_POSITION_EXTENDED)]
 player_car = PlayerCar(MAX_VEL, 4)
 
 static_cars = StaticCars(NUMBER_STATIC_CARS)
@@ -154,7 +154,7 @@ iteration = 0
 while run:
     clock.tick(FPS)
 
-    text_surface = my_font.render(str(output.index(1)), False, (0, 0, 0))
+    text_surface = my_font.render(str(player_car.y), False, (0, 0, 0))
 
     occ, occ_car = occluded(player_car, static_cars.get_static_cars_rect(), pedestrian)
     draw(WIN, images, player_car, static_cars, occ, text_surface, traffic_light)
@@ -201,7 +201,7 @@ while run:
         print("COLLISION")
         reset_traffic_simulation()
 
-    road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK, *ROAD_BORDER_POSITION)
+    road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK_EXTENDED, *ROAD_BORDER_POSITION_EXTENDED)
     if road_border_poi_collide is not None:
         player_car.road_infraction()
 
