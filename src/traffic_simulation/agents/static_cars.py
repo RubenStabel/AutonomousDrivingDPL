@@ -24,5 +24,10 @@ class StaticCars:
     def get_static_cars_rect(self):
         return self.cars_rect
 
+    def draw(self, win):
+        for car, pos in self.get_static_cars():
+            win.blit(car, pos)
+
+
     def reset(self):
         self.create_static_cars()

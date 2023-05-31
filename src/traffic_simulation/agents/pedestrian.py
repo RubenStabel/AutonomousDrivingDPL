@@ -54,8 +54,8 @@ class Pedestrian:
     def set_path(self, path):
         self.path = path
 
-    def draw(self, win):
-        blit_rotate_center(win, self.img, (self.x, self.y), 0)
+    def draw(self, win, x_offset, y_offset):
+        blit_rotate_center(win, self.img, (self.x - x_offset, self.y - y_offset), 0)
 
     def move_forward(self):
         self.y -= self.max_vel

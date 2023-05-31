@@ -3,6 +3,7 @@ import math
 from traffic_simulation.agents.pedestrian import Pedestrian
 from defs import *
 from simulation_settings import *
+from traffic_simulation.agents.traffic_light import TrafficLight
 from traffic_simulation.driving.human_based_driving import human_based_driving
 from traffic_simulation.driving.rule_based_self_driving import rule_based_driving
 from traffic_simulation.driving.simple_rule_based_self_driving import simple_rule_based_driving
@@ -16,17 +17,24 @@ from traffic_simulation.driving.speed_simple_rule_based_self_driving import spee
 from traffic_simulation.utils import reset_img_data, reset_output_data
 
 
-def draw(win, images, player_car, static_cars, occ, text):
+def draw(win, images, player_car, static_cars, occ, text, traffic_light):
+    x = GRID_POSITION[0]
+    y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
     for img, pos in images:
-        win.blit(img, pos)
+        win.blit(img, (pos[0] - x, pos[1] - y))
 
-    for car, pos in static_cars:
-        win.blit(car, pos)
-
+    static_cars.draw(win)
+    traffic_light.draw(win)
+    player_car.draw(win, x, y)
     win.blit(text, (10, 10))
-    player_car.draw(win)
+
     if not occ or OCCLUDED_OBJ_VISIBLE:
-        pedestrian.draw(win)
+        pedestrian.draw(win, x, y)
+
+    # y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
+    # rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
+    # sub = win.subsurface(rect)
+
     pygame.display.update()
 
 
@@ -130,6 +138,7 @@ player_car = PlayerCar(MAX_VEL, 4)
 static_cars = StaticCars(NUMBER_STATIC_CARS)
 static_cars.create_static_cars()
 pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
+traffic_light = TrafficLight()
 
 self_driving = None
 if MODE == 2:
@@ -148,7 +157,7 @@ while run:
     text_surface = my_font.render(str(output.index(1)), False, (0, 0, 0))
 
     occ, occ_car = occluded(player_car, static_cars.get_static_cars_rect(), pedestrian)
-    draw(WIN, images, player_car, static_cars.get_static_cars(), occ, text_surface)
+    draw(WIN, images, player_car, static_cars, occ, text_surface, traffic_light)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

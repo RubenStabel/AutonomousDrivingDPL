@@ -8,7 +8,7 @@ from deepproblog.examples.AD_V0.network import AD_V1_net, AD_V0_net, AD_V2_net
 4 --> Baseline NN self driving
 5 --> Speed simple rule based self driving
 """
-MODE = 5
+MODE = 0
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360

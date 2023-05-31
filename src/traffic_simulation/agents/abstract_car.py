@@ -24,8 +24,8 @@ class AbstractCar:
         elif right:
             self.angle -= self.rotation_vel
 
-    def draw(self, win):
-        blit_rotate_center(win, self.img, (self.x, self.y), self.angle)
+    def draw(self, win, x_offset, y_offset):
+        blit_rotate_center(win, self.img, (self.x - x_offset, self.y - y_offset), self.angle)
 
     def move_forward(self):
         self.vel = min(self.vel + self.acceleration, self.max_vel)
