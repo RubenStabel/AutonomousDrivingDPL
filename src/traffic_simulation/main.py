@@ -29,7 +29,8 @@ def draw(win, images, player_car, static_cars, occ, text, traffic_light):
     static_cars.draw(win, x, y)
     traffic_light.draw(win, x, y)
     player_car.draw(win, x, y)
-    win.blit(text, (10, 10))
+    if not (DATA_ANALYSIS or COLLECT_DATA):
+        win.blit(text, (10, 10))
 
     if not occ or OCCLUDED_OBJ_VISIBLE:
         pedestrian.draw(win, x, y)
@@ -100,10 +101,10 @@ def collect_data(output, player_car):
     y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
     rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
     sub = WIN.subsurface(rect)
-    pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
+    pygame.image.save(sub, "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
 
     f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "a")
-    f.write("{} {} {} {}\n".format(iteration, image_frame, output, get_speed_level(player_car.get_vel())))
+    f.write("{};{};{};{}\n".format(iteration, image_frame, output, get_speed_level(player_car.get_vel())))
     f.close()
 
     image_frame += 1
@@ -132,8 +133,11 @@ if DATA_ANALYSIS:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/{}'.format(MODEL_NAME), 3)
 
 if COLLECT_DATA:
-    reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}/{}'.format(DATA_FOLDER, MODEL_NAME), 3)
-    reset_output_data(MODE)
+    reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(DATA_FOLDER), 3)
+    f = open(
+        "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "w")
+    f.write("{};{};{};{}\n".format("iteration", "image_frame", "output", "speed"))
+    f.close()
 
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)
