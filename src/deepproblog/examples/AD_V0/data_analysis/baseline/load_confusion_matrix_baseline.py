@@ -4,11 +4,11 @@ import torch
 from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset, AD_test, AD_Dataset
 from deepproblog.examples.AD_V0.data_analysis.baseline.evaluate_baseline import generate_confusion_matrix_baseline, \
     plot_confusion_matrix_baseline
-from deepproblog.examples.AD_V0.network import AD_V1_net
+from deepproblog.examples.AD_V0.network import AD_V1_0_net
 
 
 # Baseline
-NETWORK = AD_V1_net()
+NETWORK = AD_V1_0_net()
 MODEL_NAME = "Baseline"
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'
 

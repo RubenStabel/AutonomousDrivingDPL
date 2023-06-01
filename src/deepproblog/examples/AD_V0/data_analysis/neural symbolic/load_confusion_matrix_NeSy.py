@@ -6,13 +6,13 @@ from pytesseract import image_to_string
 from deepproblog.engines import ExactEngine
 from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset, AD_test
-from deepproblog.examples.AD_V0.network import AD_V1_net, AD_V0_net, AD_V2_net
+from deepproblog.examples.AD_V0.network import AD_V1_0_net, AD_V0_0_net, AD_V1_1_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from traffic_simulation.utils import reset_img_data
 
 # NeSy V1
-NETWORK = [AD_V0_net(), AD_V2_net()]
+NETWORK = [AD_V0_0_net(), AD_V1_1_net()]
 MODEL_NAME = "NeSy"
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.1.pl'
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'

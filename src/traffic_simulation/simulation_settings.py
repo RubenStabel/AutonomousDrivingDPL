@@ -1,4 +1,4 @@
-from deepproblog.examples.AD_V0.network import AD_V1_net, AD_V0_net, AD_V2_net
+from deepproblog.examples.AD_V0.network import AD_V1_0_net, AD_V0_0_net, AD_V1_1_net
 
 """
 0 --> Drive sim with arrows
@@ -6,7 +6,7 @@ from deepproblog.examples.AD_V0.network import AD_V1_net, AD_V0_net, AD_V2_net
 2 --> NN self driving
 3 --> Simple rule based driving (for data collection)
 4 --> Baseline NN self driving
-5 --> Speed simple rule based self driving
+5 --> Speed rule based self driving
 """
 MODE = 5
 MAX_VEL = 8
@@ -14,7 +14,7 @@ OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
 DATA_FOLDER = "train_simple_speed_1"
 PREFIX = '0'
-COLLECT_DATA = False
+COLLECT_DATA = True
 NUMBER_STATIC_CARS = 0
 DATA_ANALYSIS = False
 SCENARIO_MODE = False
@@ -38,7 +38,7 @@ SCENARIO = {
 # NN_NAME = ['ad_baseline_net']
 
 # NeSy V1.1
-NETWORK = [AD_V0_net(), AD_V2_net()]
+NETWORK = [AD_V0_0_net(), AD_V1_1_net()]
 MODEL_NAME = "NeSy"
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.1.pl'
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'

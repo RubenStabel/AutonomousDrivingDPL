@@ -5,7 +5,7 @@ from deepproblog.dataset import DataLoader
 from deepproblog.engines import ExactEngine
 from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import get_dataset, AD_train, AD_valid, AD_test
-from deepproblog.examples.AD_V0.network import AD_V1_net
+from deepproblog.examples.AD_V0.network import AD_V1_0_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.train import train_model
@@ -20,7 +20,7 @@ valid_set = get_dataset("valid")
 test_set = get_dataset("test")
 
 print("###############    LOADING NETWORK    ###############")
-network = AD_V1_net()
+network = AD_V1_0_net()
 net = Network(network, "ad_baseline_net", batching=True)
 net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
 

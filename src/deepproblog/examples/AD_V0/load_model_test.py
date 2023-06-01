@@ -6,7 +6,7 @@ from deepproblog.engines import ExactEngine
 import cv2
 from torchvision import transforms, models
 
-from deepproblog.examples.AD_V0.network import MNIST_Net, AD_V1_net
+from deepproblog.examples.AD_V0.network import MNIST_Net, AD_V1_0_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.dataset import ImageDataset, Dataset

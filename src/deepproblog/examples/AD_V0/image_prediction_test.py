@@ -6,7 +6,7 @@ from deepproblog.engines import ExactEngine
 import cv2
 from torchvision import transforms, models
 
-from deepproblog.examples.AD_V0.network import MNIST_Net, AD_V1_net, AD_V0_net
+from deepproblog.examples.AD_V0.network import MNIST_Net, AD_V1_0_net, AD_V0_0_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.dataset import ImageDataset, Dataset
@@ -106,7 +106,7 @@ def get_nn_model():
     return model
 
 # NeSy V1.1
-NETWORK = [AD_V0_net(), AD_V2_net()]
+NETWORK = [AD_V0_0_net(), AD_V1_1_net()]
 MODEL_NAME = "NeSy"
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.1.pl'
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'
