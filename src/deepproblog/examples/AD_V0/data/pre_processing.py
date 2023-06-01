@@ -54,10 +54,17 @@ def get_vel_img_id(idx, data_path):
     test = df.loc[idx]['velocity']
 
 
-
 def generate_balanced_dataset(train_path, balanced_path, number_of_classes):
     train_path_list = []
-    for data_path in glob.glob(train_path + '/2'): # MAKE /2 dynamic to take the smallest class
+    balanced_num = len(glob.glob(train_path + '/0/*'))
+    balanced_folder = 0
+    for i, data_path in enumerate(glob.glob(train_path + '/*'), 0):
+        num_files = len(glob.glob(data_path + '/*'))
+        if num_files < balanced_num:
+            balanced_num = num_files
+            balanced_folder = i
+
+    for data_path in glob.glob(train_path + '/{}'.format(balanced_folder)):
         train_path_list.append(glob.glob(data_path + '/*'))
 
     for i in range(number_of_classes):
@@ -68,7 +75,7 @@ def generate_balanced_dataset(train_path, balanced_path, number_of_classes):
             shutil.copy(srcpath, balanced_path + '/{}'.format(i))
 
 # get_vel_img_id(3, '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt')
-# generate_balanced_dataset('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_1', '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_balanced_small',3)
+# generate_balanced_dataset('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_speed_1', '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_speed_balanced_1',4)
 
 # print(parse_output_file("output_data/output.txt"))
 # print(output_to_class_id([[0,0,1], [1,0,0]]))
