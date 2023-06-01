@@ -160,7 +160,7 @@ iteration = 0
 while run:
     clock.tick(FPS)
 
-    text_surface = my_font.render(str(output.index(1)), False, (0, 0, 0))
+    text_surface = my_font.render("{}   {}".format("___", output.index(1)), False, (0, 0, 0))
 
     occ, occ_car = occluded(player_car, static_cars.get_static_cars_rect(), pedestrian)
     draw(WIN, images, player_car, static_cars, occ, text_surface, traffic_light)

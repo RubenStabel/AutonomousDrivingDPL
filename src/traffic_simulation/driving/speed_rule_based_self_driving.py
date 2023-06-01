@@ -1,95 +1,52 @@
+import math
+
 from traffic_simulation.agents.pedestrian import Pedestrian
 from traffic_simulation.agents.player_car import PlayerCar
-from traffic_simulation.simulation_settings import *
 
 
-def get_danger_level_y(y_car, y_obst, obst_height, speed):
-    y_rel = y_car - y_obst - obst_height
-    if y_rel == 0:
-        y_rel = 1
-    if y_rel < 20:
-        danger_score = 10
+def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
+    x_rel = round(abs(player_car.x - obstacle.x)/20)*20
+    y_rel = round(min(abs(player_car.y - obstacle.y), abs(player_car.y - obstacle.y - obstacle.IMG.get_height()))/100)*100
+
+    a = 1
+    b = 12
+    s = ((speed+1)**2)/5
+
+    f1 = (x_rel / (80 + s * a)) ** 4 + (y_rel / ((s*b)+170)) ** 4 - 1
+    f2 = (x_rel / (70 + s * a)) ** 4 + (y_rel / ((s*b)+100)) ** 4 - 1
+    f3 = (x_rel / (60 + s * a)) ** 4 + (y_rel / ((s*b)+70)) ** 4 - 1
+
+    if f3 < 0:
+        return 3
+    elif f2 < 0:
+        return 2
+    elif f1 < 0:
+        return 1
     else:
-        danger_score = abs((speed/y_rel)*100)
-
-    if danger_score > 4:
-        danger_level = 2
-    elif danger_score > 2:
-        danger_level = 1
-    else:
-        danger_level = 0
-
-    return danger_level
-
-
-def get_danger_level_x(x_car, x_obst, car_width, speed):
-    x_rel = abs(x_car - x_obst + car_width)
-    if x_rel == 0:
-        x_rel = 1
-    if x_rel < 20:
-        danger_score = 10
-    else:
-        danger_score = abs((speed/x_rel)*100)
-
-    if danger_score > 6:
-        danger_level = 2
-    elif danger_score > 4:
-        danger_level = 1
-    else:
-        danger_level = 0
-
-    return danger_level
-
-
-def danger_level(danger_x, danger_y):
-    if danger_x == 0 or danger_y == 0:
         return 0
-    return danger_x + danger_y
-
-
-def target_speed_action(player_car: PlayerCar, target_speed):
-    current_speed = player_car.get_vel()
-    low = current_speed - 0.5
-    high = current_speed + 0.5
-
-    print(current_speed, target_speed)
-
-    if low < target_speed < high:
-        player_car.match_speed()
-        output = [0, 0, 0, 1]
-    elif target_speed > current_speed:
-        player_car.move_forward()
-        output = [1, 0, 0, 0]
-    else:
-        player_car.move_backward()
-        output = [0, 1, 0, 0]
-
-    return output
 
 
 def speed_rule_based_self_driving(player_car: PlayerCar, pedestrian: Pedestrian):
-    target_speed = 0
-    if player_car.y < pedestrian.y - player_car.IMG.get_height() or player_car.x > pedestrian.x + pedestrian.IMG.get_width():
-        print("OK")
+    if player_car.y < pedestrian.y or player_car.x > pedestrian.x + pedestrian.IMG.get_width():
         player_car.move_forward()
         output = [1, 0, 0, 0]
     else:
-        danger_level_x = get_danger_level_x(player_car.x, pedestrian.x, player_car.IMG.get_width(), player_car.get_vel())
-        danger_level_y = get_danger_level_y(player_car.y, pedestrian.y, pedestrian.IMG.get_height(), player_car.get_vel())
-        print(danger_level_x, danger_level_y)
-
-        match danger_level(danger_level_x, danger_level_y):
+        match get_danger_zone(player_car, pedestrian, player_car.get_vel()):
             case 0:
-                target_speed = 8
+                player_car.move_forward()
+                output = [1, 0, 0, 0]
             case 1:
-                target_speed = 8
+                player_car.match_speed()
+                output = [0, 0, 0, 1]
             case 2:
-                target_speed = 2
+                player_car.reduce_speed()
+                output = [0, 0, 1, 0]
             case 3:
-                target_speed = 0
-            case 4:
-                target_speed = -1
-
-        output = target_speed_action(player_car, target_speed)
+                player_car.move_backward()
+                output = [0, 1, 0, 0]
+            case _:
+                print("UNDEFINED")
+                player_car.move_forward()
+                output = [1, 0, 0, 0]
 
     return output
