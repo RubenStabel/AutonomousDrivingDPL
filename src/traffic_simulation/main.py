@@ -18,8 +18,11 @@ from traffic_simulation.utils import reset_img_data, reset_output_data
 
 
 def draw(win, images, player_car, static_cars, occ, text, traffic_light):
-    x = GRID_POSITION[0]
-    y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
+    if DYNAMIC_SIMULATION:
+        x = GRID_POSITION[0]
+        y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
+    else:
+        x, y = 0, 0
     for img, pos in images:
         win.blit(img, (pos[0] - x, pos[1] - y))
 
