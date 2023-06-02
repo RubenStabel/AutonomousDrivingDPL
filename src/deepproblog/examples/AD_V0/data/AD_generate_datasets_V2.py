@@ -2,6 +2,10 @@ import glob
 import random
 
 import cv2
+import numpy as np
+import pandas as pd
+import torch
+from matplotlib import pyplot as plt
 from pandas.core.common import flatten
 from problog.logic import Term, Constant
 from torchvision import datasets, transforms
@@ -12,6 +16,7 @@ from deepproblog.query import Query
 
 train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_speed_balanced_1'
 test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_speed_1'
+output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_5.txt'
 
 ####################################################
 #       Create Train, Valid and Test sets
@@ -66,13 +71,29 @@ def class_to_idx(classes):
     return {value: key for key, value in idx_to_class.items()}
 
 
+def data_2_pd_speed():
+    data = pd.read_csv(output_data_path, delimiter=';')
+    data.columns = ["iteration", "image_frame", "output", "speed"]
+    return data
+
+
+def image_file_to_speed(image_data_path: str):
+    image_name = image_data_path.split('/')[-1]
+    image_id = image_name.split('_')[-1].split('.')[0]
+    iter_image = image_id.split('frame')[0].split('iter')[-1]
+    frame = image_id.split('frame')[-1]
+
+    df = pd.DataFrame(data_2_pd_speed())
+    vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
+    return vel
+
 class AD_Dataset(Dataset):
     def __init__(self, image_paths, classes, dataset_name, transform=None):
         self.image_paths = image_paths
         if transform is None:
             self.transform = transforms.Compose([
                 transforms.ToTensor(),
-                transforms.Resize((32, 32)),
+                transforms.Resize((32, 32), antialias=True),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
             ])
         else:
@@ -83,16 +104,14 @@ class AD_Dataset(Dataset):
         for idx in range(self.__len__()):
             self.images.append(self.transform(cv2.cvtColor(cv2.imread(self.image_paths[idx]), cv2.COLOR_BGR2RGB)))
 
-    def __len__(self):
-        return len(self.image_paths)
-
     def __getitem__(self, idx):
         label = self._get_label(idx)
         image = self._get_image(idx)
+        speed = self._get_speed(idx)
         # if self.transform is not None:
         #     image = self.transform(image=image)["image"]
 
-        return image, label
+        return image, speed, label
 
     def _get_label(self, idx: int):
         image_filepath = self.image_paths[idx]
@@ -102,6 +121,10 @@ class AD_Dataset(Dataset):
 
     def _get_image(self, idx: int):
         return self.images[idx]
+
+    def _get_speed(self, idx: int):
+        image_path = self.image_paths[idx]
+        return image_file_to_speed(image_path)
 
     def __len__(self):
         "How many queries there are"
@@ -140,6 +163,7 @@ datasets = {
     "test": AD_Dataset(test_image_path, classes, "test")
 }
 
+
 def get_dataset(name:str):
     match name:
         case "train":
@@ -151,3 +175,5 @@ def get_dataset(name:str):
 
 
 print("###############    DATA LOADING DONE    ###############")
+# plt.imshow(get_dataset('train')._get_image(1).permute(1, 2, 0))
+# plt.show()
