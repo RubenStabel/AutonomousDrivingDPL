@@ -69,7 +69,7 @@ class AD_V1_1_net(nn.Module):
         return x
 
 
-class AD_V2_0_net(nn.Module):
+class AD_V2_1_net(nn.Module):
     def __init__(self):
         super().__init__()
         self.image_features = nn.Sequential(
@@ -113,7 +113,8 @@ class AD_V2_0_net(nn.Module):
         z = self.combined_features(z)
         return z
 
-class AD_V2_1_net(nn.Module):
+
+class AD_V2_0_net(nn.Module):
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(3, 6, 5)
