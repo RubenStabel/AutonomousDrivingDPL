@@ -120,14 +120,43 @@ class Network(object):
         :param to_evaluate: A list that contains the inputs that the neural network should be evaluated on.
         :return:
         """
-        if self.batching:
+        if self.batching and len(to_evaluate[0]) <= 1:
+            # for i, a in enumerate(*to_evaluate):
+            #     # print(self.function(i))
+            #     # print(self.function(i)[0])
+            #     print(i)
+            #     print(self.function(a)[0])
+            #
+            # #
+            # a = self.function(*to_evaluate[0])[1]
+
+            # batched_inputs: List[torch.Tensor] = []
+            # for e in to_evaluate:
+            #     for i in range(len(e)):
+            #         batched_inputs.append(self.function(*e)[0])
+
+            # batched_inputs_2: List[torch.Tensor] = [
+            #     self.function(e)[0] for _, e in enumerate(*to_evaluate)
+            # ]
+
             batched_inputs: List[torch.Tensor] = [
                 self.function(*e)[0] for e in to_evaluate
             ]
+
+            # print(*batched_inputs)
+            # print((self.function(*e) for e in to_evaluate))
+
+            # self.function(*e)[0] for e in to_evaluate
+            # *(self.function(*e) for e in to_evaluate)
+            # self.function(*to_evaluate[0])[0], self.function(*to_evaluate[0])[1]
+
+            # print(batched_inputs)
             stacked_inputs = torch.stack(batched_inputs)
             if self.is_cuda:
                 stacked_inputs = stacked_inputs.cuda(device=self.device)
             evaluated = self.network_module(stacked_inputs)
+
+            # evaluated = [self.network_module(*self.function(*e)) for e in to_evaluate]
         else:
             evaluated = [self.network_module(*self.function(*e)) for e in to_evaluate]
         return evaluated
