@@ -72,31 +72,17 @@ class AD_V1_1_net(nn.Module):
 class AD_V2_0_net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(3, 6, 5)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 5)
-        self.drop = nn.Dropout()
-        self.relu = nn.ReLU()
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 4)
-        self.softmax = nn.Softmax(-1)
-
         self.image_features = nn.Sequential(
             nn.Conv2d(3, 6, 5),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
-            nn.Dropout(),
             nn.Conv2d(6, 16, 5),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
-            nn.Dropout(),
+            nn.Flatten(0, 2),
             nn.Linear(16 * 5 * 5, 120),
             nn.Linear(120, 84),
-            nn.ReLU(),
-            nn.Dropout(),
             nn.Linear(84, 4),
-            nn.ReLU()
         )
 
         self.numeric_features = nn.Sequential(
@@ -111,24 +97,42 @@ class AD_V2_0_net(nn.Module):
         )
 
         self.combined_features = nn.Sequential(
-            nn.Linear(8, 64),
+            nn.Linear(8, 16),
             nn.ReLU(),
             nn.Dropout(),
-            nn.Linear(64, 32),
+            nn.Linear(16, 16),
             nn.ReLU(),
-            nn.Linear(32, 8),
-            nn.Linear(8, 4),
+            nn.Linear(16, 4),
             nn.Softmax(-1)
         )
 
     def forward(self, x, y):
         x = self.image_features(x)
         y = self.numeric_features(y)
-        z = torch.cat((x,y), 1)
+        z = torch.cat((x, y), -1)
         z = self.combined_features(z)
         return z
 
+class AD_V2_1_net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 4)
+        self.softmax = nn.Softmax(-1)
 
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = torch.flatten(x, 1) # flatten all dimensions except batch
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        x = self.softmax(x)
+        return x
 
 # class AD_V1_net(nn.Module):
 #     def __init__(self):
