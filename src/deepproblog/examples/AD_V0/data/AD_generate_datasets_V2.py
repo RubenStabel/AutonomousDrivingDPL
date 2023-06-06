@@ -5,7 +5,6 @@ import cv2
 import numpy as np
 import pandas as pd
 import torch
-from matplotlib import pyplot as plt
 from pandas.core.common import flatten
 from problog.logic import Term, Constant
 from torchvision import datasets, transforms
@@ -91,18 +90,18 @@ class AD_Dataset(Dataset):
     def __init__(self, image_paths, classes, dataset_name, transform=None):
         self.image_paths = image_paths
         if transform is None:
-            self.transform = transforms.Compose([
+            self.transform_img = transforms.Compose([
                 transforms.ToTensor(),
                 transforms.Resize((32, 32), antialias=True),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
             ])
         else:
-            self.transform = transform
+            self.transform_img = transform
         self.dataset_name = dataset_name
         self.classes = classes
         self.images = []
         for idx in range(self.__len__()):
-            self.images.append(self.transform(cv2.cvtColor(cv2.imread(self.image_paths[idx]), cv2.COLOR_BGR2RGB)))
+            self.images.append(self.transform_img(cv2.cvtColor(cv2.imread(self.image_paths[idx]), cv2.COLOR_BGR2RGB)))
 
     def __getitem__(self, idx):
         label = self._get_label(idx)
@@ -124,18 +123,64 @@ class AD_Dataset(Dataset):
 
     def _get_speed(self, idx: int):
         image_path = self.image_paths[idx]
-        return image_file_to_speed(image_path)
+        return image_file_to_speed(image_path)    # image_file_to_speed(image_path)
 
     def __len__(self):
         "How many queries there are"
         return len(self.image_paths)
 
-    def to_query(self, idx):
-        l = Constant(self._get_label(idx))
-        return Query(
-            Term("action", Term("tensor", Term(self.dataset_name, Term("a"))), l),
-            substitution={Term("a"): Constant(idx)},
-        )
+    # def to_query(self, idx):
+    #     l = Constant(self._get_label(idx))
+    #     return Query(
+    #         Term("autonomous_driving_baseline_speed", Term("tensor", Term(self.dataset_name, Term("a"))), l),
+    #         substitution={Term("a"): Constant(idx)},
+    #     )
+
+    def to_query(self, i):
+        image, speed, label = self.__getitem__(i)
+        # sub = {Term("img"): Term("tensor", Term(self.dataset_name, Constant(i))), Term("speed"): Constant(float(speed))}
+        return Query(Term("autonomous_driving_baseline_speed", Term("tensor", Term(self.dataset_name, Term("a"))),
+                          Constant(float(speed)), Constant(label)), substitution={Term("a"): Constant(i)})
+
+    # def to_query(self, i: int) -> Query:
+    #     """Generate queries"""
+    #     mnist_indices = [[i], [self._get_speed(i)]]
+    #     expected_result = self._get_label(i)
+    #
+    #     # Build substitution dictionary for the arguments
+    #     subs = dict()
+    #     var_names = []
+    #     for i in range(2):
+    #         inner_vars = []
+    #         t = Term(f"p{i}_{0}")
+    #         if i == 0:
+    #             subs[t] = Term(
+    #                 "tensor",
+    #                 Term(
+    #                     self.dataset_name,
+    #                     Constant(i),
+    #                 ),
+    #             )
+    #         else:
+    #             subs[t] = Term(
+    #                 "constant",
+    #                 Term(
+    #                     self.dataset_name,
+    #                     Constant(self._get_speed(i)),
+    #                 ),
+    #             )
+    #         inner_vars.append(t)
+    #         var_names.append(inner_vars)
+    #
+    #     # Build query
+    #     return Query(
+    #         Term(
+    #             "autonomous_driving_baseline_speed",
+    #             *(e[0] for e in var_names),
+    #             Constant(expected_result),
+    #         ),
+    #         subs,
+    #     )
 
 
 class AD_Images(object):
@@ -144,6 +189,7 @@ class AD_Images(object):
 
     def __getitem__(self, item):
         return datasets[self.subset][int(item[0])][0]
+
 
 AD_train = AD_Images("train")
 AD_test = AD_Images("test")
@@ -177,3 +223,7 @@ def get_dataset(name:str):
 print("###############    DATA LOADING DONE    ###############")
 # plt.imshow(get_dataset('train')._get_image(1).permute(1, 2, 0))
 # plt.show()
+
+# print(get_dataset('valid').to_query(2))
+# print(AD_train.__getitem__([0]))
+

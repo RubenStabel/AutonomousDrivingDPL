@@ -25,7 +25,7 @@ net = Network(network, "ad_baseline_net", batching=True)
 net.optimizer = torch.optim.Adam(network.parameters(), lr=1e-3)
 
 print("###############    LOADING MODEL    ###############")
-model = Model("../models/test.pl", [net])
+model = Model("../models/autonomous_driving_baseline.pl", [net])
 model.set_engine(ExactEngine(model), cache=True)
 model.add_tensor_source("train", AD_train)
 model.add_tensor_source("valid", AD_valid)
