@@ -120,7 +120,11 @@ class Network(object):
         :param to_evaluate: A list that contains the inputs that the neural network should be evaluated on.
         :return:
         """
-        if self.batching and len(to_evaluate[0]) <= 1:
+
+        # len(to_evaluate[0]) <= 1
+
+        if self.batching and len([s for s in to_evaluate[0] if isinstance(s.functor, float)]) < 1:
+        # if self.batching:
             # for i, a in enumerate(*to_evaluate):
             #     # print(self.function(i))
             #     # print(self.function(i)[0])
