@@ -5,8 +5,11 @@ from traffic_simulation.agents.player_car import PlayerCar
 
 
 def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
-    x_rel = round(abs(player_car.x - obstacle.x)/20)*20
-    y_rel = round(min(abs(player_car.y - obstacle.y), abs(player_car.y - obstacle.y - obstacle.IMG.get_height()))/100)*100
+    x_rel = round(
+        min(abs(player_car.x - obstacle.x), abs(player_car.x - obstacle.x - obstacle.IMG.get_width())) / 20) * 20
+    y_rel = round(
+        min(abs(player_car.y - obstacle.y), abs(player_car.y - obstacle.y - obstacle.IMG.get_height())) / 100) * 100
+    overlapping_y = (player_car.y - obstacle.y) < (obstacle.IMG.get_height() - obstacle.IMG.get_height() / 2)
 
     a = 1
     b = 12
@@ -17,11 +20,20 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
     f3 = (x_rel / (60 + s * a)) ** 4 + (y_rel / ((s*b)+70)) ** 4 - 1
 
     if f3 < 0:
-        return 3
+        if overlapping_y and player_car.get_vel() > 4:
+            return 0
+        else:
+            return 3
     elif f2 < 0:
-        return 2
+        if overlapping_y and player_car.get_vel() > 3:
+            return 0
+        else:
+            return 2
     elif f1 < 0:
-        return 1
+        if overlapping_y and player_car.get_vel() > 2:
+            return 0
+        else:
+            return 1
     else:
         return 0
 
