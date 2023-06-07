@@ -1,24 +1,26 @@
 from deepproblog.examples.Autonomous_driving.experimental.networks.network import AD_V0_0_net, AD_V1_1_net
 
 """
-0 --> Drive sim with arrows
-1 --> Rule based driving (for data collection)
-2 --> NN self driving
-3 --> Simple rule based driving (for data collection)
-4 --> Baseline NN self driving
-5 --> Speed rule based self driving
+0 --> Drive sim with keys
+1 --> DEV [Currently - Advanced rule based driving]
+2 --> NeSy self driving
+3 --> PyTorch self driving
+4 --> Version 0 rule based self driving
+5 --> Version 1 rule based self driving
+6 --> Version 2 rule based self driving
+7 --> Version 3 rule based self driving
 """
 MODE = 5
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
-DATA_FOLDER = "train_simple_speed_1"
+DATA_FOLDER = "general/dev"
 PREFIX = '0'
 COLLECT_DATA = True
 NUMBER_STATIC_CARS = 0
 DATA_ANALYSIS = False
-SCENARIO_MODE = False
-TRAFFIC_LIGHT = False
+SCENARIO_MODE = True
+TRAFFIC_LIGHT = True
 DYNAMIC_SIMULATION = False
 EXTENDED_ROAD = False
 

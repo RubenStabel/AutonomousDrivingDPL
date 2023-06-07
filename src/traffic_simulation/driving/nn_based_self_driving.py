@@ -49,7 +49,7 @@ class NNSelfDriving:
 
         if MODE == 2:
             result = int(get_nn_output(img, self.model))
-        elif MODE == 4:
+        elif MODE == 3:
             result = int(get_baseline_output(img, self.model))
 
         if DATA_ANALYSIS and frame % 5 == 0:

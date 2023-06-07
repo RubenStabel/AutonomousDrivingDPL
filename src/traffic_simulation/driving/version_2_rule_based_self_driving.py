@@ -38,7 +38,7 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
         return 0
 
 
-def speed_rule_based_self_driving(player_car: PlayerCar, pedestrian: Pedestrian):
+def version_2_rule_based_self_driving(player_car: PlayerCar, pedestrian: Pedestrian):
     if player_car.y < pedestrian.y or player_car.x > pedestrian.x + pedestrian.IMG.get_width():
         player_car.move_forward()
         output = [1, 0, 0, 0]

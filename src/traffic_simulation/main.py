@@ -6,15 +6,17 @@ from simulation_settings import *
 from traffic_simulation.agents.traffic_light import TrafficLight
 from traffic_simulation.driving.human_based_driving import human_based_driving
 from traffic_simulation.driving.rule_based_self_driving import rule_based_driving
-from traffic_simulation.driving.simple_rule_based_self_driving import simple_rule_based_driving
+from traffic_simulation.driving.version_0_rule_based_self_driving import version_0_rule_based_self_driving
 from traffic_simulation.driving.nn_based_self_driving import NNSelfDriving
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.static_cars import StaticCars
 import random
 
-from traffic_simulation.driving.speed_rule_based_self_driving import speed_rule_based_self_driving
+from traffic_simulation.driving.version_1_rule_based_self_driving import version_1_rule_based_self_driving
+from traffic_simulation.driving.version_2_rule_based_self_driving import version_2_rule_based_self_driving
 from traffic_simulation.driving.speed_simple_rule_based_self_driving import speed_simple_rule_based_self_driving
-from traffic_simulation.utils import reset_img_data, reset_output_data
+from data.pre_processing import reset_img_data, reset_output_data
+from traffic_simulation.driving.version_3_rule_based_self_driving import version_3_rule_based_self_driving
 
 
 def draw(win, images, player_car, static_cars, occ, text, traffic_light):
@@ -134,10 +136,10 @@ if DATA_ANALYSIS:
 
 if COLLECT_DATA:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(DATA_FOLDER), 3)
-    f = open(
-        "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "w")
-    f.write("{};{};{};{}\n".format("iteration", "image_frame", "output", "speed"))
-    f.close()
+    # f = open(
+    #     "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "w")
+    # f.write("{};{};{};{}\n".format("iteration", "image_frame", "output", "speed"))
+    # f.close()
 
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)
@@ -153,7 +155,7 @@ if TRAFFIC_LIGHT:
 self_driving = None
 if MODE == 2:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
-elif MODE == 4:
+elif MODE == 3:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH)
 output = [1]
 
@@ -184,21 +186,17 @@ while run:
             case 1:
                 output = rule_based_driving(player_car, occ, pedestrian)
             case 2:
-                if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
-                    self_driving.nn_driving(frame)
-                else:
-                    simple_rule_based_driving(player_car, pedestrian)
-
+                self_driving.nn_driving(frame)
             case 3:
-                output = simple_rule_based_driving(player_car, pedestrian)
-
+                self_driving.nn_driving(frame)
             case 4:
-                if player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0:
-                    self_driving.nn_driving(frame)
-                else:
-                    simple_rule_based_driving(player_car, pedestrian)
+                output = version_0_rule_based_self_driving(player_car, pedestrian)
             case 5:
-                output = speed_rule_based_self_driving(player_car, pedestrian)
+                output = version_1_rule_based_self_driving(player_car, pedestrian)
+            case 6:
+                output = version_2_rule_based_self_driving(player_car, pedestrian)
+            case 7:
+                output = version_3_rule_based_self_driving(player_car, pedestrian, traffic_light)
 
     pedestrian.move()
 
