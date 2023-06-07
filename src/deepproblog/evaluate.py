@@ -5,7 +5,7 @@ from typing import Optional
 import torch
 
 from deepproblog.dataset import Dataset
-from deepproblog.examples.AD_V0.data_analysis.data_analysis_plots import generate_bar_graph_idx
+from deepproblog.examples.Autonomous_driving.data_analysis.data_analysis_plots import generate_bar_graph_idx
 from deepproblog.model import Model
 from deepproblog.utils.confusion_matrix import ConfusionMatrix
 
@@ -57,7 +57,7 @@ def get_confusion_matrix(
                         NN_outputs = NN_outputs + '  '
 
                 f = open(
-                    "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/data_analysis/errors/false_predictions_NeSy",
+                    "/deepproblog/examples/Autonomous_driving/data_analysis/errors/false_predictions_NeSy",
                     "a")
                 f.write("{}  {} vs {}::{}  {}  for query {} \n".format(
                     i, actual, p, predicted, NN_outputs, test_query

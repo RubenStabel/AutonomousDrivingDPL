@@ -1,4 +1,4 @@
-from deepproblog.examples.AD_V0.network import AD_V1_0_net, AD_V0_0_net, AD_V1_1_net
+from deepproblog.examples.Autonomous_driving.experimental.networks.network import AD_V0_0_net, AD_V1_1_net
 
 """
 0 --> Drive sim with arrows
@@ -33,20 +33,20 @@ SCENARIO = {
 # # Baseline NeSy
 # NETWORK = [AD_V1_net()]
 # MODEL_NAME = "NN"
-# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_baseline.pl'
-# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/autonomous_driving_baseline_NeSy_9.pth'
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/models/autonomous_driving_baseline.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/snapshot/baseline/autonomous_driving_baseline_NeSy_9.pth'
 # NN_NAME = ['ad_baseline_net']
 
 # NeSy V1.1
 NETWORK = [AD_V0_0_net(), AD_V1_1_net()]
 MODEL_NAME = "NeSy"
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/models/autonomous_driving_V1.1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'
+MODEL_PATH = '/deepproblog/examples/Autonomous_driving/models/autonomous_driving_NeSy_1.pl'
+NN_PATH = '/deepproblog/examples/Autonomous_driving/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'
 NN_NAME = ['perc_net_AD_V1X', 'perc_net_AD_V1Y']
 
 # # # Baseline PyTorch
 # NETWORK = [AD_V1_net()]
 # MODEL_NAME = "NN"
-# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/AD_V0/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'
 # MODEL_PATH = ''
 # NN_NAME = ['']

@@ -1,8 +1,4 @@
-import cv2
 import torch
-import numpy as np
-import io
-from PIL import Image
 
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.defs import *
@@ -10,7 +6,7 @@ from traffic_simulation.simulation_settings import *
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.engines import ExactEngine
-from deepproblog.examples.AD_V0.load_model_test import get_nn_output, get_baseline_output
+from deepproblog.examples.Autonomous_driving.simulation_connector.load_model_test import get_nn_output, get_baseline_output
 
 
 class NNSelfDriving:

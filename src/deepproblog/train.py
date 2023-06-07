@@ -1,5 +1,4 @@
-import array
-from deepproblog.examples.AD_V0.data.AD_generate_datasets_V1 import AD_Dataset
+from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import AD_Dataset
 import signal
 import time
 from typing import List, Callable, Union
