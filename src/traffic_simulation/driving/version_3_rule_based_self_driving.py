@@ -3,6 +3,8 @@ import math
 from traffic_simulation.agents.pedestrian import Pedestrian
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.traffic_light import TrafficLight
+from traffic_simulation.agents.traffic_lights import TrafficLights
+from traffic_simulation.simulation_settings import NUMBER_TRAFFIC_LIGHTS
 
 
 def agents_danger_zone(player_car: PlayerCar, obstacles: list, speed):
@@ -48,7 +50,16 @@ def agents_danger_zone(player_car: PlayerCar, obstacles: list, speed):
         return 0
 
 
-def traffic_light_handler(player_car: PlayerCar, traffic_light: TrafficLight, speed):
+def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLight], speed):
+    if NUMBER_TRAFFIC_LIGHTS == 0:
+        return 0
+
+    positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y > 0]
+    if positive_distances:
+        traffic_light = traffic_lights[[player_car.y - x.y for x in traffic_lights].index(min(positive_distances))]
+    else:
+        traffic_light = traffic_lights[0]
+
     traffic_light_id = traffic_light.get_light()
 
     if traffic_light_id == 0:
@@ -69,7 +80,9 @@ def traffic_light_handler(player_car: PlayerCar, traffic_light: TrafficLight, sp
         if traffic_light_id == 1:
             return 0
         else:
-            if speed > 0:
+            if y_rel < pixel_margin-1:
+                return 3
+            elif speed > 0:
                 return 3
             else:
                 return 2
@@ -83,12 +96,11 @@ def get_action(actions: list):
     return max(actions)
 
 
-def version_3_rule_based_self_driving(player_car: PlayerCar, pedestrian: Pedestrian, traffic_light: TrafficLight):
-    traffic_light_id = traffic_light.get_light()
+def version_3_rule_based_self_driving(player_car: PlayerCar, pedestrian: Pedestrian, traffic_lights: TrafficLights):
 
     obstacles = [pedestrian]
 
-    match get_action([agents_danger_zone(player_car, obstacles, player_car.get_vel()), traffic_light_handler(player_car, traffic_light, player_car.get_vel())]):
+    match get_action([agents_danger_zone(player_car, obstacles, player_car.get_vel()), traffic_light_handler(player_car, traffic_lights.unique_traffic_lights, player_car.get_vel())]):
         case 0:
             player_car.move_forward()
             output = [1, 0, 0, 0]
