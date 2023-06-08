@@ -43,7 +43,6 @@ FINISH_POSITION = (128, IMAGE_DIM - FINISH.get_height() - RED_CAR.get_height())
 GREEN_LIGHT = scale_image(pygame.image.load(path+"green_light.png"), 0.08)
 ORANGE_LIGHT = scale_image(pygame.image.load(path+"orange_light.png"), 0.08)
 RED_LIGHT = scale_image(pygame.image.load(path+"red_light.png"), 0.08)
-POSITION_LIGHT = (280, ROAD.get_height()/2)
 
 
 # PEDESTRIAN = scale_image(pygame.image.load("imgs/pedastrian.png"), 0.9)

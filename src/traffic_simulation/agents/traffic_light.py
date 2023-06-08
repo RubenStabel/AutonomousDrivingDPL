@@ -15,9 +15,8 @@ class TrafficLight:
         self.orange_time = None
         self.red_time = None
         self.counter = 0
-        self.position = POSITION_LIGHT
-        self.x = POSITION_LIGHT[0]
-        self.y = POSITION_LIGHT[1]
+        self.x = 280
+        self.y = random.randrange(FINISH_POSITION[1]+FINISH.get_height(), START_POS_CAR[1] - self.height, 10)
         self.lights = ['green', 'orange', 'red']
         if TRAFFIC_LIGHT:
             self.reset()
@@ -41,7 +40,6 @@ class TrafficLight:
         self.green_time = random.randrange(100, 160, 10)
         self.orange_time = random.randrange(50, 70, 10)
         self.red_time = random.randrange(100, 160, 10)
-        print(self.green_time, self.orange_time, self.red_time)
 
     def get_light_time(self):
         match self.get_light():
@@ -68,9 +66,9 @@ class TrafficLight:
 
     def draw(self, win, x_offset, y_offset):
         if self.img is not None:
-            win.blit(self.img, (self.position[0] - x_offset, self.position[1] - y_offset))
+            win.blit(self.img, (self.x - x_offset, self.y - y_offset))
             pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH/2 + ROAD_BORDER.get_width()/20 - x_offset,
-                                                               self.position[1] + self.height - y_offset,
+                                                               self.y + self.height - y_offset,
                                                                ROAD_BORDER.get_width()/2 - ROAD_BORDER.get_width()/10,
                                                                5))
 
@@ -78,3 +76,4 @@ class TrafficLight:
         self.set_light(random.choice(self.lights))
         self.set_light_times()
         self.counter = self.get_light_time()
+        self.y = random.randrange(FINISH_POSITION[1]+FINISH.get_height(), START_POS_CAR[1] - 2*self.height, 10)

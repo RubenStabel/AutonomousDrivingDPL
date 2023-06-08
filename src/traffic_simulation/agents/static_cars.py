@@ -5,18 +5,20 @@ class StaticCars:
     def __init__(self, number_of_cars):
         self.cars = []
         self.cars_rect = []
-        self.x = GREEN_CAR.get_width()
-        self.y = GREEN_CAR.get_height()
+        self.car_width = GREEN_CAR.get_width()
+        self.car_height = GREEN_CAR.get_height()
         self.number_of_cars = number_of_cars
+        self.x_range = [91, 248]
+        self.y_range = [FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.car_height]
 
     def create_static_cars(self):
         self.cars = []
         self.cars_rect = []
         for _ in range(self.number_of_cars):
-            pos = (random.choice([91, 248]), random.randrange(50, 700, 70))
+            pos = (random.choice(self.x_range), random.randrange(self.y_range[0], self.y_range[1], self.car_height+15))
             car_color = random.choice(CAR_ARRAY)
             self.cars.append((car_color, pos))
-            self.cars_rect.append(pygame.Rect(*pos, self.x, self.y))
+            self.cars_rect.append(pygame.Rect(*pos, self.car_width, self.car_height))
 
     def get_static_cars(self):
         return self.cars

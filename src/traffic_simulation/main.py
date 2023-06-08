@@ -123,6 +123,7 @@ def reset_traffic_simulation():
     player_car.reset()
     static_cars.reset()
     pedestrian.reset(static_cars.get_static_cars_rect())
+    traffic_light.reset()
 
 
 run = True
