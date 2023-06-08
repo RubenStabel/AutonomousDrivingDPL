@@ -16,10 +16,9 @@ class TrafficLight:
         self.red_time = None
         self.counter = 0
         self.x = 280
-        self.y = random.randrange(FINISH_POSITION[1]+FINISH.get_height(), START_POS_CAR[1] - self.height, 10)
+        self.y = None
         self.lights = ['green', 'orange', 'red']
-        if TRAFFIC_LIGHT:
-            self.reset()
+        self.reset()
 
     def set_light(self, color: str):
         match color:
@@ -76,4 +75,4 @@ class TrafficLight:
         self.set_light(random.choice(self.lights))
         self.set_light_times()
         self.counter = self.get_light_time()
-        self.y = random.randrange(FINISH_POSITION[1]+FINISH.get_height(), START_POS_CAR[1] - 2*self.height, 10)
+        self.y = random.randrange(FINISH_POSITION[1]+FINISH.get_height(), START_POS_CAR[1] - 2*self.height, 2*self.height)

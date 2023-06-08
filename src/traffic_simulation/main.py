@@ -4,6 +4,7 @@ from traffic_simulation.agents.pedestrian import Pedestrian
 from defs import *
 from simulation_settings import *
 from traffic_simulation.agents.traffic_light import TrafficLight
+from traffic_simulation.agents.traffic_lights import TrafficLights
 from traffic_simulation.driving.human_based_driving import human_based_driving
 from traffic_simulation.driving.rule_based_self_driving import rule_based_driving
 from traffic_simulation.driving.version_0_rule_based_self_driving import version_0_rule_based_self_driving
@@ -19,7 +20,7 @@ from data.pre_processing import reset_img_data, reset_output_data
 from traffic_simulation.driving.version_3_rule_based_self_driving import version_3_rule_based_self_driving
 
 
-def draw(win, images, player_car, static_cars, occ, text, traffic_light):
+def draw(win, images, player_car, static_cars, occ, text, traffic_lights):
     if DYNAMIC_SIMULATION:
         x = GRID_POSITION[0]
         y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
@@ -29,7 +30,7 @@ def draw(win, images, player_car, static_cars, occ, text, traffic_light):
         win.blit(img, (pos[0] - x, pos[1] - y))
 
     static_cars.draw(win, x, y)
-    traffic_light.draw(win, x, y)
+    traffic_lights.draw(win, x, y)
     player_car.draw(win, x, y)
     if not (DATA_ANALYSIS or COLLECT_DATA):
         win.blit(text, (10, 10))
@@ -123,7 +124,7 @@ def reset_traffic_simulation():
     player_car.reset()
     static_cars.reset()
     pedestrian.reset(static_cars.get_static_cars_rect())
-    traffic_light.reset()
+    traffic_lights.reset()
 
 
 run = True
@@ -148,7 +149,7 @@ player_car = PlayerCar(MAX_VEL, 4)
 static_cars = StaticCars(NUMBER_STATIC_CARS)
 static_cars.create_static_cars()
 pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
-traffic_light = TrafficLight()
+traffic_lights = TrafficLights(NUMBER_TRAFFIC_LIGHTS)
 
 self_driving = None
 if MODE == 2:
@@ -164,10 +165,10 @@ iteration = 0
 while run:
     clock.tick(FPS)
 
-    text_surface = my_font.render("{}   {}".format("___", output.index(1)), False, (0, 0, 0))
+    text_surface = my_font.render("{}   {}".format(iteration, output.index(1)), False, (0, 0, 0))
 
     occ, occ_car = occluded(player_car, static_cars.get_static_cars_rect(), pedestrian)
-    draw(WIN, images, player_car, static_cars, occ, text_surface, traffic_light)
+    draw(WIN, images, player_car, static_cars, occ, text_surface, traffic_lights)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -194,11 +195,10 @@ while run:
             case 6:
                 output = version_2_rule_based_self_driving(player_car, pedestrian)
             case 7:
-                output = version_3_rule_based_self_driving(player_car, pedestrian, traffic_light)
+                output = version_3_rule_based_self_driving(player_car, pedestrian, traffic_lights)
 
     pedestrian.move()
-    if TRAFFIC_LIGHT:
-        traffic_light.traffic_light_dynamics()
+    traffic_lights.traffic_light_dynamics()
 
     if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and \
             player_car.y + player_car.IMG.get_height() < HEIGHT and COLLECT_DATA:
