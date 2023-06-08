@@ -94,7 +94,7 @@ def occluded(player_car, static_cars_rect, pedestrian):
 
 
 def get_speed_level(speed):
-    return round(speed)
+    return round(speed, 2)
 
 
 def collect_data(output, player_car):
@@ -149,9 +149,6 @@ static_cars.create_static_cars()
 pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
 traffic_light = TrafficLight()
 
-if TRAFFIC_LIGHT:
-    traffic_light.set_light('green')
-
 self_driving = None
 if MODE == 2:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
@@ -199,6 +196,8 @@ while run:
                 output = version_3_rule_based_self_driving(player_car, pedestrian, traffic_light)
 
     pedestrian.move()
+    if TRAFFIC_LIGHT:
+        traffic_light.traffic_light_dynamics()
 
     if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and \
             player_car.y + player_car.IMG.get_height() < HEIGHT and COLLECT_DATA:
