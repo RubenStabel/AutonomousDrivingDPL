@@ -20,17 +20,17 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
     f3 = (x_rel / (60 + s * a)) ** 4 + (y_rel / ((s*b)+70)) ** 4 - 1
 
     if f3 < 0:
-        if overlapping_y and player_car.get_vel() > 4:
+        if overlapping_y and speed > 4:
             return 0
         else:
             return 3
     elif f2 < 0:
-        if overlapping_y and player_car.get_vel() > 3:
+        if overlapping_y and speed > 3:
             return 0
         else:
             return 2
     elif f1 < 0:
-        if overlapping_y and player_car.get_vel() > 2:
+        if overlapping_y and speed > 2:
             return 0
         else:
             return 1
