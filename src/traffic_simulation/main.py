@@ -3,6 +3,7 @@ import math
 from traffic_simulation.agents.pedestrian import Pedestrian
 from defs import *
 from simulation_settings import *
+from traffic_simulation.agents.pedestrians import Pedestrians
 from traffic_simulation.agents.traffic_light import TrafficLight
 from traffic_simulation.agents.traffic_lights import TrafficLights
 from traffic_simulation.driving.human_based_driving import human_based_driving
@@ -20,78 +21,24 @@ from data.pre_processing import reset_img_data, reset_output_data
 from traffic_simulation.driving.version_3_rule_based_self_driving import version_3_rule_based_self_driving
 
 
-def draw(win, images, player_car, static_cars, occ, text, traffic_lights):
+def draw(win, images, player_car, static_cars, text, traffic_lights, pedestrians):
     if DYNAMIC_SIMULATION:
         x = GRID_POSITION[0]
         y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
     else:
         x, y = 0, 0
+
     for img, pos in images:
         win.blit(img, (pos[0] - x, pos[1] - y))
 
     static_cars.draw(win, x, y)
     traffic_lights.draw(win, x, y)
     player_car.draw(win, x, y)
+    pedestrians.draw(win, x, y, player_car, static_cars)
     if not (DATA_ANALYSIS or COLLECT_DATA):
         win.blit(text, (10, 10))
 
-    if not occ or OCCLUDED_OBJ_VISIBLE:
-        pedestrian.draw(win, x, y)
-
-    # y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
-    # rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
-    # sub = win.subsurface(rect)
-
     pygame.display.update()
-
-
-def occluded(player_car, static_cars_rect, pedestrian):
-    occ = False
-    occ_car = []
-
-    xc = player_car.x + RED_CAR.get_width() // 2
-    yc = player_car.y
-
-    xp = pedestrian.x + (PEDESTRIAN.get_width() // 2) - xc
-    yp = pedestrian.y + (PEDESTRIAN.get_width() // 2) - yc
-
-    angle_1 = -1
-    angle_2 = -1
-    angle_p = 0
-    x1, y2 = 0, 0
-
-    if xp > 0 and pedestrian.y < player_car.y:
-        angle_p = math.degrees(math.acos(abs(xp / (math.sqrt(xp ** 2 + yp ** 2)))))
-    elif pedestrian.y < player_car.y:
-        angle_p = math.degrees(math.pi - math.acos(abs(abs(xp) / (math.sqrt(xp ** 2 + yp ** 2)))))
-
-    length_p = math.sqrt(xp ** 2 + yp ** 2)
-
-    for car in static_cars_rect:
-        if car.x > xc and car.y < player_car.y:
-            x1 = car.left - xc
-            y1 = car.top - yc
-            x2 = car.right - xc
-            y2 = car.bottom - yc
-
-            angle_1 = math.degrees(math.acos(abs(x2 / (math.sqrt(x2 ** 2 + y2 ** 2)))))
-            angle_2 = math.degrees(math.acos(abs(x1 / (math.sqrt(x1 ** 2 + y1 ** 2)))))
-        elif car.y < player_car.y:
-            x1 = xc - car.right
-            y1 = yc - car.top
-            x2 = xc - car.left
-            y2 = yc - car.bottom
-
-            angle_1 = math.degrees(math.pi - math.acos(abs(x1 / (math.sqrt(x1 ** 2 + y1 ** 2)))))
-            angle_2 = math.degrees(math.pi - math.acos(abs(x2 / (math.sqrt(x2 ** 2 + y2 ** 2)))))
-
-        length_car = math.sqrt(x1 ** 2 + y2 ** 2)
-
-        if (angle_1 <= angle_p <= angle_2 and length_p > length_car) or yp > 0:
-            occ = True
-            occ_car.append(car)
-
-    return occ, occ_car
 
 
 def get_speed_level(speed):
@@ -123,7 +70,7 @@ def reset_traffic_simulation():
     image_frame = 0
     player_car.reset()
     static_cars.reset()
-    pedestrian.reset(static_cars.get_static_cars_rect())
+    pedestrians.reset(static_cars.get_static_cars_rect())
     traffic_lights.reset()
 
 
@@ -148,7 +95,8 @@ player_car = PlayerCar(MAX_VEL, 4)
 
 static_cars = StaticCars(NUMBER_STATIC_CARS)
 static_cars.create_static_cars()
-pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
+# pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
+pedestrians = Pedestrians(NUMBER_PEDESTRIANS, static_cars.get_static_cars_rect())
 traffic_lights = TrafficLights(NUMBER_TRAFFIC_LIGHTS)
 
 self_driving = None
@@ -167,8 +115,7 @@ while run:
 
     text_surface = my_font.render("{}   {}".format(iteration, output.index(1)), False, (0, 0, 0))
 
-    occ, occ_car = occluded(player_car, static_cars.get_static_cars_rect(), pedestrian)
-    draw(WIN, images, player_car, static_cars, occ, text_surface, traffic_lights)
+    draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -183,31 +130,32 @@ while run:
             case 0:
                 human_based_driving(player_car)
             case 1:
-                output = rule_based_driving(player_car, occ, pedestrian)
+                output = rule_based_driving(player_car, occ, pedestrians)
             case 2:
                 self_driving.nn_driving(frame)
             case 3:
                 self_driving.nn_driving(frame)
             case 4:
-                output = version_0_rule_based_self_driving(player_car, pedestrian)
+                output = version_0_rule_based_self_driving(player_car, pedestrians)
             case 5:
-                output = version_1_rule_based_self_driving(player_car, pedestrian)
+                output = version_1_rule_based_self_driving(player_car, pedestrians)
             case 6:
-                output = version_2_rule_based_self_driving(player_car, pedestrian)
+                output = version_2_rule_based_self_driving(player_car, pedestrians)
             case 7:
-                output = version_3_rule_based_self_driving(player_car, pedestrian, traffic_lights)
+                output = version_3_rule_based_self_driving(player_car, pedestrians, traffic_lights)
 
-    pedestrian.move()
+    pedestrians.move()
     traffic_lights.traffic_light_dynamics()
 
     if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and \
             player_car.y + player_car.IMG.get_height() < HEIGHT and COLLECT_DATA:
         collect_data(output, player_car)
 
-    pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
-    if pedestrian_poi_collide is not None:
-        print("COLLISION")
-        reset_traffic_simulation()
+    for pedestrian in pedestrians.get_pedestrians():
+        pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
+        if pedestrian_poi_collide is not None:
+            print("COLLISION")
+            reset_traffic_simulation()
 
     road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK, *ROAD_BORDER_POSITION)
     if road_border_poi_collide is not None:

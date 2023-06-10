@@ -19,7 +19,7 @@ def create_grid():
 class Pedestrian:
     IMG = PEDESTRIAN
 
-    def __init__(self, max_vel, obstacles_rect=None):
+    def __init__(self, max_vel=1, obstacles_rect=None):
         if obstacles_rect is None:
             obstacles_rect = []
         self.img = self.IMG
