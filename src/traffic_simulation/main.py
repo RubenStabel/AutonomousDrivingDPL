@@ -85,10 +85,10 @@ if DATA_ANALYSIS:
 
 if COLLECT_DATA:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(DATA_FOLDER), 3)
-    # f = open(
-    #     "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "w")
-    # f.write("{};{};{};{}\n".format("iteration", "image_frame", "output", "speed"))
-    # f.close()
+    f = open(
+        "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "w")
+    f.write("{};{};{};{}\n".format("iteration", "image_frame", "output", "speed"))
+    f.close()
 
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
 player_car = PlayerCar(MAX_VEL, 4)

@@ -10,10 +10,10 @@ from deepproblog.examples.Autonomous_driving.experimental.networks.network impor
 # Baseline
 NETWORK = AD_V1_0_net()
 MODEL_NAME = "Baseline"
-NN_PATH = '/deepproblog/examples/Autonomous_driving/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/experimental/snapshot/baseline/test/autonomous_driving_baseline_V0_0.pth'
 
-HTML_FILE_PATH = '/deepproblog/examples/Autonomous_driving/data_analysis/errors/data_analysis_baseline.html'
-DATA_FILE_PATH = '/deepproblog/examples/Autonomous_driving/data_analysis/errors/false_predictions_baseline'
+HTML_FILE_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/errors/data_analysis_baseline.html'
+DATA_FILE_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/errors/false_predictions_baseline'
 
 CLASSES = ('Accelerate', 'Brake', 'Idle')
 DATA = get_dataset("test")

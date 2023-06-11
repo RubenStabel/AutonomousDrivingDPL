@@ -7,7 +7,7 @@ from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets
 from deepproblog.examples.Autonomous_driving.experimental.networks.network import AD_V0_0_net, AD_V1_1_net
 from deepproblog.model import Model
 from deepproblog.network import Network
-from traffic_simulation.utils import reset_img_data
+from data.pre_processing import reset_img_data
 
 # NeSy V1
 NETWORK = [AD_V0_0_net(), AD_V1_1_net()]

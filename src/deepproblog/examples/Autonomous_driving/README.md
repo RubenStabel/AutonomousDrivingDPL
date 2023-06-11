@@ -10,4 +10,4 @@ Model reasoning on both X and Y
 Model has an additional speed parameter to reason on
 
 ## [V3] -  Version 3:
-Model includes stop sign in environment (new traffic rule)
+Model includes traffic light in environment (new traffic rule)

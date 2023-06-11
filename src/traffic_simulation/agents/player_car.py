@@ -7,7 +7,8 @@ class PlayerCar(AbstractCar):
     START_POS = START_POS_CAR
 
     def road_infraction(self):
-        print("road border infraction")
+        # print("road border infraction")
+        pass
 
     def bounce(self):
         self.vel = 0

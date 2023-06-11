@@ -1,35 +1,31 @@
 import math
 
 from traffic_simulation.agents.pedestrian import Pedestrian
+from traffic_simulation.agents.pedestrians import Pedestrians
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.traffic_light import TrafficLight
 from traffic_simulation.agents.traffic_lights import TrafficLights
 from traffic_simulation.simulation_settings import NUMBER_TRAFFIC_LIGHTS
 
 
-def agents_danger_zone(player_car: PlayerCar, obstacles: list, speed):
-    if player_car.y < min([obj.y for obj in obstacles]) or player_car.x > max([obj.x + obj.img.get_width() for obj in obstacles]):
+def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
+
+    if player_car.y < obstacle.y or player_car.x > obstacle.x + obstacle.img.get_width():
         return 0
 
-    diff_x = [min(abs(player_car.x - obstacle.x), abs(player_car.x - obstacle.x - obstacle.img.get_width())) for obstacle in obstacles]
-    diff_y = [min(abs(player_car.y - obstacle.y), abs(player_car.y - obstacle.y - obstacle.img.get_height())) for obstacle in obstacles]
-
-    distance_obj = [math.sqrt(diff_x[i]**2 + diff_y[i]**2) for i in range(len(diff_x))]
-    danger_obj = obstacles[distance_obj.index(min(distance_obj))]
-
     x_rel = round(
-        min(abs(player_car.x - danger_obj.x), abs(player_car.x - danger_obj.x - danger_obj.img.get_width())) / 20) * 20
+        min(abs(player_car.x - obstacle.x), abs(player_car.x - obstacle.x - obstacle.IMG.get_width())) / 20) * 20
     y_rel = round(
-        min(abs(player_car.y - danger_obj.y), abs(player_car.y - danger_obj.y - danger_obj.img.get_height())) / 100) * 100
-    overlapping_y = (player_car.y - danger_obj.y) < (danger_obj.img.get_height() - danger_obj.img.get_height() / 2)
+        min(abs(player_car.y - obstacle.y), abs(player_car.y - obstacle.y - obstacle.IMG.get_height())) / 100) * 100
+    overlapping_y = (player_car.y - obstacle.y) < (obstacle.IMG.get_height() - obstacle.IMG.get_height() / 2)
 
     a = 1
     b = 12
-    s = ((speed + 1) ** 2) / 5
+    s = ((speed+1)**2)/5
 
-    f1 = (x_rel / (80 + s * a)) ** 4 + (y_rel / ((s * b) + 170)) ** 4 - 1
-    f2 = (x_rel / (70 + s * a)) ** 4 + (y_rel / ((s * b) + 100)) ** 4 - 1
-    f3 = (x_rel / (60 + s * a)) ** 4 + (y_rel / ((s * b) + 70)) ** 4 - 1
+    f1 = (x_rel / (80 + s * a)) ** 4 + (y_rel / ((s*b)+170)) ** 4 - 1
+    f2 = (x_rel / (70 + s * a)) ** 4 + (y_rel / ((s*b)+100)) ** 4 - 1
+    f3 = (x_rel / (60 + s * a)) ** 4 + (y_rel / ((s*b)+70)) ** 4 - 1
 
     if f3 < 0:
         if overlapping_y and speed > 4:
@@ -55,6 +51,7 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
         return 0
 
     positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y > 0]
+    print(positive_distances)
     if positive_distances:
         traffic_light = traffic_lights[[player_car.y - x.y for x in traffic_lights].index(min(positive_distances))]
     else:
@@ -96,11 +93,15 @@ def get_action(actions: list):
     return max(actions)
 
 
-def version_3_rule_based_self_driving(player_car: PlayerCar, pedestrian: Pedestrian, traffic_lights: TrafficLights):
+def version_3_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedestrians, traffic_lights: TrafficLights):
+    actions = []
+    for pedestrian in pedestrians.get_pedestrians():
+        actions.append(get_danger_zone(player_car, pedestrian, player_car.get_vel()))
+    actions.append(traffic_light_handler(player_car, traffic_lights.unique_traffic_lights, player_car.get_vel()))
 
-    obstacles = [pedestrian]
+    print(actions)
 
-    match get_action([agents_danger_zone(player_car, obstacles, player_car.get_vel()), traffic_light_handler(player_car, traffic_lights.unique_traffic_lights, player_car.get_vel())]):
+    match get_action(actions):
         case 0:
             player_car.move_forward()
             output = [1, 0, 0, 0]
