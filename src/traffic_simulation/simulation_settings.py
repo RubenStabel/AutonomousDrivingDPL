@@ -10,20 +10,20 @@ from deepproblog.examples.Autonomous_driving.experimental.networks.network impor
 6 --> Version 2 rule based self driving
 7 --> Version 3 rule based self driving
 """
-MODE = 7
+MODE = 4
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
-DATA_FOLDER = "general/dev"
-PREFIX = '0'
-COLLECT_DATA = False
-NUMBER_STATIC_CARS = 20
-NUMBER_PEDESTRIANS = 4
+COLLECT_DATA = True
 DATA_ANALYSIS = False
 SCENARIO_MODE = False
-NUMBER_TRAFFIC_LIGHTS = 5
-DYNAMIC_SIMULATION = True
-EXTENDED_ROAD = True
+DATA_FOLDER = "general/version_0_env_0"
+PREFIX = '0'
+NUMBER_STATIC_CARS = 0
+NUMBER_PEDESTRIANS = 1
+NUMBER_TRAFFIC_LIGHTS = 0
+DYNAMIC_SIMULATION = False
+EXTENDED_ROAD = False
 
 SCENARIO = {
     'low pass': [(30, 70), (29, 69), (28, 68), (27, 67), (26, 66), (25, 65), (24, 64), (23, 63), (22, 62), (21, 61), (20, 61), (19, 60), (18, 59), (17, 58), (16, 57), (15, 57), (14, 56), (13, 56), (12, 55), (11, 54), (10, 53), (9, 52), (8, 51), (7, 50)],

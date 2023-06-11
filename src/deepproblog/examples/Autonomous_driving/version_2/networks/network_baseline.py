@@ -63,6 +63,8 @@ class AD_V2_baseline_net_1(nn.Module):
         )
 
     def forward(self, img, spd):
+        # print(torch.unbind(x))
+        # img, spd = torch.unbind(x)
         img = self.image_features(img)
         spd = self.numeric_features(spd)
         z = torch.cat((img, spd), -1)

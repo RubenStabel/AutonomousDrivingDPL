@@ -14,13 +14,13 @@ from deepproblog.examples.Autonomous_driving.version_0.networks.network_baseline
 
 
 N = 0
-folder = "test/"
+folder = "train/"
 
 name = "autonomous_driving_baseline_{}".format(N)
 
 train_set, AD_train = get_dataset("train")
-valid_set, AD_valid = get_dataset("valid")
-test_set, AD_test = get_dataset("test")
+valid_set, AD_valid = get_dataset("train")
+test_set, AD_test = get_dataset("train")
 
 print("###############    LOADING NETWORK    ###############")
 network = AD_V0_baseline_net()

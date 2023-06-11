@@ -7,33 +7,33 @@ import numpy as np
 #######################################################
 
 
-def plot_loss(data, filter=1, data_class='loss'):
+def plot_loss(data, filter=1, metric='loss'):
     df = pd.DataFrame(data)
     df = df[(df['i'] / 20) % filter == 0]
-    df.plot(x='i', y=data_class)
+    df.plot(x='i', y=metric)
     plt.show()
 
 
-def plot_multiple_losses(data1, name1, data2, name2, filter=1, data_class='loss'):
+def plot_multiple_losses(data1, name1, data2, name2, filter=1, metric='loss'):
     df1 = pd.DataFrame(data1)
     df1 = df1[(df1['i'] / 20) % filter == 0]
     df2 = pd.DataFrame(data2)
     df2 = df2[(df2['i'] / 20) % filter == 0]
-    ax = df1.plot(x='i', y=data_class)
-    df2.plot(ax=ax, x='i', y=data_class)
+    ax = df1.plot(x='i', y=metric)
+    df2.plot(ax=ax, x='i', y=metric)
     ax.legend(["loss: {}".format(name1), "loss: {}".format(name2)])
     plt.show()
 
 
-def running_loss(data, sequence_length=20, data_class='loss'):
+def running_metric(data, sequence_length=20, metric='loss'):
     df = pd.DataFrame(data)
     run_loss = []
 
     for i in range(len(df)):
         if i < sequence_length:
-            run_loss.append(sum(df.loc[0:i][data_class])/(i+1))
+            run_loss.append(sum(df.loc[0:i][metric])/(i+1))
         else:
-            run_loss.append(sum(df.loc[i-sequence_length:i][data_class])/(sequence_length+1))
+            run_loss.append(sum(df.loc[i-sequence_length:i][metric])/(sequence_length+1))
 
     return run_loss
 
@@ -81,9 +81,9 @@ def data_2_pd_baseline_acc(data_path):
 #######################################################
 
 def running_accuracy_loss(data_3, name_1):
-    d1 = np.array(running_loss(data_3))
+    d1 = np.array(running_metric(data_3))
     df1 = pd.DataFrame(d1)
-    d2 = np.array(running_loss(data_3, data_class='accuracy'))
+    d2 = np.array(running_metric(data_3, metric='accuracy'))
     df2 = pd.DataFrame(d2)
     ax = df1.plot()
     df2.plot(ax=ax)
@@ -121,15 +121,15 @@ def multiple_accuracy_loss(data_1, name_1, data_2, name_2, filter=1):
 
 
 def multiple_running_accuracy_loss(data_1, name_1, data_2, name_2):
-    d1 = np.array(running_loss(data_1))
+    d1 = np.array(running_metric(data_1, metric='loss'))
     df1 = pd.DataFrame(d1)
-    d2 = np.array(running_loss(data_1, data_class='accuracy'))
+    d2 = np.array(running_metric(data_1, metric='accuracy'))
     df2 = pd.DataFrame(d2)
     ax = df1.plot()
     df2.plot(ax=ax)
-    d3 = np.array(running_loss(data_2))
+    d3 = np.array(running_metric(data_2, metric='loss'))
     df3 = pd.DataFrame(d3)
-    d4 = np.array(running_loss(data_2, data_class='accuracy'))
+    d4 = np.array(running_metric(data_2, metric='accuracy'))
     df4 = pd.DataFrame(d4)
     df3.plot(ax=ax)
     df4.plot(ax=ax)
@@ -139,29 +139,18 @@ def multiple_running_accuracy_loss(data_1, name_1, data_2, name_2):
     plt.show()
 
 
-#######################################################
-#                 EXPERIMENTS
-#######################################################
-
-data_1 = data_2_pd_acc(
-    '/deepproblog/examples/Autonomous_driving/log/baseline/train/autonomous_driving_baseline_NeSy_10.log')
-data_2 = data_2_pd_acc(
-    '/deepproblog/examples/Autonomous_driving/log/neuro_symbolic/test/autonomous_driving_NeSy_V0.1_19.log')
-# data_3 = data_2_pd_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/log/baseline/train/autonomous_driving_baseline_NeSy_10.log')
-# data_4 = data_2_pd_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/log/neuro_symbolic/test/autonomous_driving_NeSy_16.log')
-# data_5 = data_2_pd_baseline_acc('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/log/baseline/test/autonomous_driving_baseline_V0_0.log')
-
-# multiple_accuracy_loss(data_3, "autonomous_driving_baseline_1",data_4,  "autonomous_driving_V1.0")
-# multiple_running_accuracy_loss(data_1,"Baseline",data_2,"NeSy")
-
-multiple_running_accuracy_loss(data_1, 'Test Baseline', data_2, 'Test NeSy V1')
-# multiple_running_accuracy_loss(data_1, 'Test NeSy V1', data_5, 'Test Baseline')
-multiple_accuracy_loss(data_1, 'Test Baseline', data_2, 'Test NeSy V1')
-# accuracy_loss(data_5, "Baseline")
-# running_accuracy_loss(data_5, "Baseline")
-# loss = running_loss(data_5)
-
-# plot_multiple_losses(data_1, "autonomous_driving_baseline_1", data_2, "autonomous_driving_V1.0", 5)
-# accuracy_loss(data_2, "NeSy")
-# running_accuracy_loss(data_2, "NeSy")
-# plot_multiple_running_losses(running_loss(data_1), "autonomous_driving_baseline_1", running_loss(data_2), "autonomous_driving_V1.0")
+def multiple_running_metrics(data: list[pd.DataFrame], names: list[str], metrics: list[str]):
+    df = {}
+    legend = []
+    ax = None
+    for i, d in enumerate(data, 0):
+        for j, metric in enumerate(metrics, 0):
+            x = len(metrics)*i + j
+            df['df_{}'.format(x)] = pd.DataFrame(np.array(running_metric(d, metric=metric)))
+            if x == 0:
+                ax = df.get('df_0').plot()
+            else:
+                df.get('df_{}'.format(x)).plot(ax=ax)
+            legend.append("running {}: {}".format(metric, names[i]))
+    ax.legend(legend)
+    plt.show()

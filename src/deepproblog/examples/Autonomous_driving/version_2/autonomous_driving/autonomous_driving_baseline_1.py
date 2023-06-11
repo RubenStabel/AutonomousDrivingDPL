@@ -12,7 +12,7 @@ from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_baseline_1 import get_dataset
 from deepproblog.examples.Autonomous_driving.version_2.networks.network_baseline import AD_V2_baseline_net_1
 
-N = 0
+N = 2
 folder = "test/"
 
 name = "autonomous_driving_baseline_1_{}".format(N)
