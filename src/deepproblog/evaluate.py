@@ -43,7 +43,8 @@ def get_confusion_matrix(
                 actual = float(gt_query.output_values()[0])
                 if abs(actual - predicted) < eps:
                     predicted = actual
-            if verbose > 1 and actual != predicted:
+            # if verbose > 1 and actual != predicted:
+            if verbose > 1:
                 NN_outputs = ""
                 for j in range(len(model.networks)):
                     NN_name = str(list(answer.semiring.values.items())[j][0][0])
@@ -57,7 +58,7 @@ def get_confusion_matrix(
                         NN_outputs = NN_outputs + '  '
 
                 f = open(
-                    "/deepproblog/examples/Autonomous_driving/data_analysis/errors/false_predictions_NeSy",
+                    "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/errors/false_predictions_NeSy",
                     "a")
                 f.write("{}  {} vs {}::{}  {}  for query {} \n".format(
                     i, actual, p, predicted, NN_outputs, test_query

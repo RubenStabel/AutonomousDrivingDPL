@@ -11,9 +11,9 @@ from torchvision import datasets, transforms
 from deepproblog.dataset import Dataset
 from deepproblog.query import Query
 
-train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_2_env_0'
-test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_2_env_0'
-output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6.txt'
+train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/small'
+test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete'
+output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
 
 ####################################################
 #       Create Train, Valid and Test sets
@@ -86,6 +86,7 @@ def image_file_to_speed(image_data_path: str):
     image_id = image_name.split('_')[-1].split('.')[0]
     iter_image = image_id.split('frame')[0].split('iter')[-1]
     frame = image_id.split('frame')[-1]
+
     df = pd.DataFrame(data_2_pd_speed())
     vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
     return vel

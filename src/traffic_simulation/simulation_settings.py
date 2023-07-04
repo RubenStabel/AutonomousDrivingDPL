@@ -10,14 +10,14 @@ from deepproblog.examples.Autonomous_driving.experimental.networks.network impor
 6 --> Version 2 rule based self driving
 7 --> Version 3 rule based self driving
 """
-MODE = 4
+MODE = 6
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
 COLLECT_DATA = True
 DATA_ANALYSIS = False
 SCENARIO_MODE = False
-DATA_FOLDER = "general/version_0_env_0"
+DATA_FOLDER = "general/version_2_env_0"
 PREFIX = '0'
 NUMBER_STATIC_CARS = 0
 NUMBER_PEDESTRIANS = 1

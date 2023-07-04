@@ -3,18 +3,19 @@ import torch
 
 from deepproblog.engines import ExactEngine
 from deepproblog.evaluate import get_confusion_matrix
-from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import get_dataset, AD_test
+from deepproblog.examples.Autonomous_driving.version_0.networks.network_NeSy import AD_V0_NeSy_1_net, AD_V0_NeSy_2_net
+from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets_NeSy import get_dataset, AD_test
 from deepproblog.examples.Autonomous_driving.experimental.networks.network import AD_V0_0_net, AD_V1_1_net
 from deepproblog.model import Model
 from deepproblog.network import Network
 from data.pre_processing import reset_img_data
 
 # NeSy V1
-NETWORK = [AD_V0_0_net(), AD_V1_1_net()]
+NETWORK = [AD_V0_NeSy_2_net()]
 MODEL_NAME = "NeSy"
-MODEL_PATH = '/deepproblog/examples/Autonomous_driving/models/autonomous_driving_NeSy_1.pl'
-NN_PATH = '/deepproblog/examples/Autonomous_driving/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'
-NN_NAME = ['perc_net_AD_V1X', 'perc_net_AD_V1Y']
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_2.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_2_0.pth'
+NN_NAME = ['perc_net_version_0_NeSy_2']
 
 # # Baseline NeSy
 # NETWORK = AD_V1_net()
@@ -23,8 +24,8 @@ NN_NAME = ['perc_net_AD_V1X', 'perc_net_AD_V1Y']
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/snapshot/baseline/autonomous_driving_baseline_NeSy_10.pth'
 # NN_NAME = 'ad_baseline_net'
 
-HTML_FIL_PATH = '/deepproblog/examples/Autonomous_driving/data_analysis/errors/data_analysis_NeSy.html'
-DATA_FILE = '/deepproblog/examples/Autonomous_driving/data_analysis/errors/false_predictions_NeSy'
+HTML_FIL_PATH = '../errors/data_analysis_NeSy.html'
+DATA_FILE = '../errors/false_predictions_NeSy'
 
 
 def get_nn_model(networks, nn_name, model_path, nn_path):
@@ -93,13 +94,9 @@ def generate_false_prediction_data(data, test_set):
         f.close()
 
 
-
-
-
-
 def generate_html_data_analysis():
     reset_false_predictions()
-    test_set = get_dataset("test")
+    test_set, _ = get_dataset("test")
     get_confusion_matrix(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), test_set, verbose=2).accuracy()
     data = data_2_pd_img_idx(DATA_FILE)
     style = """
@@ -114,7 +111,7 @@ def generate_html_data_analysis():
     
     /* Create three equal columns that sits next to each other */
     .column {
-      flex: 33.33%;
+      flex: 50%;
       padding: 5px;
     }
     </style>
@@ -148,7 +145,7 @@ def reset_false_predictions():
     f = open(DATA_FILE, 'w')
     f.write("idx  model_result  {}  query \n".format(NN_str))
     f.close()
-    reset_img_data("/deepproblog/examples/Autonomous_driving/data_analysis/errors/histogram_NeSy", 2)
+    reset_img_data("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/errors/histogram_NeSy", 2)
 
 
 generate_html_data_analysis()

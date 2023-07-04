@@ -56,6 +56,8 @@ def generate_balanced_dataset(train_path, balanced_path, number_of_classes, size
 # generate_balanced_dataset('img/general/version_0_env_0', 'img/balanced/version_0_env_0/medium', 3, 0.5)
 # generate_balanced_dataset('img/general/version_0_env_0', 'img/balanced/version_0_env_0/small', 3, 0.25)
 
+# generate_balanced_dataset('img/general/version_2_env_0', 'img/balanced/version_2_env_0_complete', 4)
+
 # get_vel_img_id(3, '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output.txt')
 
 # print(parse_output_file("output_data/output.txt"))

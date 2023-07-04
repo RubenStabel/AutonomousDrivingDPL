@@ -49,8 +49,7 @@ def idx_to_file_name(data, test_set):
                 "<b>Actual:</b> {}\n"
                 "<br>\n"
                 "<br>\n"
-                "".format(img_path,
-                                                                                                               predicted, actual))
+                "".format(img_path, predicted, actual))
         f.close()
 
 
