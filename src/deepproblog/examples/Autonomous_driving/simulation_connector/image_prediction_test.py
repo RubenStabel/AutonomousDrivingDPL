@@ -71,6 +71,7 @@ def get_nn_output(data, model):
     test_query = image.variable_output()
     answer = model.solve([test_query])[0]
     # actual = str(image.output_values()[0])
+    print(answer.result)
     max_ans = max(answer.result, key=lambda x: answer.result[x])
     # p = answer.result[max_ans]
     predicted = str(max_ans.args[image.output_ind[0]])
@@ -102,18 +103,28 @@ def get_nn_model():
     model.eval()
     return model
 
-# NeSy V1.1
-NETWORK = [AD_V0_0_net(), AD_V1_1_net()]
-MODEL_NAME = "NeSy"
-MODEL_PATH = '/deepproblog/examples/Autonomous_driving/models/autonomous_driving_NeSy_1.pl'
-NN_PATH = '/deepproblog/examples/Autonomous_driving/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'
-NN_NAME = ['perc_net_AD_V1X', 'perc_net_AD_V1Y']
 
-path1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_balanced_1/1/0_iter0frame17.png'
-path2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train/0/0_iter0frame8.png'
-result = int(get_nn_output(path1, get_nn_model()))
-# print(NN_NAME)
-print(result)
+
+
+
+# # NeSy V1.1
+# NETWORK = [AD_V0_0_net(), AD_V1_1_net()]
+# MODEL_NAME = "NeSy"
+# MODEL_PATH = '/deepproblog/examples/Autonomous_driving/models/autonomous_driving_NeSy_1.pl'
+# NN_PATH = '/deepproblog/examples/Autonomous_driving/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_V1.1_2.pth'
+# NN_NAME = ['perc_net_AD_V1X', 'perc_net_AD_V1Y']
+#
+# path1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train_simple_yellow_balanced_1/1/0_iter0frame17.png'
+# path2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/train/0/0_iter0frame8.png'
+# result = int(get_nn_output(path1, get_nn_model()))
+# # print(NN_NAME)
+# print(result)
+
+
+
+
+
+
 # transform = transforms.Compose([
 #     transforms.ToTensor(),
 #     transforms.Resize((32, 32)),
