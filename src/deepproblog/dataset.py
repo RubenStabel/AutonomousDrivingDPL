@@ -14,6 +14,9 @@ from deepproblog.query import Query
 class Dataset(ABC):
     __slots__ = ()
 
+    def __init__(self):
+        self.image_paths = None
+
     def __str__(self):
         return "\n".join(str(self.to_query(i)) for i in range(min(len(self), 5)))
 

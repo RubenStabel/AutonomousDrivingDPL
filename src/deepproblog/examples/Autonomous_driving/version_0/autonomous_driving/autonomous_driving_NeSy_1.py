@@ -12,8 +12,8 @@ from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets_NeSy import get_dataset
 from deepproblog.examples.Autonomous_driving.version_0.networks.network_NeSy import AD_V0_NeSy_1_net
 
-N = 0
-folder = "train/"
+N = 2
+folder = "test/"
 
 name = "autonomous_driving_NeSy_1_{}".format(N)
 

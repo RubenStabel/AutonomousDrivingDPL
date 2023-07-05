@@ -8,7 +8,7 @@ from traffic_simulation.agents.traffic_light import TrafficLight
 from traffic_simulation.agents.traffic_lights import TrafficLights
 from traffic_simulation.driving.human_based_driving import human_based_driving
 from traffic_simulation.driving.rule_based_self_driving import rule_based_driving
-from traffic_simulation.driving.version_0_rule_based_self_driving import version_0_rule_based_self_driving
+from traffic_simulation.driving.version_0_rule_based_self_driving import version_0_rule_based_self_driving, danger_pedestrian
 from traffic_simulation.driving.nn_based_self_driving import NNSelfDriving
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.static_cars import StaticCars
@@ -45,7 +45,7 @@ def get_speed_level(speed):
     return round(speed, 2)
 
 
-def collect_data(output, player_car):
+def collect_data(output, player_car, danger_level, ped: Pedestrian):
     global image_frame
     output_class = output.index(1)
     y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
@@ -54,7 +54,7 @@ def collect_data(output, player_car):
     pygame.image.save(sub, "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
 
     f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "a")
-    f.write("{};{};{};{}\n".format(iteration, image_frame, output, get_speed_level(player_car.get_vel())))
+    f.write("{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output, get_speed_level(player_car.get_vel()), danger_level, player_car.x, player_car.y, ped.x, ped.y))
     f.close()
 
     image_frame += 1
@@ -87,7 +87,7 @@ if COLLECT_DATA:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(DATA_FOLDER), 3)
     f = open(
         "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "w")
-    f.write("{};{};{};{}\n".format("iteration", "image_frame", "output", "speed"))
+    f.write("{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y'))
     f.close()
 
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
@@ -100,6 +100,8 @@ pedestrians = Pedestrians(NUMBER_PEDESTRIANS, static_cars.get_static_cars_rect()
 traffic_lights = TrafficLights(NUMBER_TRAFFIC_LIGHTS)
 
 self_driving = None
+ped = None
+danger_level = 0
 if MODE == 2:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
 elif MODE == 3:
@@ -137,6 +139,7 @@ while run:
                 self_driving.nn_driving(frame)
             case 4:
                 output = version_0_rule_based_self_driving(player_car, pedestrians)
+                danger_level, ped = danger_pedestrian(player_car, pedestrians)
             case 5:
                 output = version_1_rule_based_self_driving(player_car, pedestrians)
             case 6:
@@ -149,7 +152,7 @@ while run:
 
     if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and \
             player_car.y + player_car.IMG.get_height() < HEIGHT and COLLECT_DATA:
-        collect_data(output, player_car)
+        collect_data(output, player_car, danger_level, ped)
 
     for pedestrian in pedestrians.get_pedestrians():
         pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)

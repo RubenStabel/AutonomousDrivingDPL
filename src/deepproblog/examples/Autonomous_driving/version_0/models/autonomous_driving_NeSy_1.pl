@@ -6,7 +6,6 @@ nn(perc_net_version_0_NeSy_1,[Img],X,[0,1,2,3]) :: cell(Img,X).
 attention_boundary(X) :- X==1.
 
 
-
 % Prediction ---> 50 pixels
 enlarged_boundary(X) :- X==2.
 
