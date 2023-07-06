@@ -63,8 +63,8 @@ def collect_data(output, player_car, danger_level, ped: Pedestrian):
 
 def collect_simulation_metrics(iter, infraction, start_time):
     f = open(
-        "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/simulation_metrics".format(
-            MODE), "a")
+        "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/model_analysis/simulation_metrics/{}".format(
+            MODEL_NAME), "a")
     f.write("{};{};{}\n".format(iter, infraction, round(time.time()-start_time, 3)))
     f.close()
 
@@ -109,7 +109,7 @@ if COLLECT_DATA:
     f.close()
 
 if SIMULATION_METRICS:
-    f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/simulation_metrics".format(MODE), "w")
+    f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/model_analysis/simulation_metrics/{}".format(MODEL_NAME), "w")
     f.write("{};{};{}\n".format('iteration', 'infraction', 'ttf'))
     f.close()
 
@@ -158,7 +158,10 @@ while run and iteration < NUMBER_ITERATIONS:
             case 1:
                 output = rule_based_driving(player_car, occ, pedestrians)
             case 2:
-                self_driving.nn_driving(frame)
+                if pedestrians.get_pedestrians()[0].x < player_car.x - PEDESTRIAN.get_width():
+                    version_0_rule_based_self_driving(player_car, pedestrians)
+                else:
+                    self_driving.nn_driving(frame)
             case 3:
                 self_driving.nn_driving(frame)
             case 4:

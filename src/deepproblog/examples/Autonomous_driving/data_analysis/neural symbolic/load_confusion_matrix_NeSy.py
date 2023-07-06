@@ -17,10 +17,10 @@ from data.pre_processing import reset_img_data
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_2_0.pth'
 # NN_NAME = ['perc_net_version_0_NeSy_2']
 
-NETWORK = [AD_V0_NeSy_1_net()]
 MODEL_NAME = "NeSy"
+NETWORK = [AD_V0_NeSy_1_net()]
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_2.pth'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'
 NN_NAME = ['perc_net_version_0_NeSy_1']
 
 # # Baseline NeSy

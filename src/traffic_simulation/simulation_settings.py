@@ -2,6 +2,7 @@ import numpy as np
 
 from deepproblog.examples.Autonomous_driving.experimental.networks.network import AD_V0_0_net, AD_V1_1_net
 from deepproblog.examples.Autonomous_driving.version_0.networks.network_NeSy import AD_V0_NeSy_1_net
+from deepproblog.examples.Autonomous_driving.version_0.networks.network_baseline import AD_V0_baseline_net
 
 """
 0 --> Drive sim with keys
@@ -28,7 +29,7 @@ NUMBER_TRAFFIC_LIGHTS = 0
 DYNAMIC_SIMULATION = False
 EXTENDED_ROAD = False
 SIMULATION_METRICS = True
-NUMBER_ITERATIONS = 3
+NUMBER_ITERATIONS = 50
 
 SCENARIO = {
     'low pass': [(30, 70), (29, 69), (28, 68), (27, 67), (26, 66), (25, 65), (24, 64), (23, 63), (22, 62), (21, 61), (20, 61), (19, 60), (18, 59), (17, 58), (16, 57), (15, 57), (14, 56), (13, 56), (12, 55), (11, 54), (10, 53), (9, 52), (8, 51), (7, 50)],
@@ -47,9 +48,9 @@ SCENARIO = {
 
 # NeSy V1.1
 NETWORK = [AD_V0_NeSy_1_net()]
-MODEL_NAME = "NeSy"
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_2.pth'
+MODEL_NAME = "version_0_NeSy_1_Collision"
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/collision_NeSy.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'
 NN_NAME = ['perc_net_version_0_NeSy_1']
 
 # # # Baseline PyTorch

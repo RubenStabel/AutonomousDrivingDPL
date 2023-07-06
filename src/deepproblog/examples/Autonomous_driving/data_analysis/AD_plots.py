@@ -139,14 +139,14 @@ def multiple_running_accuracy_loss(data_1, name_1, data_2, name_2):
     plt.show()
 
 
-def multiple_running_metrics(data: list[pd.DataFrame], names: list[str], metrics: list[str]):
+def multiple_running_metrics(data: list[pd.DataFrame], names: list[str], metrics: list[str], granularity=20):
     df = {}
     legend = []
     ax = None
     for i, d in enumerate(data, 0):
         for j, metric in enumerate(metrics, 0):
             x = len(metrics)*i + j
-            df['df_{}'.format(x)] = pd.DataFrame(np.array(running_metric(d, metric=metric)))
+            df['df_{}'.format(x)] = pd.DataFrame(np.array(running_metric(d, sequence_length=granularity, metric=metric)))
             if x == 0:
                 ax = df.get('df_0').plot()
             else:

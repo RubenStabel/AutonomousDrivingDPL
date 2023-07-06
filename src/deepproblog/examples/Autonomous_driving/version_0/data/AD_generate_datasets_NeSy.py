@@ -10,7 +10,7 @@ from deepproblog.dataset import Dataset
 from deepproblog.query import Query
 
 
-train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/small'
+train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete'
 test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete'
 
 ####################################################

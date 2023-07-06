@@ -106,7 +106,7 @@ def create_heatmap(img_path, danger_zones, probs, save_path=None):
         w = 1
         cv2.rectangle(overlay, (zone, y), (zone + w, y + h), (255 * probs[i], 255 * probs[i], 255 * probs[i]), -1)
 
-    alpha = 0.4  # Transparency factor.
+    alpha = 0.1  # Transparency factor.
 
     grey = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
 
@@ -144,9 +144,10 @@ def generate_heatmap(model, simulation_data_path, img_path, save_path=None):
 SIM_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
 NETWORK = [AD_V0_NeSy_1_net()]
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_2.pth'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'
 NN_NAME = ['perc_net_version_0_NeSy_1']
-
-IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/2/0_iter0frame5.png'
+# IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/0/0_iter22frame28.png'
+IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/0/0_iter14frame5.png'
+# IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/2/0_iter0frame7.png'
 
 generate_heatmap(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH)

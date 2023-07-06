@@ -56,6 +56,8 @@ def create_predicate_confusion_matrix(model: Model, NN_name: str, dataset: Datas
 
         # NN predicate
         predicted = int(str(torch.argmax(list(answer.semiring.values.values())[network]).item()))
+        if int(predicted) == 3:
+            predicted = 0
         p = str(torch.max(list(answer.semiring.values.values())[network]).item())
         y_pred.append(int(predicted))
 
@@ -111,14 +113,3 @@ def generate_confusion_matrices(model, dataset, output_data_path, classes, save_
     for i in range(len(model.networks)):
         NN_name = list(model.networks.keys())[i]
         create_predicate_confusion_matrix(model, NN_name, dataset, i, df, classes, save_path)
-
-
-OUTPUT_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
-NETWORK = [AD_V0_NeSy_1_net()]
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_2.pth'
-NN_NAME = ['perc_net_version_0_NeSy_1']
-
-test_set, _ = get_dataset("test")
-
-generate_confusion_matrices(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), test_set, OUTPUT_DATA_PATH, [0, 1, 2])

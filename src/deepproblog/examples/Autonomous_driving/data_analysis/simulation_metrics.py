@@ -37,7 +37,7 @@ def generate_bar_graph(models, infractions:list, ttf: list):
     plt.xlabel('Models', fontweight='bold', fontsize=12)
     plt.xticks([r - 0.1 for r in range(len(models))], models)
     plt.ylabel('Amount', fontweight='bold', fontsize=12)
-    plt.title('simulation metrics')
+    plt.title('Generalisation metrics')
 
     colors = {'infractions': 'blue', 'time-to-finish': 'green'}
     labels = list(colors.keys())
@@ -48,6 +48,9 @@ def generate_bar_graph(models, infractions:list, ttf: list):
     # plt.savefig("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/errors/histogram_NeSy/{}/{}".format(nn_idx, idx))
 
 
-data_path_1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/simulation_metrics'
-data_path_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/simulation_metrics'
-simulation_metrics_graph([data_path_1, data_path_2], ['model_1', 'model_2'])
+RB = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/model_analysis/simulation_metrics/Rule-based system'
+Baseline = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/model_analysis/simulation_metrics/version_0_baseline'
+NeSy = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/model_analysis/simulation_metrics/version_0_NeSy_1'
+Collision_NeSy = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/model_analysis/simulation_metrics/version_0_NeSy_1_Collision'
+# simulation_metrics_graph([RB, Baseline, NeSy], ['Rule-based', 'Baseline', 'NeSy_1'])
+simulation_metrics_graph([NeSy, Collision_NeSy], ['NeSy_1', 'Collision NeSy_1'])
