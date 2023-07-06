@@ -11,11 +11,17 @@ from deepproblog.network import Network
 from data.pre_processing import reset_img_data
 
 # NeSy V1
-NETWORK = [AD_V0_NeSy_2_net()]
+# NETWORK = [AD_V0_NeSy_2_net()]
+# MODEL_NAME = "NeSy"
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_2.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_2_0.pth'
+# NN_NAME = ['perc_net_version_0_NeSy_2']
+
+NETWORK = [AD_V0_NeSy_1_net()]
 MODEL_NAME = "NeSy"
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_2.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_2_0.pth'
-NN_NAME = ['perc_net_version_0_NeSy_2']
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_2.pth'
+NN_NAME = ['perc_net_version_0_NeSy_1']
 
 # # Baseline NeSy
 # NETWORK = AD_V1_net()
@@ -67,7 +73,7 @@ def generate_false_prediction_data(data, test_set):
             nn_html_text = nn_html_text + "<b>{}:</b> {}\n<br>\n".format(nn_name, nn_prediction)
             nn_html_imgs = nn_html_imgs + """
             <div class="column">
-              <img src="histogram_NeSy/{}/{}.png" alt="{}" style="width:100%">
+              <img src="histogram_NeSy/{}/{}.png" alt="{}" height="360">
             </div>
             """.format(n, file_id,  "{}_{}".format(nn_name, file_id))
 
@@ -123,10 +129,10 @@ def generate_html_data_analysis():
         "<head>\n"
         "<meta charset='UTF-8'>\n"
         "{}\n"
-        "<title>Data analysis</title>\n"
+        "<title>Model analysis</title>\n"
         "</head>\n"
         "<body>\n"
-        "<h2>{} DATA ANALYSIS</h2>\n"
+        "<h2>{} MODEL ANALYSIS</h2>\n"
         "<hr>\n"
         "".format(style, MODEL_NAME))
     f.close()

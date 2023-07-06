@@ -43,8 +43,8 @@ def get_confusion_matrix(
                 actual = float(gt_query.output_values()[0])
                 if abs(actual - predicted) < eps:
                     predicted = actual
-            # if verbose > 1 and actual != predicted:
-            if verbose > 1:
+            if verbose > 1 and actual != predicted:
+            # if verbose > 1:
                 NN_outputs = ""
                 for j in range(len(model.networks)):
                     NN_name = str(list(answer.semiring.values.items())[j][0][0])
