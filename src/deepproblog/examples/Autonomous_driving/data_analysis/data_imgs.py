@@ -21,4 +21,4 @@ transform = transforms.Compose([
                     transforms.Resize((32, 32), antialias=True),
                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                 ])
-show_transformed_img('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_3_dev/1/0_iter0frame15.png', transform)
+show_transformed_img('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_0_env_0/0/0_iter0frame20.png', transform)

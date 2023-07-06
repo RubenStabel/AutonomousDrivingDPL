@@ -35,7 +35,7 @@ def image_file_to_danger_level(image_data_path: str, df: pd.DataFrame):
     return danger_level
 
 
-def get_predicate_confusion_matrix(model: Model, dataset: Dataset, network: int, df: pd.DataFrame, classes) -> ConfusionMatrix:
+def create_predicate_confusion_matrix(model: Model, NN_name: str, dataset: Dataset, network: int, df: pd.DataFrame, classes, save_path=None) -> ConfusionMatrix:
     """
     :param model: The model to evaluate.
     :param dataset: The dataset to evaluate the model on.
@@ -80,10 +80,16 @@ def get_predicate_confusion_matrix(model: Model, dataset: Dataset, network: int,
                          columns=[i for i in classes])
 
     plt.figure(figsize=(12, 7))
-    sn.heatmap(df_cm, annot=True)
-    plt.show()
-    # plt.savefig('output.png')
-    print(accuracy_score(y_true, y_pred))
+
+    sn.heatmap(df_cm, annot=True, cmap='Greens')
+
+    plt.title(NN_name)
+    plt.xlabel('Accuracy: {}'.format(accuracy_score(y_true, y_pred), fontweight='bold', fontsize=12))
+
+    if save_path is not None:
+        plt.savefig(save_path)
+    else:
+        plt.show()
 
 
 def get_nn_model(networks, nn_name, model_path, nn_path):
@@ -100,15 +106,11 @@ def get_nn_model(networks, nn_name, model_path, nn_path):
     return model
 
 
-def generate_confusion_matrices(networks, nn_name, model_path, nn_path, dataset, output_data_path, classes):
-    model = get_nn_model(networks, nn_name, model_path, nn_path)
+def generate_confusion_matrices(model, dataset, output_data_path, classes, save_path=None):
     df = pd.DataFrame(output_data_2_pd(output_data_path))
     for i in range(len(model.networks)):
-        NN_name = nn_name[i]
-        print(NN_name)
-        get_predicate_confusion_matrix(model, dataset, i, df, classes)
-        # print(confusion_matrix)
-        # print("Accuracy", confusion_matrix.accuracy())
+        NN_name = list(model.networks.keys())[i]
+        create_predicate_confusion_matrix(model, NN_name, dataset, i, df, classes, save_path)
 
 
 OUTPUT_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
@@ -119,4 +121,4 @@ NN_NAME = ['perc_net_version_0_NeSy_1']
 
 test_set, _ = get_dataset("test")
 
-generate_confusion_matrices(NETWORK, NN_NAME, MODEL_PATH, NN_PATH, test_set, OUTPUT_DATA_PATH, [0, 1, 2])
+generate_confusion_matrices(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), test_set, OUTPUT_DATA_PATH, [0, 1, 2])

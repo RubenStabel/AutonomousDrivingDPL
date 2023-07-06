@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import cv2
 import torch
+from torchvision import transforms
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from scipy import interpolate
@@ -42,10 +43,12 @@ def create_danger_zones(cols):
     max_1 = cols[1][1]
     max_2 = cols[2][1]
 
-    danger_0_0 = (min_0, min_1)
-    danger_1 = (max_1 + (min_2 - max_1)//2, max_2)
-    danger_2 = (min_1, max_1 + (min_2 - max_1)//2)
-    danger_0_1 = (max_2, max_0 + 29)
+    buffer = 29 // 2
+
+    danger_0_0 = (min_0 + buffer, min_1 + buffer)
+    danger_1 = (max_1 + (min_2 - max_1)//2 + buffer, max_2 + buffer)
+    danger_2 = (min_1 + buffer, max_1 + (min_2 - max_1)//2 + buffer)
+    danger_0_1 = (max_2 + buffer, max_0 + buffer)
 
     return [danger_0_0, danger_2, danger_1, danger_0_1]
 
@@ -59,7 +62,7 @@ def get_points(danger_zones):
 
 
 def get_danger_interpolation(x, y):
-    y_interp = interpolate.interp1d(points, probs)
+    y_interp = interpolate.interp1d(x, y)
     x = []
     danger_level = []
     for i in range(360):
@@ -68,8 +71,8 @@ def get_danger_interpolation(x, y):
     return x, danger_level
 
 
-def accuracy_on_predicates():
-    output_data = output_data_2_pd(OUTPUT_DATA_PATH)
+def accuracy_on_predicates(simulation_data_path):
+    output_data = output_data_2_pd(simulation_data_path)
     cols = []
     for i in range(len(get_danger_levels(output_data))):
         cols.append(get_min_max_ped_y(output_data, i))
@@ -90,54 +93,60 @@ def get_nn_model(networks, nn_name, model_path, nn_path):
     return model
 
 
-def create_heatmap(img_path, danger_zones, probs):
+def create_heatmap(img_path, danger_zones, probs, save_path=None):
     img = cv2.imread(img_path)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     overlay = img_rgb.copy()
 
     # Rectangle parameters
     y, h = 0, 360
-    # A filled rectangle
+
+    # Create rectangles
     for i, zone in enumerate(danger_zones):
         w = 1
-        cv2.rectangle(overlay, (zone, y), (zone + w, y + h), (255*probs[i], 255*probs[i], 255*probs[i]), -1)
+        cv2.rectangle(overlay, (zone, y), (zone + w, y + h), (255 * probs[i], 255 * probs[i], 255 * probs[i]), -1)
 
     alpha = 0.4  # Transparency factor.
 
     grey = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
-    heatmap = cv2.applyColorMap(grey, cv2.COLORMAP_JET)
-    image_new = cv2.addWeighted(heatmap, alpha, img, 1 - alpha, 0)
 
     ax = plt.subplot()
     im = ax.imshow(grey, cmap='jet')
+
     ax.imshow(img, alpha=alpha)
+
+    # ax.imshow(img, alpha=alpha)
 
     # create an Axes on the right side of ax. The width of cax will be 5%
     # of ax and the padding between cax and ax will be fixed at 0.05 inch.
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad=0.05)
     plt.colorbar(im, cax=cax)
-    plt.show()
+    plt.yticks(np.arange(0, 251, step=125), np.arange(0, 1.01, step=0.5))
+    if save_path is not None:
+        plt.savefig(save_path)
+    else:
+        # plt.yticks([r for r in range(1)], [0,1])
+        plt.show()
 
 
+def generate_heatmap(model, simulation_data_path, img_path, save_path=None):
+    probs = get_nn_prediction_probs(img_path, model)
+    probs = [0, probs[0] + probs[3], probs[1], probs[2], probs[0] + probs[3], 0]
+
+    danger_zones = accuracy_on_predicates(simulation_data_path)
+    points = get_points(danger_zones)
+
+    x, danger_level = get_danger_interpolation(points, probs)
+    create_heatmap(img_path, x, danger_level, save_path)
 
 
-
-OUTPUT_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
+SIM_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
 NETWORK = [AD_V0_NeSy_1_net()]
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_2.pth'
 NN_NAME = ['perc_net_version_0_NeSy_1']
 
-test_set, _ = get_dataset("test")
+IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/2/0_iter0frame5.png'
 
-IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/0/0_iter6frame42.png'
-
-danger_zones = accuracy_on_predicates()
-probs = get_nn_prediction_probs(IMG_PATH, get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH))
-probs = [0, probs[0]+probs[3], probs[1], probs[2], probs[0]+probs[3], 0]
-points = get_points(danger_zones)
-x, danger_level = get_danger_interpolation(points, probs)
-create_heatmap(IMG_PATH, x, danger_level)
-# print(pred, p)
-
+generate_heatmap(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH)
