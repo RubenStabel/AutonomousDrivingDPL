@@ -77,7 +77,7 @@ def create_heatmap(img_path, danger_zones, probs):
     for i, zone in enumerate(danger_zones):
         x = zone[0]
         w = zone[1] - zone[0]
-        cv2.rectangle(overlay, (x, y), (x + w, y + h), (0, 0, 255*probs[i]), -1)
+        cv2.rectangle(overlay, (x, y), (x + w, y + h), (0, 255*probs[i], 0), -1)
 
     alpha = 0.7  # Transparency factor.
 

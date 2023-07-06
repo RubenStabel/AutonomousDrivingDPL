@@ -1,8 +1,9 @@
 import math
+import time
 
 from traffic_simulation.agents.pedestrian import Pedestrian
-from defs import *
-from simulation_settings import *
+from traffic_simulation.defs import *
+from traffic_simulation.simulation_settings import *
 from traffic_simulation.agents.pedestrians import Pedestrians
 from traffic_simulation.agents.traffic_light import TrafficLight
 from traffic_simulation.agents.traffic_lights import TrafficLights
@@ -60,14 +61,31 @@ def collect_data(output, player_car, danger_level, ped: Pedestrian):
     image_frame += 1
 
 
-def reset_traffic_simulation():
+def collect_simulation_metrics(iter, infraction, start_time):
+    f = open(
+        "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/simulation_metrics".format(
+            MODE), "a")
+    f.write("{};{};{}\n".format(iter, infraction, round(time.time()-start_time, 3)))
+    f.close()
+
+
+def check_constraints(start_time):
+    return time.time() - start_time < 20
+
+def reset_traffic_simulation(infraction: int):
     # random.seed(0) --> Every iteration in the simulation is the same
     global iteration
     global frame
     global image_frame
+    global start_time
+
+    if SIMULATION_METRICS:
+        collect_simulation_metrics(iteration, infraction, start_time)
+
     iteration += 1
     frame = 0
     image_frame = 0
+    start_time = time.time()
     player_car.reset()
     static_cars.reset()
     pedestrians.reset(static_cars.get_static_cars_rect())
@@ -88,6 +106,11 @@ if COLLECT_DATA:
     f = open(
         "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}.txt".format(MODE), "w")
     f.write("{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y'))
+    f.close()
+
+if SIMULATION_METRICS:
+    f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/data_analysis/simulation_metrics".format(MODE), "w")
+    f.write("{};{};{}\n".format('iteration', 'infraction', 'ttf'))
     f.close()
 
 images = [(ROAD, (0, 0)), (FINISH, FINISH_POSITION), (ROAD_BORDER, ROAD_BORDER_POSITION)]
@@ -111,8 +134,9 @@ output = [1]
 frame = 0
 image_frame = 0
 iteration = 0
+start_time = time.time()
 
-while run:
+while run and iteration < NUMBER_ITERATIONS:
     clock.tick(FPS)
 
     text_surface = my_font.render("{}   {}".format(iteration, output.index(1)), False, (0, 0, 0))
@@ -154,11 +178,16 @@ while run:
             player_car.y + player_car.IMG.get_height() < HEIGHT and COLLECT_DATA:
         collect_data(output, player_car, danger_level, ped)
 
+    if frame & 60 == 0:
+        if not check_constraints(start_time):
+            print("TIMEOUT")
+            reset_traffic_simulation(1)
+
     for pedestrian in pedestrians.get_pedestrians():
         pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
         if pedestrian_poi_collide is not None:
             print("COLLISION")
-            reset_traffic_simulation()
+            reset_traffic_simulation(1)
 
     road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK, *ROAD_BORDER_POSITION)
     if road_border_poi_collide is not None:
@@ -170,7 +199,7 @@ while run:
             player_car.bounce()
         else:
             print("Finish")
-            reset_traffic_simulation()
+            reset_traffic_simulation(0)
 
     frame += 1
 
