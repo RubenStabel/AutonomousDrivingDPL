@@ -100,6 +100,14 @@ def generate_false_prediction_data(data, test_set):
         f.close()
 
 
+def get_model_html():
+    html = ""
+    model = open(MODEL_PATH, 'r')
+    Lines = model.readlines()
+    for line in Lines:
+        html = html + "{}\n<br>\n".format(line.strip())
+    return html
+
 def generate_html_data_analysis():
     reset_false_predictions()
     test_set, _ = get_dataset("test")
@@ -134,7 +142,9 @@ def generate_html_data_analysis():
         "<body>\n"
         "<h2>{} MODEL ANALYSIS</h2>\n"
         "<hr>\n"
-        "".format(style, MODEL_NAME))
+        "{}"
+        "<hr>\n"
+        "".format(style, MODEL_NAME, get_model_html()))
     f.close()
     generate_false_prediction_data(data, test_set)
     f = open(HTML_FIL_PATH, "a")
