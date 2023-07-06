@@ -1,6 +1,11 @@
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import cv2
 import torch
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+from scipy import interpolate
 
 from deepproblog.engines import ExactEngine
 from deepproblog.examples.Autonomous_driving.data_analysis.neural_predicate import get_nn_prediction_probs
@@ -45,6 +50,24 @@ def create_danger_zones(cols):
     return [danger_0_0, danger_2, danger_1, danger_0_1]
 
 
+def get_points(danger_zones):
+    points = [0]
+    for zone in danger_zones:
+        points.append((zone[0]+zone[1])/2)
+    points.append(360)
+    return points
+
+
+def get_danger_interpolation(x, y):
+    y_interp = interpolate.interp1d(points, probs)
+    x = []
+    danger_level = []
+    for i in range(360):
+        x.append(i)
+        danger_level.append(y_interp(i))
+    return x, danger_level
+
+
 def accuracy_on_predicates():
     output_data = output_data_2_pd(OUTPUT_DATA_PATH)
     cols = []
@@ -68,27 +91,36 @@ def get_nn_model(networks, nn_name, model_path, nn_path):
 
 
 def create_heatmap(img_path, danger_zones, probs):
-    image = cv2.imread(img_path)
-    overlay = image.copy()
+    img = cv2.imread(img_path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    overlay = img_rgb.copy()
 
     # Rectangle parameters
     y, h = 0, 360
     # A filled rectangle
     for i, zone in enumerate(danger_zones):
-        x = zone[0]
-        w = zone[1] - zone[0]
-        cv2.rectangle(overlay, (x, y), (x + w, y + h), (0, 255*probs[i], 0), -1)
+        w = 1
+        cv2.rectangle(overlay, (zone, y), (zone + w, y + h), (255*probs[i], 255*probs[i], 255*probs[i]), -1)
 
-    alpha = 0.7  # Transparency factor.
+    alpha = 0.4  # Transparency factor.
 
-    # Following line overlays transparent rectangle
-    # over the image
-    image_new = cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0)
-    heatmap = cv2.applyColorMap(image_new, cv2.COLORMAP_JET)
+    grey = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
+    heatmap = cv2.applyColorMap(grey, cv2.COLORMAP_JET)
+    image_new = cv2.addWeighted(heatmap, alpha, img, 1 - alpha, 0)
 
-    cv2.imshow("heatmap pedestrian detection", heatmap)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    ax = plt.subplot()
+    im = ax.imshow(grey, cmap='jet')
+    ax.imshow(img, alpha=alpha)
+
+    # create an Axes on the right side of ax. The width of cax will be 5%
+    # of ax and the padding between cax and ax will be fixed at 0.05 inch.
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(im, cax=cax)
+    plt.show()
+
+
+
 
 
 OUTPUT_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
@@ -103,9 +135,9 @@ IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDriving
 
 danger_zones = accuracy_on_predicates()
 probs = get_nn_prediction_probs(IMG_PATH, get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH))
-probs = [probs[0]+probs[3], probs[1], probs[2], probs[0]+probs[3]]
-print(danger_zones)
-print(probs)
-create_heatmap(IMG_PATH, danger_zones, probs)
+probs = [0, probs[0]+probs[3], probs[1], probs[2], probs[0]+probs[3], 0]
+points = get_points(danger_zones)
+x, danger_level = get_danger_interpolation(points, probs)
+create_heatmap(IMG_PATH, x, danger_level)
 # print(pred, p)
 
