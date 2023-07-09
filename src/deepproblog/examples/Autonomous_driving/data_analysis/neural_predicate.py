@@ -21,7 +21,7 @@ class AD_Eval_Image(Dataset):
         if transform is None:
             self.transform = transforms.Compose([
                 transforms.ToTensor(),
-                transforms.Resize((32, 32)),
+                transforms.Resize((32, 32), antialias=True),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
             ])
         else:

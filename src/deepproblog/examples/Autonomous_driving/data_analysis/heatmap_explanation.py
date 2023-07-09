@@ -62,7 +62,7 @@ def get_points(danger_zones):
 
 
 def get_danger_interpolation(x, y):
-    y_interp = interpolate.interp1d(x, y)
+    y_interp = interpolate.interp1d(x, y, kind='quadratic')
     x = []
     danger_level = []
     for i in range(360):
@@ -93,7 +93,7 @@ def get_nn_model(networks, nn_name, model_path, nn_path):
     return model
 
 
-def create_heatmap(img_path, danger_zones, probs, save_path=None):
+def create_heatmap_1d(img_path, danger_zones, probs, save_path=None):
     img = cv2.imread(img_path)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     overlay = img_rgb.copy()
@@ -104,9 +104,9 @@ def create_heatmap(img_path, danger_zones, probs, save_path=None):
     # Create rectangles
     for i, zone in enumerate(danger_zones):
         w = 1
-        cv2.rectangle(overlay, (zone, y), (zone + w, y + h), (255 * probs[i], 255 * probs[i], 255 * probs[i]), -1)
+        cv2.rectangle(overlay, (zone, 0), (zone + w + w, y + h), (255 * probs[i],255 * probs[i], 255 * probs[i]), -1)
 
-    alpha = 0.1  # Transparency factor.
+    alpha = 0.4  # Transparency factor.
 
     grey = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
 
@@ -130,15 +130,65 @@ def create_heatmap(img_path, danger_zones, probs, save_path=None):
         plt.show()
 
 
+def create_heatmap_2d(img_path, danger_zones, probs, save_path=None):
+    img = cv2.imread(img_path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    overlay = img_rgb.copy()
+
+    # Rectangle parameters
+    y, h = 0, 360
+
+    # Create rectangles
+    for i, zone_x in enumerate(danger_zones):
+        for j, zone_y in enumerate(danger_zones):
+            w = 1
+            cv2.rectangle(overlay, (zone_x, zone_y), (zone_x + w, zone_y + w), (255 * probs[i] * probs[j],255 * probs[i] * probs[j], 255 * probs[i] * probs[j]), -1)
+
+    alpha = 0.4  # Transparency factor.
+
+    grey = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
+
+    ax = plt.subplot()
+    im = ax.imshow(grey, cmap='jet')
+
+    ax.imshow(img, alpha=alpha)
+
+    # ax.imshow(img, alpha=alpha)
+
+    # create an Axes on the right side of ax. The width of cax will be 5%
+    # of ax and the padding between cax and ax will be fixed at 0.05 inch.
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(im, cax=cax)
+    plt.yticks(np.arange(0, 251, step=125), np.arange(0, 1.01, step=0.5))
+    if save_path is not None:
+        plt.savefig(save_path)
+    else:
+        # plt.yticks([r for r in range(1)], [0,1])
+        plt.show()
+
+
+def generate_probs_heatmap(probs):
+    new_probs = [0]
+    for i, prob in enumerate(probs, 0):
+        if i == 0 or i == len(probs) - 1:
+            new_probs.append(probs[0] + probs[len(probs) - 1])
+        else:
+            new_probs.append(prob)
+    new_probs.append(0)
+    return new_probs
+
+
+
 def generate_heatmap(model, simulation_data_path, img_path, save_path=None):
-    probs = get_nn_prediction_probs(img_path, model)
-    probs = [0, probs[0] + probs[3], probs[1], probs[2], probs[0] + probs[3], 0]
+    probs = generate_probs_heatmap(get_nn_prediction_probs(img_path, model))
+    print(probs)
 
     danger_zones = accuracy_on_predicates(simulation_data_path)
     points = get_points(danger_zones)
 
     x, danger_level = get_danger_interpolation(points, probs)
-    create_heatmap(img_path, x, danger_level, save_path)
+    create_heatmap_1d(img_path, x, danger_level, save_path)
 
 
 SIM_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
@@ -146,8 +196,8 @@ NETWORK = [AD_V0_NeSy_1_net()]
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'
 NN_NAME = ['perc_net_version_0_NeSy_1']
-# IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/0/0_iter22frame28.png'
-IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/0/0_iter14frame5.png'
-# IMG_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/2/0_iter0frame7.png'
+IMG_PATH_OK = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/0/0_iter22frame28.png'
+IMG_PATH_ER = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/0/0_iter14frame5.png'
+IMG_PATH_ER_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/1/0_iter24frame15.png'
 
-generate_heatmap(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH)
+generate_heatmap(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_OK)
