@@ -15,23 +15,22 @@ class AD_V0_NeSy_0_net(nn.Module):
             nn.MaxPool2d(2, 2),
             nn.Flatten(0, 2),
             nn.Linear(16 * 5 * 5, 120),
+            nn.ReLU(),
             nn.Linear(120, 84),
-            nn.Linear(84, 4),
+            nn.ReLU(),
+            nn.Linear(84, 16),
+            nn.ReLU(),
         )
 
         self.numeric_features = nn.Sequential(
             nn.Linear(1, 4),
             nn.ReLU(),
-            nn.Dropout(),
             nn.Linear(4, 4),
             nn.ReLU()
         )
 
         self.combined_features = nn.Sequential(
-            nn.Linear(8, 16),
-            nn.ReLU(),
-            nn.Dropout(),
-            nn.Linear(16, 16),
+            nn.Linear(20, 16),
             nn.ReLU(),
             nn.Linear(16, 2),
             nn.Softmax(-1)
