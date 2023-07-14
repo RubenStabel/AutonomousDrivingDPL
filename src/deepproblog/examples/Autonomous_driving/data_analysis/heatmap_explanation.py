@@ -191,7 +191,7 @@ def generate_heatmap(model, simulation_data_path, img_path, save_path=None):
     create_heatmap_1d(img_path, x, danger_level, save_path)
 
 
-SIM_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
+SIM_DATA_PATH = '/data/output_data/output_4_env_0.txt'
 NETWORK = [AD_V0_NeSy_1_net()]
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'

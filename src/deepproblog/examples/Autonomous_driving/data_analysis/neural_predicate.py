@@ -13,7 +13,6 @@ from deepproblog.query import Query
 from traffic_simulation.simulation_settings import *
 
 
-
 class AD_Eval_Image(Dataset):
     def __init__(self, image_path, eval_name, transform=None):
         self.image_path = image_path
