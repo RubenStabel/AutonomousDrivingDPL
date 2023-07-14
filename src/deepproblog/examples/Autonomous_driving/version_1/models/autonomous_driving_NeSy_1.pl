@@ -1,20 +1,47 @@
 % Perception
-nn(perc_net_version_1_NeSy_x,[Img],X,[0,1,2,3,4,5,6,7,8,9]) :: cell_x(Img,X).
-nn(perc_net_version_1_NeSy_y,[Img],Y,[0,1]) :: cell_y(Img,Y).
+nn(perc_net_version_1_NeSy,[Img],X,[0,1,2,3,4,5,6,7,8,9,10,11]) :: cell_low(Img,X).
+
+
+% Mapping NN --> X, Y
+cell_x(Img, 0) :- cell_low(Img, Z), Z=0.
+cell_x(Img, 0) :- cell_low(Img, Z), Z=4.
+cell_x(Img, 0) :- cell_low(Img, Z), Z=8.
+cell_x(Img, 1) :- cell_low(Img, Z), Z=1.
+cell_x(Img, 1) :- cell_low(Img, Z), Z=5.
+cell_x(Img, 1) :- cell_low(Img, Z), Z=9.
+cell_x(Img, 2) :- cell_low(Img, Z), Z=2.
+cell_x(Img, 2) :- cell_low(Img, Z), Z=6.
+cell_x(Img, 2) :- cell_low(Img, Z), Z=10.
+cell_x(Img, 3) :- cell_low(Img, Z), Z=3.
+cell_x(Img, 3) :- cell_low(Img, Z), Z=7.
+cell_x(Img, 3) :- cell_low(Img, Z), Z=11.
+
+cell_y(Img, 0) :- cell_low(Img, Z), Z=0.
+cell_y(Img, 0) :- cell_low(Img, Z), Z=1.
+cell_y(Img, 0) :- cell_low(Img, Z), Z=2.
+cell_y(Img, 0) :- cell_low(Img, Z), Z=3.
+cell_y(Img, 1) :- cell_low(Img, Z), Z=4.
+cell_y(Img, 1) :- cell_low(Img, Z), Z=5.
+cell_y(Img, 1) :- cell_low(Img, Z), Z=6.
+cell_y(Img, 1) :- cell_low(Img, Z), Z=7.
+cell_y(Img, 2) :- cell_low(Img, Z), Z=8.
+cell_y(Img, 2) :- cell_low(Img, Z), Z=9.
+cell_y(Img, 2) :- cell_low(Img, Z), Z=10.
+cell_y(Img, 2) :- cell_low(Img, Z), Z=11.
 
 
 % Prediction --> 80 pixels
-attention_boundary(X,y) :- X==4, Y=0.
-attention_boundary(X,Y) :- X==5, Y=0.
-attention_boundary(X,Y) :- X==6, Y=0.
+attention_boundary(X,Y) :- X==1, Y=0.
 
 
 % Prediction ---> 50 pixels
-enlarged_boundary(X,Y) :- X==7, Y=0.
-enlarged_boundary(X,Y) :- X==8, Y=0.
+enlarged_boundary(X,Y) :- X==1, Y=1.
+enlarged_boundary(X,Y) :- X==2, Y=0.
+enlarged_boundary(X,Y) :- X==2, Y=1.
+
 
 % Prediction ---> ... pixels
-out_of_view(X,Y) :- X==0; X==1; X==2; X==3; X==9; Y==1.
+out_of_view(X,Y) :- X==0; X==3; Y==2.
 
 % Control
 % 0 --> accelerate
