@@ -11,9 +11,9 @@ from torchvision import datasets, transforms
 from deepproblog.dataset import Dataset
 from deepproblog.query import Query
 
-train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_2_env_0'
-test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_2_env_0'
-output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6.txt'
+train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_2/complete'
+test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_2/complete'
+output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_2.txt'
 
 ####################################################
 #       Create Train, Valid and Test sets
@@ -77,16 +77,17 @@ def class_to_idx(classes):
 
 def data_2_pd_speed():
     data = pd.read_csv(output_data_path, delimiter=';')
-    data.columns = ["iteration", "image_frame", "output", "speed"]
+    data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone']
     return data
 
 
-def image_file_to_speed(image_data_path: str):
+def image_file_to_speed(image_data_path: str, df):
     image_name = image_data_path.split('/')[-1]
     image_id = image_name.split('_')[-1].split('.')[0]
     iter_image = image_id.split('frame')[0].split('iter')[-1]
     frame = image_id.split('frame')[-1]
-    df = pd.DataFrame(data_2_pd_speed())
+
+    # df = pd.DataFrame(data_2_pd_speed())
     vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
     return vel
 
@@ -107,6 +108,7 @@ class AD_Dataset(Dataset):
         self.images = []
         for idx in range(self.__len__()):
             self.images.append(self.transform_img(cv2.cvtColor(cv2.imread(self.image_paths[idx]), cv2.COLOR_BGR2RGB)))
+        self.simulation_data = pd.DataFrame(data_2_pd_speed())
 
     def __getitem__(self, idx):
         label = self._get_label(idx)
@@ -125,7 +127,7 @@ class AD_Dataset(Dataset):
 
     def _get_speed(self, idx: int):
         image_path = self.image_paths[idx]
-        return image_file_to_speed(image_path)  # torch.tensor(image_file_to_speed(image_path))
+        return image_file_to_speed(image_path, self.simulation_data)  # torch.tensor(image_file_to_speed(image_path))
 
     def __len__(self):
         "How many queries there are"

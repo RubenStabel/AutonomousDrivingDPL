@@ -12,10 +12,12 @@ from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_baseline_1 import get_dataset
 from deepproblog.examples.Autonomous_driving.version_2.networks.network_baseline import AD_V2_baseline_net_1
 
-N = 2
+N = 1
 folder = "test/"
+data_size = "complete"
+env = "env_2"
 
-name = "autonomous_driving_baseline_1_{}".format(N)
+name = "autonomous_driving_baseline_1_{}_{}_{}".format(data_size, env, N)
 
 train_set, AD_train = get_dataset("train")
 valid_set, AD_valid = get_dataset("valid")
@@ -35,10 +37,10 @@ model.add_tensor_source("test", AD_test)
 
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 20, test_set=valid_set, log_iter=5, profile=0)
-# model.save_state("../snapshot/baseline/" + folder + name + ".pth")
+train = train_model(model, loader, 10, test_set=valid_set, log_iter=5, profile=0)
+model.save_state("../snapshot/baseline/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")
 train.logger.comment(dumps(model.get_hyperparameters()))
 train.logger.comment("Accuracy {}".format(get_confusion_matrix(model, test_set, verbose=1).accuracy()))
-# train.logger.write_to_file("../log/baseline/" + folder + name)
+train.logger.write_to_file("../log/baseline/" + folder + name)

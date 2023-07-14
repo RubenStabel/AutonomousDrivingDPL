@@ -37,34 +37,28 @@ class AD_V2_baseline_net_1(nn.Module):
             nn.MaxPool2d(2, 2),
             nn.Flatten(0, 2),
             nn.Linear(16 * 5 * 5, 120),
+            nn.ReLU(),
             nn.Linear(120, 84),
-            nn.Linear(84, 4),
+            nn.ReLU(),
+            nn.Linear(84, 16),
+            nn.ReLU(),
         )
 
         self.numeric_features = nn.Sequential(
-            nn.Linear(1, 8),
+            nn.Linear(1, 9),
             nn.ReLU(),
-            nn.Dropout(),
-            nn.Linear(8, 8),
+            nn.Linear(9, 9),
             nn.ReLU(),
-            nn.Dropout(),
-            nn.Linear(8, 4),
-            nn.ReLU()
         )
 
         self.combined_features = nn.Sequential(
-            nn.Linear(8, 16),
-            nn.ReLU(),
-            nn.Dropout(),
-            nn.Linear(16, 16),
+            nn.Linear(25, 16),
             nn.ReLU(),
             nn.Linear(16, 4),
             nn.Softmax(-1)
         )
 
     def forward(self, img, spd):
-        # print(torch.unbind(x))
-        # img, spd = torch.unbind(x)
         img = self.image_features(img)
         spd = self.numeric_features(spd)
         z = torch.cat((img, spd), -1)
