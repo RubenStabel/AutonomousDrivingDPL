@@ -24,28 +24,29 @@ def get_nn_model(networks, nn_name, model_path, nn_path):
 
 
 def accuracy_on_actions():
-    baseline_train_data = data_2_pd_acc('../log/baseline/train/autonomous_driving_baseline__medium_env_1_0.log')
+    baseline_train_data = data_2_pd_acc('../log/baseline/train/autonomous_driving_baseline_medium_env_1_0.log')
     baseline_test_data_small = data_2_pd_acc('../log/baseline/test/autonomous_driving_baseline_small_env_1_0.log')
-    baseline_test_data_medium = data_2_pd_acc('../log/baseline/test/autonomous_driving_baseline__medium_env_1_0.log')
-    baseline_test_data_complete = data_2_pd_acc('../log/baseline/test/autonomous_driving_baseline__complete_env_1_0.log')
+    baseline_test_data_medium = data_2_pd_acc('../log/baseline/test/autonomous_driving_baseline_medium_env_1_0.log')
+    baseline_test_data_complete = data_2_pd_acc('../log/baseline/test/autonomous_driving_baseline_complete_env_1_0.log')
 
     NeSy_0_train_data = data_2_pd_acc('../log/neuro_symbolic/train/autonomous_driving_NeSy_0_medium_env_1_0.log')
     NeSy_0_test_data_small = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_0_small_env_1_0.log')
     NeSy_0_test_data_medium = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_0_medium_env_1_0.log')
     NeSy_0_test_data_complete = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_0_complete_env_1_0.log')
-    # NeSy_0_test_data_complete_1 = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_0_complete_1.log')
 
     NeSy_1_train_data = data_2_pd_acc('../log/neuro_symbolic/train/autonomous_driving_NeSy_1_medium_env_1_0.log')
     NeSy_1_test_data_small = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_1_small_env_1_0.log')
     NeSy_1_test_data_medium = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_1_medium_env_1_0.log')
     NeSy_1_test_data_complete = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_env_1_0.log')
 
-    NeSy_2_train_data = data_2_pd_acc('../log/neuro_symbolic/train/autonomous_driving_NeSy_1_medium_env_1_0.log')
+    NeSy_2_train_data = data_2_pd_acc('../log/neuro_symbolic/train/autonomous_driving_NeSy_2_medium_env_1_0.log')
     NeSy_2_test_data_small = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_2_small_env_1_0.log')
     NeSy_2_test_data_medium = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_2_medium_env_1_0.log')
     NeSy_2_test_data_complete = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_2_complete_env_1_0.log')
 
-    # multiple_running_metrics([NeSy_0_test_data_complete, NeSy_0_test_data_complete_1], ['NeSy_0 - old', 'NeSy_0 - new'], ['accuracy', 'loss'], 40)
+    # NeSy_1_test_data_medium = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_1_medium_env_1_0.log')
+    # NeSy_2_test_data_medium = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_2_medium_env_1_0.log')
+
 
     # Train vs test
     multiple_running_metrics([baseline_train_data, baseline_test_data_medium], ['Train baseline', 'Test baseline'], ['accuracy', 'loss'])
@@ -54,15 +55,9 @@ def accuracy_on_actions():
     # Dataset sizes
     multiple_running_metrics([baseline_test_data_small, baseline_test_data_medium, baseline_test_data_complete], ['baseline - SMALL', 'baseline - MEDIUM', 'baseline - COMPLETE'], ['accuracy', 'loss'])
     multiple_running_metrics([NeSy_1_test_data_small, NeSy_1_test_data_medium, NeSy_1_test_data_complete], ['NeSy_1 - SMALL', 'NeSy_1 - MEDIUM', 'NeSy_1 - COMPLETE'], ['accuracy', 'loss'])
-    multiple_running_metrics(
-        [baseline_test_data_small, NeSy_0_test_data_small, NeSy_1_test_data_small, NeSy_2_test_data_small],
-        ['baseline - SMALL', 'NeSy_0 - SMALL', 'NeSy_1 - SMALL', 'NeSy_2 - SMALL'], ['accuracy'])
-    multiple_running_metrics(
-        [baseline_test_data_medium, NeSy_0_test_data_medium, NeSy_1_test_data_medium, NeSy_2_test_data_medium],
-        ['baseline - MEDIUM', 'NeSy_0 - MEDIUM', 'NeSy_1 - MEDIUM', 'NeSy_2 - MEDIUM'], ['accuracy'])
-    multiple_running_metrics(
-        [baseline_test_data_complete, NeSy_0_test_data_complete, NeSy_1_test_data_complete, NeSy_2_test_data_complete],
-        ['baseline - COMPLETE', 'NeSy_0 - COMPLETE', 'NeSy_1 - COMPLETE', 'NeSy_2 - COMPLETE'], ['accuracy'])
+    multiple_running_metrics([baseline_test_data_small, NeSy_0_test_data_small, NeSy_1_test_data_small, NeSy_2_test_data_small], ['baseline - SMALL', 'NeSy_0 - SMALL', 'NeSy_1 - SMALL', 'NeSy_2 - SMALL'], ['accuracy'])
+    multiple_running_metrics([baseline_test_data_medium, NeSy_0_test_data_medium, NeSy_1_test_data_medium, NeSy_2_test_data_medium], ['baseline - MEDIUM', 'NeSy_0 - MEDIUM', 'NeSy_1 - MEDIUM', 'NeSy_2 - MEDIUM'], ['accuracy'])
+    multiple_running_metrics([baseline_test_data_complete, NeSy_0_test_data_complete, NeSy_1_test_data_complete, NeSy_2_test_data_complete], ['baseline - COMPLETE', 'NeSy_0 - COMPLETE', 'NeSy_1 - COMPLETE', 'NeSy_2 - COMPLETE'], ['accuracy'])
 
     # Comparison between models
     multiple_running_metrics([baseline_test_data_complete, NeSy_1_test_data_complete], ['baseline - COMPLETE', 'NeSy_1 - COMPLETE'], ['accuracy', 'loss'])
@@ -70,6 +65,8 @@ def accuracy_on_actions():
 
     # Compare accuracy of all models
     multiple_running_metrics([baseline_test_data_complete, NeSy_0_test_data_complete, NeSy_1_test_data_complete, NeSy_2_test_data_complete],['baseline', 'NeSy_0', 'NeSy_1', 'NeSy_2'], ['accuracy'])
+
+    # multiple_running_metrics([NeSy_1_test_data_medium, NeSy_2_test_data_medium], ['NeSy_1', 'NeSy_2'], ['accuracy', 'loss'])
 
 
 OUTPUT_DATA_PATH = '/data/output_data/output_4_env_0.txt'
