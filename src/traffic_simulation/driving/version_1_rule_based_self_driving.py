@@ -40,3 +40,18 @@ def version_1_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedest
             player_car.move_forward()
             output = [1, 0, 0]
     return output
+
+
+def danger_pedestrian_1(player_car: PlayerCar, pedestrians: Pedestrians):
+    detected_levels = []
+    for pedestrian in pedestrians.get_pedestrians():
+        detected_levels.append((get_action(player_car, pedestrian), pedestrian))
+
+    action = -1
+    ped = None
+    for (a, p) in detected_levels:
+        if a > action:
+            action = a
+            ped = p
+
+    return action, ped
