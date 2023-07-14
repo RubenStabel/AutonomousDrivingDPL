@@ -15,6 +15,9 @@ class AbstractCar:
     def get_vel(self):
         return self.vel
 
+    def get_max_vel(self):
+        return self.max_vel
+
     def set_max_vel(self, new_max_vel):
         self.max_vel = new_max_vel
 

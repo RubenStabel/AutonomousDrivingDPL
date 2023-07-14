@@ -14,21 +14,23 @@ from deepproblog.examples.Autonomous_driving.version_0.networks.network_baseline
 6 --> Version 2 rule based self driving
 7 --> Version 3 rule based self driving
 """
-MODE = 2
+MODE = 5
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
-COLLECT_DATA = False
+COLLECT_DATA = True
 DATA_ANALYSIS = False
 SCENARIO_MODE = False
-DATA_FOLDER = "general/version_0_env_0"
+DATA_FOLDER = "general/version_1_env_2"
 PREFIX = '0'
-NUMBER_STATIC_CARS = 0
+ENV = 'env_2'
+NUMBER_STATIC_CARS = 6
 NUMBER_PEDESTRIANS = 1
 NUMBER_TRAFFIC_LIGHTS = 0
+NUMBER_SPEED_ZONES = 1
 DYNAMIC_SIMULATION = False
 EXTENDED_ROAD = False
-SIMULATION_METRICS = True
+SIMULATION_METRICS = False
 NUMBER_ITERATIONS = 50
 
 SCENARIO = {
@@ -48,7 +50,7 @@ SCENARIO = {
 
 # NeSy V1.1
 NETWORK = [AD_V0_NeSy_1_net()]
-MODEL_NAME = "version_0_NeSy_1_Collision"
+MODEL_NAME = "version_0_NeSy_1"
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/collision_NeSy.pl'
 NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'
 NN_NAME = ['perc_net_version_0_NeSy_1']
