@@ -52,9 +52,13 @@ def generate_balanced_dataset(train_path, balanced_path, number_of_classes, size
             shutil.copy(srcpath, balanced_path + '/{}'.format(i))
 
 
-# generate_balanced_dataset('img/general/version_0_env_0', 'img/balanced/version_0_env_0/complete', 3)
-# generate_balanced_dataset('img/general/version_0_env_0', 'img/balanced/version_0_env_0/medium', 3, 0.5)
-# generate_balanced_dataset('img/general/version_0_env_0', 'img/balanced/version_0_env_0/small', 3, 0.1)
+# generate_balanced_dataset('img/general/version_1_env_2', 'img/balanced/version_1_env_2/complete', 4)
+# generate_balanced_dataset('img/general/version_1_env_2', 'img/balanced/version_1_env_2/medium', 4, 0.5)
+# generate_balanced_dataset('img/general/version_1_env_2', 'img/balanced/version_1_env_2/small', 4, 0.1)
+
+# generate_balanced_dataset('img/general/version_1_env_1_ped_2', 'img/balanced/version_1_env_1_ped_2/complete', 3)
+# generate_balanced_dataset('img/general/version_1_env_1_ped_2', 'img/balanced/version_1_env_1_ped_2/medium', 3, 0.5)
+# generate_balanced_dataset('img/general/version_1_env_1_ped_2', 'img/balanced/version_1_env_1_ped_2/small', 3, 0.1)
 
 # generate_balanced_dataset('img/general/version_2_env_0', 'img/balanced/version_2_env_0_complete', 4)
 
