@@ -13,7 +13,7 @@ from deepproblog.query import Query
 
 train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/small'
 test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete'
-output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4.txt'
+output_data_path = '/data/output_data/output_4_env_0.txt'
 
 ####################################################
 #       Create Train, Valid and Test sets

@@ -16,8 +16,9 @@ from deepproblog.examples.Autonomous_driving.version_0.networks.network_baseline
 N = 0
 folder = "test/"
 data_size = "complete"
+env = "env_1"
 
-name = "autonomous_driving_baseline__{}_{}".format(data_size, N)
+name = "autonomous_driving_baseline_{}_{}_{}".format(data_size, env, N)
 
 train_set, AD_train = get_dataset("train")
 valid_set, AD_valid = get_dataset("valid")
