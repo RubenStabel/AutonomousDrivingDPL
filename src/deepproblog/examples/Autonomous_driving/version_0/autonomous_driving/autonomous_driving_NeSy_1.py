@@ -13,9 +13,9 @@ from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets
 from deepproblog.examples.Autonomous_driving.version_0.networks.network_NeSy import AD_V0_NeSy_1_net
 
 N = 0
-folder = "train/"
-data_size = "medium"
-env = "env_1"
+folder = "test/"
+data_size = "small"
+env = "env_0"
 
 name = "autonomous_driving_NeSy_1_{}_{}_{}".format(data_size, env, N)
 
@@ -37,7 +37,7 @@ model.add_tensor_source("test", AD_test)
 
 print("###############    TRAINING MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 10, test_set=valid_set, log_iter=5, profile=0)
+train = train_model(model, loader, 20, test_set=valid_set, log_iter=5, profile=0)
 model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA    ###############")
