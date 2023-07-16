@@ -16,7 +16,7 @@ from deepproblog.examples.Autonomous_driving.version_0.networks.network_baseline
 N = 0
 folder = "test/"
 data_size = "small"
-env = "env_0"
+env = "env_1"
 
 name = "autonomous_driving_baseline_{}_{}_{}".format(data_size, env, N)
 

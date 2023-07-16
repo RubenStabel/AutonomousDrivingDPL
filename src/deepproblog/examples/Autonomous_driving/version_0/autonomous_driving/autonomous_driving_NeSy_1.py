@@ -15,7 +15,7 @@ from deepproblog.examples.Autonomous_driving.version_0.networks.network_NeSy imp
 N = 0
 folder = "test/"
 data_size = "small"
-env = "env_0"
+env = "env_1"
 
 name = "autonomous_driving_NeSy_1_{}_{}_{}".format(data_size, env, N)
 
