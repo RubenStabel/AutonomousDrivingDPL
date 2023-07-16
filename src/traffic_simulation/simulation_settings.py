@@ -14,21 +14,21 @@ from deepproblog.examples.Autonomous_driving.version_0.networks.network_baseline
 6 --> Version 2 rule based self driving
 7 --> Version 3 rule based self driving
 """
-MODE = 5
+MODE = 0
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
-COLLECT_DATA = True
+COLLECT_DATA = False
 DATA_ANALYSIS = False
 SCENARIO_MODE = False
-DATA_FOLDER = "general/version_1_env_2"
+DATA_FOLDER = "general/version_2_env_2"
 PREFIX = '0'
 ENV = 'env_2'
 NUMBER_STATIC_CARS = 6
 NUMBER_PEDESTRIANS = 1
 NUMBER_TRAFFIC_LIGHTS = 0
 NUMBER_SPEED_ZONES = 1
-DYNAMIC_SIMULATION = False
+DYNAMIC_SIMULATION = True
 EXTENDED_ROAD = False
 SIMULATION_METRICS = False
 NUMBER_ITERATIONS = 50
