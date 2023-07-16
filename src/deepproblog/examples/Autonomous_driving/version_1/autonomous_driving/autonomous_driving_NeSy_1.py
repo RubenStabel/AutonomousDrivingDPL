@@ -20,7 +20,7 @@ env = "env_1"
 name = "autonomous_driving_NeSy_1_{}_{}_{}".format(data_size, env, N)
 
 train_set, AD_train = get_dataset("train")
-valid_set, AD_valid = get_dataset("test")
+valid_set, AD_valid = get_dataset("valid")
 test_set, AD_test = get_dataset("test")
 
 print("###############    LOADING NETWORK    ###############")
