@@ -11,9 +11,9 @@ from torchvision import datasets, transforms
 from deepproblog.dataset import Dataset
 from deepproblog.query import Query
 
-train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_2/complete'
-test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_2/complete'
-output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_2.txt'
+train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_1/complete'
+test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_1/complete'
+output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_1.txt'
 
 ####################################################
 #       Create Train, Valid and Test sets

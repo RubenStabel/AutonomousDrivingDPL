@@ -13,7 +13,7 @@ from deepproblog.evaluate import get_confusion_matrix
 
 from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_NeSy_1 import get_dataset
 
-N = 1
+N = 0
 folder = "test/"
 data_size = "complete"
 env = "env_2"
