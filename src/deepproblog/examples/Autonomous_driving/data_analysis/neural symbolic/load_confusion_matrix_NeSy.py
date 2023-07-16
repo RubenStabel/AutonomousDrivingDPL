@@ -8,8 +8,8 @@ from deepproblog.examples.Autonomous_driving.version_0.networks.network_NeSy imp
 # from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets_NeSy import get_dataset, AD_test
 # from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets_NeSy import get_dataset, AD_test
 # from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_baseline import get_dataset, AD_test
-from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import get_dataset, AD_test
-# from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_NeSy_1 import get_dataset, AD_test
+# from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import get_dataset, AD_test
+from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_NeSy_1 import get_dataset, AD_test
 
 
 from deepproblog.examples.Autonomous_driving.experimental.networks.network import AD_V0_0_net, AD_V1_1_net
@@ -86,12 +86,13 @@ from data.pre_processing import reset_img_data
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_env_2_1.pth'
 # NN_NAME = ['perc_net_version_2_NeSy_ped', 'perc_net_version_2_NeSy_speed']
 
-# # V2 - NeSy_3
-# MODEL_NAME = "NeSy"
-# NETWORK = [AD_V2_NeSy_2_net_x_rel(), AD_V2_NeSy_2_net_y_rel()]
-# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_NeSy_3.pl'
-# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/neuro_symbolic/train/autonomous_driving_NeSy_3_complete_env_1_0.pth'
-# NN_NAME = ['perc_net_version_2_NeSy_x_rel', 'perc_net_version_2_NeSy_y_rel']
+# V2 - NeSy_3
+MODEL_NAME = "NeSy"
+NETWORK = [AD_V2_NeSy_2_net_x_rel(), AD_V2_NeSy_2_net_y_rel()]
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_NeSy_3.pl'
+OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_1.txt'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/neuro_symbolic/train/autonomous_driving_NeSy_3_complete_env_1_0.pth'
+NN_NAME = ['perc_net_version_2_NeSy_x_rel', 'perc_net_version_2_NeSy_y_rel']
 
 # # Baseline NeSy
 # NETWORK = AD_V1_net()
@@ -127,8 +128,26 @@ def data_2_pd_img_idx(data_path):
     return data
 
 
+def data_2_pd_speed():
+    data = pd.read_csv(OUTPUT_DATA, delimiter=';')
+    data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone']
+    return data
+
+
+def image_file_to_speed(image_data_path: str, df):
+    image_name = image_data_path.split('/')[-1]
+    image_id = image_name.split('_')[-1].split('.')[0]
+    iter_image = image_id.split('frame')[0].split('iter')[-1]
+    frame = image_id.split('frame')[-1]
+
+    # df = pd.DataFrame(data_2_pd_speed())
+    vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
+    return vel
+
+
 def generate_false_prediction_data(data, test_set):
     df = pd.DataFrame(data)
+    df_output_data = data_2_pd_speed()
     for i, j in df.iterrows():
         file_id = j['idx']
         img_path = str(test_set.image_paths[file_id]).split('src')[1]
@@ -165,8 +184,10 @@ def generate_false_prediction_data(data, test_set):
             "{}"
             "<b>Actual:</b> {}\n"
             "<br>\n"
+            "<b>Speed:</b> {}\n"
             "<br>\n"
-            "".format(html_imgs, model_predicted, nn_html_text, actual))
+            "<br>\n"
+            "".format(html_imgs, model_predicted, nn_html_text, actual, image_file_to_speed(img_path, df_output_data)))
         f.close()
 
 
