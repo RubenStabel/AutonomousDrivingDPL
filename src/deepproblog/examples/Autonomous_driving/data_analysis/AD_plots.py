@@ -139,18 +139,38 @@ def multiple_running_accuracy_loss(data_1, name_1, data_2, name_2):
     plt.show()
 
 
-def multiple_running_metrics(data: list[pd.DataFrame], names: list[str], metrics: list[str], granularity=20):
+def multiple_running_metrics(data: list[pd.DataFrame], names: list[str], metrics: list[str], img_name, granularity=20):
     df = {}
     legend = []
-    ax = None
+    ax2 = None
+    fig, ax1 = plt.subplots()
+    ax1.set_xlabel('Iterations')
+    ax1.set_ylabel('Accuracy')
+    ax1.tick_params(axis='y')
+
+    if metrics.count('loss') > 0:
+        ax2 = ax1.twinx()
+        ax2.set_ylabel('Loss')
+        ax2.tick_params(axis='y')
+
+    colors = ['blue', 'red', 'green', 'orange', 'orchid', 'teal', 'coral', 'magenta']
+
+
     for i, d in enumerate(data, 0):
         for j, metric in enumerate(metrics, 0):
             x = len(metrics)*i + j
             df['df_{}'.format(x)] = pd.DataFrame(np.array(running_metric(d, sequence_length=granularity, metric=metric)))
-            if x == 0:
-                ax = df.get('df_0').plot()
+            if metric == 'accuracy':
+                ax1.plot(df.get('df_{}'.format(x)), color=colors[x])
+
             else:
-                df.get('df_{}'.format(x)).plot(ax=ax)
-            legend.append("running {}: {}".format(metric, names[i]))
-    ax.legend(legend)
-    plt.show()
+                ax2.plot(df.get('df_{}'.format(x)), color=colors[x])
+
+            legend.append("{}: {}".format(metric, names[i]))
+
+    if len(metrics) > 1:
+        legend = legend[0:][::2] + legend[1:][::2]
+
+    fig.legend(legend, loc='right')
+    fig.tight_layout()
+    plt.savefig('results/{}'.format(img_name))
