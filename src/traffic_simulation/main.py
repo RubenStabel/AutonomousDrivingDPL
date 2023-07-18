@@ -61,7 +61,7 @@ def collect_data(output, player_car, danger_level, ped: Pedestrian, speed_zones:
     pygame.image.save(sub, "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))
 
     f = open("/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}_{}.txt".format(MODE, ENV), "a")
-    f.write("{};{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output, get_speed_level(player_car.get_vel()), danger_level, player_car.x, player_car.y, ped.x, ped.y, speed_zones.get_current_speed_zone(player_car)))
+    f.write("{};{};{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output, get_speed_level(player_car.get_vel()), danger_level, player_car.x, player_car.y, ped.x, ped.y, speed_zones.get_current_speed_zone(player_car).get_speed_zone(), speed_zones.get_speed_zone_img_idx(player_car)))
     f.close()
 
     image_frame += 1
@@ -112,7 +112,7 @@ if COLLECT_DATA:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(DATA_FOLDER), 3)
     f = open(
         "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}_{}.txt".format(MODE, ENV), "w")
-    f.write("{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone'))
+    f.write("{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone','speed_zone_img_idx'))
     f.close()
 
 if SIMULATION_METRICS:
@@ -147,7 +147,7 @@ start_time = time.time()
 while run and iteration < NUMBER_ITERATIONS:
     clock.tick(FPS)
 
-    text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car), player_car.get_vel()), False, (0, 0, 0))
+    text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), player_car.get_vel()), False, (0, 0, 0))
 
     draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians, speed_zones)
 
@@ -192,6 +192,9 @@ while run and iteration < NUMBER_ITERATIONS:
     if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and \
             player_car.y + player_car.IMG.get_height() < HEIGHT and COLLECT_DATA:
         collect_data(output, player_car, danger_level, ped, speed_zones)
+
+    if frame % 10 == 0:
+        speed_zones.get_speed_zone_img_idx(player_car)
 
     if frame & 60 == 0:
         if not check_constraints(start_time):

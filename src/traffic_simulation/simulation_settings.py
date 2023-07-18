@@ -18,24 +18,24 @@ from deepproblog.examples.Autonomous_driving.version_2.networks.network_baseline
 6 --> Version 2 rule based self driving
 7 --> Version 3 rule based self driving
 """
-MODE = 2
+MODE = 6
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
-COLLECT_DATA = False
+COLLECT_DATA = True
 DATA_ANALYSIS = False
 SCENARIO_MODE = False
 DATA_FOLDER = "general/version_2_env_2"
 PREFIX = '0'
 ENV = 'env_2'
-NUMBER_STATIC_CARS = 0
+NUMBER_STATIC_CARS = 6
 NUMBER_PEDESTRIANS = 1
 NUMBER_TRAFFIC_LIGHTS = 0
-NUMBER_SPEED_ZONES = 0
+NUMBER_SPEED_ZONES = 1
 DYNAMIC_SIMULATION = False
 EXTENDED_ROAD = False
 SIMULATION_METRICS = False
-NUMBER_ITERATIONS = 50
+NUMBER_ITERATIONS = 100
 
 SCENARIO = {
     'low pass': [(30, 70), (29, 69), (28, 68), (27, 67), (26, 66), (25, 65), (24, 64), (23, 63), (22, 62), (21, 61), (20, 61), (19, 60), (18, 59), (17, 58), (16, 57), (15, 57), (14, 56), (13, 56), (12, 55), (11, 54), (10, 53), (9, 52), (8, 51), (7, 50)],
@@ -59,12 +59,12 @@ SCENARIO = {
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'
 # NN_NAME = ['perc_net_version_0_NeSy_1']
 
-# # V2 - baseline_0
-# MODEL_NAME = "NeSy"
-# NETWORK = [AD_V2_baseline_net_0()]
-# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_baseline_0.pl'
-# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/train/autonomous_driving_baseline_0_complete_env_1_0.pth'
-# NN_NAME = ['perc_net_version_2_baseline_0']
+# V2 - baseline_0
+MODEL_NAME = "NeSy"
+NETWORK = [AD_V2_baseline_net_0()]
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_baseline_0.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/train/autonomous_driving_baseline_0_complete_env_1_0.pth'
+NN_NAME = ['perc_net_version_2_baseline_0']
 
 # # V2 - baseline_1
 # MODEL_NAME = "NeSy"

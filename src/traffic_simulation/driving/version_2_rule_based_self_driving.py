@@ -45,12 +45,8 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
         return 0
 
 
-def speed_zone_handler(player_car: PlayerCar, speed_zones: list[SpeedZone], speed):
-    passed_speed_zones = [player_car.y - speed_zone.y for speed_zone in speed_zones if player_car.y - speed_zone.y < 0]
-    if passed_speed_zones:
-        speed_zone = speed_zones[[player_car.y - speed_zone.y for speed_zone in speed_zones].index(max(passed_speed_zones))]
-    else:
-        return 0
+def speed_zone_handler(player_car: PlayerCar, speed_zones: SpeedZones, speed):
+    speed_zone = speed_zones.get_current_speed_zone(player_car)
 
     if speed > speed_zone.get_speed_zone():
         return 3
@@ -68,7 +64,7 @@ def version_2_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedest
     actions = []
     for pedestrian in pedestrians.get_pedestrians():
         actions.append(get_danger_zone(player_car, pedestrian, player_car.get_vel()))
-    actions.append(speed_zone_handler(player_car, speed_zones.unique_speed_zones, player_car.get_vel()))
+    actions.append(speed_zone_handler(player_car, speed_zones, player_car.get_vel()))
 
     match get_action(actions):
         case 0:
