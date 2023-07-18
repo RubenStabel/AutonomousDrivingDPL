@@ -166,10 +166,10 @@ while run and iteration < NUMBER_ITERATIONS:
             case 1:
                 output = rule_based_driving(player_car, occ, pedestrians)
             case 2:
-                if pedestrians.get_pedestrians()[0].x < player_car.x - PEDESTRIAN.get_width():
-                    version_0_rule_based_self_driving(player_car, pedestrians)
-                else:
-                    self_driving.nn_driving(frame)
+                # if pedestrians.get_pedestrians()[0].x < player_car.x - PEDESTRIAN.get_width():
+                #     version_0_rule_based_self_driving(player_car, pedestrians)
+                # else:
+                self_driving.nn_driving(frame)
             case 3:
                 self_driving.nn_driving(frame)
             case 4:

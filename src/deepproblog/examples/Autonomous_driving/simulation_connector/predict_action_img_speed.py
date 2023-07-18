@@ -9,7 +9,7 @@ from deepproblog.query import Query
 
 
 class AD_Eval_Image(Dataset):
-    def __init__(self, image, eval_name, transform=None):
+    def __init__(self, image, speed, eval_name, transform=None):
         if transform is None:
             self.transform = transforms.Compose([
                 transforms.ToTensor(),
@@ -21,6 +21,7 @@ class AD_Eval_Image(Dataset):
         self.eval_name = eval_name
         # self.image = self.transform(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
         self.image = self.transform(image)
+        self.speed = speed
 
 
     def __len__(self):
@@ -28,15 +29,17 @@ class AD_Eval_Image(Dataset):
         return 1
 
     def __getitem__(self, idx):
-        # if self.transform is not None:
-        #     image = self.transform(image=image)["image"]
+        label = 0
+        image = self.image
+        speed = self.speed
+        return image, speed, label
 
-        return self.image, 0
-
-    def to_query(self, idx):
+    def to_query(self, i):
         return Query(
-            Term("action", Term("tensor", Term(self.eval_name, Term("a"))), 0),
-            substitution={Term("a"): Constant(idx)},
+            Term("action",
+                 Term("tensor", Term(self.eval_name, Term("a"))), Constant(float(self.speed)),
+                 Constant(0)),
+            substitution={Term("a"): Constant(i)}
         )
 
 
@@ -49,9 +52,9 @@ class AD_Eval_Images(object):
         return self.datasets[self.subset][int(item[0])][0]
 
 
-def get_nn_output(data, model):
+def predict_action_img_speed(img, speed, model):
     datasets = {
-        "eval_image": AD_Eval_Image(data, "eval_image"),  # test transforms are applied
+        "eval_image": AD_Eval_Image(img, speed, "eval_image"),  # test transforms are applied
     }
     AD_eval_image = AD_Eval_Images("eval_image", datasets)
     eval_dataset = datasets['eval_image']  # test transforms are applied

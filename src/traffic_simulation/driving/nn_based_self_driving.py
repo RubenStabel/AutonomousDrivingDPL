@@ -1,5 +1,7 @@
 import torch
 
+from deepproblog.examples.Autonomous_driving.simulation_connector.predict_action_img_speed import \
+    predict_action_img_speed
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.defs import *
 from traffic_simulation.simulation_settings import *
@@ -48,7 +50,9 @@ class NNSelfDriving:
         img = img.swapaxes(0, 1)
 
         if MODE == 2:
-            result = int(get_nn_output(img, self.model))
+            # result = int(get_nn_output(img, self.model))
+            result = int(predict_action_img_speed(img, round(self.player_car.get_vel(), 1), self.model))
+
         elif MODE == 3:
             result = int(get_baseline_output(img, self.model))
 
