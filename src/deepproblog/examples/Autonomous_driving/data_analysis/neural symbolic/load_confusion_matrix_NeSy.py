@@ -8,9 +8,9 @@ from deepproblog.examples.Autonomous_driving.version_0.networks.network_NeSy imp
 # from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets_baseline import get_dataset, AD_test
 # from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets_NeSy import get_dataset, AD_test
 # from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_baseline import get_dataset, AD_test
-# from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import get_dataset, AD_test
-from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_NeSy_1 import get_dataset, AD_test, \
-    MNIST_train
+from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import get_dataset, AD_test
+from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_NeSy_1 import MNIST_train
+# from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_NeSy_1 import get_dataset, AD_test, MNIST_train
 
 from deepproblog.examples.Autonomous_driving.experimental.networks.network import AD_V0_0_net, AD_V1_1_net
 from deepproblog.examples.Autonomous_driving.version_0.networks.network_baseline import AD_V0_baseline_net
@@ -70,21 +70,22 @@ from data.pre_processing import reset_img_data
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_1/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_env_1_0.pth'
 # NN_NAME = ['perc_net_version_1_NeSy']
 
-# # V1 - NeSy_2
-# MODEL_NAME = "NeSy"
-# NETWORK = [AD_V1_NeSy_1_net_x(), AD_V1_NeSy_1_net_y()]
-# OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_5_env_1.txt'
-# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_1/models/autonomous_driving_NeSy_2.pl'
-# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_1/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_2_complete_env_1_0.pth'
-# NN_NAME = ['perc_net_version_1_NeSy_x', 'perc_net_version_1_NeSy_y']
-
-# V2 - baseline_2
+# V1 - NeSy_2
 MODEL_NAME = "NeSy"
-NETWORK = [AD_V2_baseline_net_2()]
-OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_2.txt'
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_baseline_2.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/test/autonomous_driving_baseline_2_complete_env_2_0.pth'
-NN_NAME = ['perc_net_version_2_baseline_2']
+ENV = 1
+NETWORK = [AD_V1_NeSy_1_net_x(), AD_V1_NeSy_1_net_y()]
+OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_5_env_1.txt'
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_1/models/autonomous_driving_NeSy_2.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_1/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_2_complete_env_1_1.pth'
+NN_NAME = ['perc_net_version_1_NeSy_x', 'perc_net_version_1_NeSy_y']
+
+# # V2 - baseline_2
+# MODEL_NAME = "NeSy"
+# NETWORK = [AD_V2_baseline_net_2()]
+# OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_2.txt'
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_baseline_2.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/test/autonomous_driving_baseline_2_complete_env_2_0.pth'
+# NN_NAME = ['perc_net_version_2_baseline_2']
 
 # # V2 - NeSy_1
 # MODEL_NAME = "NeSy"
@@ -121,7 +122,8 @@ def get_nn_model(networks, nn_name, model_path, nn_path):
         nn.append(net)
     model = Model(model_path, nn)
     model.add_tensor_source("test", AD_test)
-    model.add_tensor_source("MNIST", MNIST_train)
+    if ENV >= 2:
+        model.add_tensor_source("MNIST", MNIST_train)
     model.set_engine(ExactEngine(model), cache=True)
     model.load_state(nn_path)
     model.eval()
@@ -139,7 +141,11 @@ def data_2_pd_img_idx(data_path):
 
 def data_2_pd_speed():
     data = pd.read_csv(OUTPUT_DATA, delimiter=';')
-    data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone', 'speed_zone_img_idx']
+    if ENV < 2:
+        data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y',
+                        'pedestrian_x', 'pedestrian_y']
+    else:
+        data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone', 'speed_zone_img_idx']
     return data
 
 
@@ -154,13 +160,16 @@ def image_file_to_speed(image_data_path: str, df):
 
 
 def image_file_to_speed_zone(image_data_path: str, df):
-    image_name = image_data_path.split('/')[-1]
-    image_id = image_name.split('_')[-1].split('.')[0]
-    iter_image = image_id.split('frame')[0].split('iter')[-1]
-    frame = image_id.split('frame')[-1]
+    if ENV < 2:
+        return 8
+    else:
+        image_name = image_data_path.split('/')[-1]
+        image_id = image_name.split('_')[-1].split('.')[0]
+        iter_image = image_id.split('frame')[0].split('iter')[-1]
+        frame = image_id.split('frame')[-1]
 
-    speed_zone = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed_zone'].values[0]
-    return speed_zone
+        speed_zone = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed_zone'].values[0]
+        return speed_zone
 
 
 def generate_false_prediction_data(data, test_set):
