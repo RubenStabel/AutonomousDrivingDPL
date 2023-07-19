@@ -4,16 +4,16 @@ nn(perc_net_version_1_NeSy_y,[Img],Y,[0,1,2]) :: cell_y(Img,Y).
 
 
 % Prediction --> 80 pixels
-attention_boundary(X,Y) :- X==1, Y=0.
+attention_boundary(X,Y) :- X=1, Y=0.
 
 
 % Prediction ---> 50 pixels
-enlarged_boundary(X,Y) :- X==1, Y=1.
-enlarged_boundary(X,Y) :- X==2, Y=0.
-enlarged_boundary(X,Y) :- X==2, Y=1.
+enlarged_boundary(X,Y) :- X=1, Y=1.
+enlarged_boundary(X,Y) :- X=2, Y=0.
+enlarged_boundary(X,Y) :- X=2, Y=1.
 
 % Prediction ---> ... pixels
-out_of_view(X,Y) :- X==0; X==3; Y==2.
+out_of_view(X,Y) :- X=0; X=3; Y=2.
 
 % Control
 % 0 --> accelerate

@@ -12,15 +12,15 @@ from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import get_dataset
 from deepproblog.examples.Autonomous_driving.version_1.networks.network_NeSy import AD_V1_NeSy_1_net_y, AD_V1_NeSy_1_net_x
 
-N = 0
+N = 1
 folder = "test/"
-data_size = "small"
+data_size = "complete"
 env = "env_1"
 
 name = "autonomous_driving_NeSy_2_{}_{}_{}".format(data_size, env, N)
 
 train_set, AD_train = get_dataset("train")
-valid_set, AD_valid = get_dataset("test")
+valid_set, AD_valid = get_dataset("valid")
 test_set, AD_test = get_dataset("test")
 
 print("###############    LOADING NETWORK    ###############")
