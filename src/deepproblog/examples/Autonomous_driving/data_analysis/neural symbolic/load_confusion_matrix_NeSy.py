@@ -149,7 +149,6 @@ def image_file_to_speed(image_data_path: str, df):
     iter_image = image_id.split('frame')[0].split('iter')[-1]
     frame = image_id.split('frame')[-1]
 
-    # df = pd.DataFrame(data_2_pd_speed())
     vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
     return vel
 
@@ -160,7 +159,6 @@ def image_file_to_speed_zone(image_data_path: str, df):
     iter_image = image_id.split('frame')[0].split('iter')[-1]
     frame = image_id.split('frame')[-1]
 
-    # df = pd.DataFrame(data_2_pd_speed())
     speed_zone = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed_zone'].values[0]
     return speed_zone
 
