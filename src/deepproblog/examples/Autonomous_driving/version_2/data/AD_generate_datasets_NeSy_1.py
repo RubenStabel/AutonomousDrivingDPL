@@ -1,8 +1,11 @@
 import glob
 import random
+from pathlib import Path
+
 import cv2
 
 import pandas as pd
+import torchvision
 
 from pandas.core.common import flatten
 from problog.logic import Term, Constant
@@ -11,9 +14,11 @@ from torchvision import datasets, transforms
 from deepproblog.dataset import Dataset
 from deepproblog.query import Query
 
-train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_1/medium'
-test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_1/medium'
-output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_1.txt'
+# train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_2/small'
+# test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_2/medium'
+train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_2_env_2'
+test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_2_env_2'
+output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_2.txt'
 
 ####################################################
 #       Create Train, Valid and Test sets
@@ -66,9 +71,31 @@ def create_test_dataset(path):
     return test_image_paths
 
 
+_DATA_ROOT = Path(__file__).parent
+
+transform = transforms.Compose(
+    [transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))]
+)
+
+datasets_MNIST = {
+    "MNIST": torchvision.datasets.MNIST(
+        root=str(_DATA_ROOT), train=True, download=True, transform=transform
+    ),
+}
+
 #######################################################
 #               Define Dataset Class
 #######################################################
+
+class MNIST_Images(object):
+    def __init__(self, subset):
+        self.subset = subset
+
+    def __getitem__(self, item):
+        return datasets_MNIST[self.subset][int(item[0])][0]
+
+
+MNIST_train = MNIST_Images("MNIST")
 
 def class_to_idx(classes):
     idx_to_class = {i: j for i, j in enumerate(classes)}
@@ -77,7 +104,7 @@ def class_to_idx(classes):
 
 def data_2_pd_speed():
     data = pd.read_csv(output_data_path, delimiter=';')
-    data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone']
+    data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone', 'speed_zone_img_idx']
     return data
 
 
@@ -87,9 +114,18 @@ def image_file_to_speed(image_data_path: str, df):
     iter_image = image_id.split('frame')[0].split('iter')[-1]
     frame = image_id.split('frame')[-1]
 
-    # df = pd.DataFrame(data_2_pd_speed())
     vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
     return vel
+
+
+def image_file_to_MNIST_img_idx(image_data_path: str, df):
+    image_name = image_data_path.split('/')[-1]
+    image_id = image_name.split('_')[-1].split('.')[0]
+    iter_image = image_id.split('frame')[0].split('iter')[-1]
+    frame = image_id.split('frame')[-1]
+
+    img_idx = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed_zone_img_idx'].values[0]
+    return img_idx
 
 
 class AD_Dataset(Dataset):
@@ -113,8 +149,9 @@ class AD_Dataset(Dataset):
     def __getitem__(self, idx):
         label = self._get_label(idx)
         image = self._get_image(idx)
+        MNIST_img = self._get_MNIST_image(idx)
         speed = self._get_speed(idx)
-        return image, speed, label
+        return image, speed, MNIST_img, label
 
     def _get_label(self, idx: int):
         image_filepath = self.image_paths[idx]
@@ -129,17 +166,21 @@ class AD_Dataset(Dataset):
         image_path = self.image_paths[idx]
         return image_file_to_speed(image_path, self.simulation_data)  # torch.tensor(image_file_to_speed(image_path))
 
+    def _get_MNIST_image(self, idx: int):
+        image_path = self.image_paths[idx]
+        return image_file_to_MNIST_img_idx(image_path, self.simulation_data)
+
     def __len__(self):
         "How many queries there are"
         return len(self.image_paths)
 
     def to_query(self, i):
-        image, speed, label = self.__getitem__(i)
+        image, speed, MNIST_img_idx, label = self.__getitem__(i)
         return Query(
             Term("action",
-                 Term("tensor", Term(self.dataset_name, Term("a"))), Constant(float(speed)),
+                 Term("tensor", Term(self.dataset_name, Term("a"))), Term("tensor", Term("MNIST", Term("b"))), Constant(float(speed)),
                  Constant(label)),
-            substitution={Term("a"): Constant(i)}
+            substitution={Term("a"): Constant(i), Term("b"): Constant(MNIST_img_idx)}
         )
 
 
