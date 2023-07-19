@@ -15,7 +15,7 @@ class TrafficLight:
         self.orange_time = None
         self.red_time = None
         self.counter = 0
-        self.x = 280
+        self.x = 320
         self.y = None
         self.lights = ['green', 'orange', 'red']
         self.reset()

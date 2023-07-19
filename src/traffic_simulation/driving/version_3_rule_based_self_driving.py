@@ -3,6 +3,7 @@ import math
 from traffic_simulation.agents.pedestrian import Pedestrian
 from traffic_simulation.agents.pedestrians import Pedestrians
 from traffic_simulation.agents.player_car import PlayerCar
+from traffic_simulation.agents.speed_zones import SpeedZones
 from traffic_simulation.agents.traffic_light import TrafficLight
 from traffic_simulation.agents.traffic_lights import TrafficLights
 from traffic_simulation.simulation_settings import NUMBER_TRAFFIC_LIGHTS
@@ -51,7 +52,7 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
         return 0
 
     positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y > 0]
-    print(positive_distances)
+    # print(positive_distances)
     if positive_distances:
         traffic_light = traffic_lights[[player_car.y - x.y for x in traffic_lights].index(min(positive_distances))]
     else:
@@ -89,17 +90,28 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
         return 0
 
 
+def speed_zone_handler(player_car: PlayerCar, speed_zones: SpeedZones, speed):
+    speed_zone = speed_zones.get_current_speed_zone(player_car)
+
+    if speed > speed_zone.get_speed_zone():
+        return 3
+    elif speed_zone.get_speed_zone() - 0.1 < speed < speed_zone.get_speed_zone():
+        return 1
+    else:
+        return 0
+
 def get_action(actions: list):
     return max(actions)
 
 
-def version_3_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedestrians, traffic_lights: TrafficLights):
+def version_3_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedestrians,  speed_zones: SpeedZones, traffic_lights: TrafficLights):
     actions = []
     for pedestrian in pedestrians.get_pedestrians():
         actions.append(get_danger_zone(player_car, pedestrian, player_car.get_vel()))
+    actions.append(speed_zone_handler(player_car, speed_zones, player_car.get_vel()))
     actions.append(traffic_light_handler(player_car, traffic_lights.unique_traffic_lights, player_car.get_vel()))
 
-    print(actions)
+    # print(actions)
 
     match get_action(actions):
         case 0:

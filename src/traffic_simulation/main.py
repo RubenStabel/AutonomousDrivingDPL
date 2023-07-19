@@ -147,7 +147,7 @@ start_time = time.time()
 while run and iteration < NUMBER_ITERATIONS:
     clock.tick(FPS)
 
-    text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), player_car.get_vel()), False, (0, 0, 0))
+    text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), ''), False, (0, 0, 0))
 
     draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians, speed_zones)
 
@@ -184,7 +184,7 @@ while run and iteration < NUMBER_ITERATIONS:
                 output = version_2_rule_based_self_driving(player_car, pedestrians, speed_zones)
                 danger_level, ped = danger_pedestrian_2(player_car, pedestrians)
             case 7:
-                output = version_3_rule_based_self_driving(player_car, pedestrians, traffic_lights)
+                output = version_3_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights)
 
     pedestrians.move()
     traffic_lights.traffic_light_dynamics()
