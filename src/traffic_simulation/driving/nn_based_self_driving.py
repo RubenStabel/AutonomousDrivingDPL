@@ -47,7 +47,10 @@ class NNSelfDriving:
 
     def nn_driving(self, frame):
 
-        y = self.player_car.y - IMAGE_DIM + self.player_car.IMG.get_height()
+        if DYNAMIC_SIMULATION:
+            y = 0
+        else:
+            y = self.player_car.y - IMAGE_DIM + self.player_car.IMG.get_height()
         rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
         sub = WIN.subsurface(rect)
         img = pygame.surfarray.array3d(sub)
@@ -55,8 +58,8 @@ class NNSelfDriving:
 
         if MODE == 2:
             # result = int(get_nn_output(img, self.model))
-            # result = int(predict_action_img_speed(img, round(self.player_car.get_vel(), 1), self.model))
-            result = int(predict_action_img_mnist_speed(img, self.speed_zones.get_speed_zone_img_idx(self.player_car), round(self.player_car.get_vel(), 1), self.model))
+            result = int(predict_action_img_speed(img, round(self.player_car.get_vel(), 1), self.model))
+            # result = int(predict_action_img_mnist_speed(img, self.speed_zones.get_speed_zone_img_idx(self.player_car), round(self.player_car.get_vel(), 1), self.model))
 
         elif MODE == 3:
             result = int(get_baseline_output(img, self.model))

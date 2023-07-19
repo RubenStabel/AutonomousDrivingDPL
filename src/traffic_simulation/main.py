@@ -27,10 +27,10 @@ from data.pre_processing import reset_img_data, reset_output_data
 from traffic_simulation.driving.version_3_rule_based_self_driving import version_3_rule_based_self_driving
 
 
-def draw(win, images, player_car, static_cars, text, traffic_lights, pedestrians, speed_zones):
+def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traffic_lights: TrafficLights, pedestrians:Pedestrians, speed_zones: SpeedZones):
     if DYNAMIC_SIMULATION:
-        x = GRID_POSITION[0]
-        y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
+        x = 0
+        y = player_car.y - DYNAMIC_Y + player_car.IMG.get_height()
     else:
         x, y = 0, 0
 
@@ -55,7 +55,10 @@ def get_speed_level(speed):
 def collect_data(output, player_car, danger_level, ped: Pedestrian, speed_zones: SpeedZones):
     global image_frame
     output_class = output.index(1)
-    y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
+    if DYNAMIC_SIMULATION:
+        y = 0
+    else:
+        y = player_car.y - IMAGE_DIM + player_car.IMG.get_height()
     rect = pygame.Rect(GRID_POSITION[0], y, IMAGE_DIM, IMAGE_DIM)
     sub = WIN.subsurface(rect)
     pygame.image.save(sub, "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/" + DATA_FOLDER + "/{}/{}_iter{}frame{}.png".format(output_class, PREFIX, iteration, image_frame))

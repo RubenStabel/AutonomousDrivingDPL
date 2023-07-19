@@ -58,8 +58,10 @@ WHITE = (0, 0, 0)
 
 # DIMENSIONS
 WIDTH, HEIGHT = ROAD.get_width(), ROAD.get_height()
+DYNAMIC_X = IMAGE_DIM + 10
+DYNAMIC_Y = IMAGE_DIM + 10
 if DYNAMIC_SIMULATION:
-    display_width, display_height = IMAGE_DIM, IMAGE_DIM
+    display_width, display_height = DYNAMIC_X, DYNAMIC_Y
 else:
     display_width, display_height = WIDTH, HEIGHT
 WIN = pygame.display.set_mode((display_width, display_height))
@@ -69,7 +71,7 @@ BLOCK_SIZE = 10  # Set the size of the grid block
 # GAME SETTINGS
 FPS = 60
 
-# print(ROAD_BORDER.get_width(), ROAD_BORDER.get_height())
+# print(ROAD.get_width(), ROAD_BORDER.get_width())
 # print(WIDTH, HEIGHT)
 # print(RED_CAR.get_width(), RED_CAR.get_height())
 # print(PEDESTRIAN.get_width(), PEDESTRIAN.get_height())w
