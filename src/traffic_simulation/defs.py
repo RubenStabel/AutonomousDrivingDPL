@@ -12,6 +12,16 @@ if EXTENDED_ROAD:
     ROAD_BORDER = scale_image(pygame.image.load(path + "road_border_extended.png"), 0.9)
     ROAD_BORDER_POSITION = (125, 0)
     ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD)
+elif NUMBER_INTERSECTIONS == 1:
+    ROAD = scale_image(pygame.image.load(path + "1_intersection.png"), 0.9)
+    ROAD_BORDER = scale_image(pygame.image.load(path + "1_intersections_border.png"), 0.9)
+    ROAD_BORDER_POSITION = (3, 2)
+    ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD)
+elif NUMBER_INTERSECTIONS == 2:
+    ROAD = scale_image(pygame.image.load(path + "2_intersection.png"), 0.9)
+    ROAD_BORDER = scale_image(pygame.image.load(path + "2_intersections_border.png"), 0.9)
+    ROAD_BORDER_POSITION = (4, 4)
+    ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD)
 else:
     ROAD = scale_image(pygame.image.load(path + "road.png"), 0.9)
     ROAD_BORDER = scale_image(pygame.image.load(path + "road_border.png"), 0.9)
@@ -23,7 +33,6 @@ TRACK_BORDER = scale_image(pygame.image.load(path+"track-border.png"), 0.9)
 TRACK_BORDER_MASK = pygame.mask.from_surface(TRACK_BORDER)
 
 GRID_POSITION = (5, 190)
-PER_BLOCK_SIZE = 60
 
 RED_CAR = scale_image(pygame.image.load(path+"red-car.png"), 0.8)
 GREEN_CAR = scale_image(pygame.image.load(path+"green-car.png"), 0.8)
@@ -32,13 +41,13 @@ PURPLE_CAR = scale_image(pygame.image.load(path+"purple-car.png"), 0.8)
 WHITE_CAR = scale_image(pygame.image.load(path+"white-car.png"), 0.8)
 CAR_ARRAY = [RED_CAR, GREY_CAR, GREY_CAR, PURPLE_CAR, WHITE_CAR]
 if DYNAMIC_SIMULATION:
-    START_POS_CAR = (200, ROAD.get_height() - RED_CAR.get_height())
+    START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, ROAD.get_height() - RED_CAR.get_height())
 else:
-    START_POS_CAR = (200, ROAD.get_height() - 120)
+    START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, ROAD.get_height() - 120)
 
 FINISH = scale_image(pygame.image.load(path+"finish.png"), 1.15)
 FINISH_MASK = pygame.mask.from_surface(FINISH)
-FINISH_POSITION = (128, IMAGE_DIM - FINISH.get_height() - RED_CAR.get_height())
+FINISH_POSITION = (ROAD.get_width()/2 - FINISH.get_width()/2, IMAGE_DIM - FINISH.get_height() - RED_CAR.get_height())
 
 GREEN_LIGHT = scale_image(pygame.image.load(path+"green_light.png"), 0.08)
 ORANGE_LIGHT = scale_image(pygame.image.load(path+"orange_light.png"), 0.08)
@@ -71,7 +80,8 @@ BLOCK_SIZE = 10  # Set the size of the grid block
 # GAME SETTINGS
 FPS = 60
 
-# print(ROAD.get_width(), ROAD_BORDER.get_width())
+print(ROAD.get_width(), ROAD_BORDER.get_width())
+print(FINISH.get_width())
 # print(WIDTH, HEIGHT)
 # print(RED_CAR.get_width(), RED_CAR.get_height())
 # print(PEDESTRIAN.get_width(), PEDESTRIAN.get_height())w

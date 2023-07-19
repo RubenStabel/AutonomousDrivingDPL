@@ -29,7 +29,10 @@ from traffic_simulation.driving.version_3_rule_based_self_driving import version
 
 def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traffic_lights: TrafficLights, pedestrians:Pedestrians, speed_zones: SpeedZones):
     if DYNAMIC_SIMULATION:
-        x = 0
+        if NUMBER_INTERSECTIONS > 0:
+            x = DYNAMIC_X/2 - RED_CAR.get_width()/2
+        else:
+            x = 0
         y = player_car.y - DYNAMIC_Y + player_car.IMG.get_height()
     else:
         x, y = 0, 0
