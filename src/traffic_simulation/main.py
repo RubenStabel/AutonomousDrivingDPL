@@ -109,7 +109,7 @@ if DATA_ANALYSIS:
     reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/{}'.format(MODEL_NAME), 3)
 
 if COLLECT_DATA:
-    reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(DATA_FOLDER), 3)
+    reset_img_data('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(DATA_FOLDER), 4)
     f = open(
         "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}_{}.txt".format(MODE, ENV), "w")
     f.write("{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone','speed_zone_img_idx'))
@@ -134,7 +134,7 @@ self_driving = None
 ped = None
 danger_level = 0
 if MODE == 2:
-    self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
+    self_driving = NNSelfDriving(player_car, speed_zones,  NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
 elif MODE == 3:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH)
 output = [1]
