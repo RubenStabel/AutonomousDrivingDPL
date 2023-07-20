@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 from traffic_simulation.defs import *
@@ -26,16 +28,20 @@ class Pedestrian:
         self.rect = self.img.get_rect()
         self.max_vel = max_vel
         self.vel = max_vel
+        self.x = None
+        self.y = None
+        self.x_end = None
+        self.y_end = None
         if SCENARIO_MODE:
             self.scenario_num = 0
             self.set_path(path=list(SCENARIO.values())[self.scenario_num])
             self.x = list(SCENARIO.values())[self.scenario_num][0][0] * BLOCK_SIZE
             self.y = list(SCENARIO.values())[self.scenario_num][0][1] * BLOCK_SIZE
         else:
-            self.x = random.randrange(280, 340, 10)
-            self.y = random.randrange(abs(round((HEIGHT/2)/10)*10), abs(round(START_POS_CAR[1]/10)*10) - 100, 10)
-            self.x_end = random.randrange(10, 70, 10)
-            self.y_end = random.randrange(abs(round(FINISH_POSITION[1]/10)*10) + abs(round(HEIGHT/10)), round((HEIGHT/2)/10)*10+abs(round(HEIGHT/10)), 10)
+            self.x_start_range = np.arange(round(WIDTH/2 + 100, -1), round(WIDTH - PEDESTRIAN.get_width(), -1), 10, dtype=int).tolist()
+            self.y_range = np.arange(round(abs(round(FINISH_POSITION[1]/10)*10) + abs(round(HEIGHT/10)), -1), round(abs(round(START_POS_CAR[1]/10)*10) - 100, -1), 10, dtype=int).tolist()
+            self.x_end_range = np.arange(round(10, -1), round(WIDTH/2 - 100, -1), 10, dtype=int).tolist()
+            self.create_new_pedestrian_targets()
             self.grid = create_grid()
             self.obstacles_rect = obstacles_rect
             self.mask = []
@@ -110,11 +116,10 @@ class Pedestrian:
         self.path, _ = finder.find_path(start, end, grid)
 
     def create_new_pedestrian_targets(self):
-        self.x = random.randrange(280, 340, 10)
-        self.y = random.randrange(abs(round((HEIGHT / 2) / 10) * 10), abs(round(START_POS_CAR[1] / 10) * 10) - 100, 10)
-        self.x_end = random.randrange(10, 70, 10)
-        self.y_end = random.randrange(abs(round(FINISH_POSITION[1] / 10) * 10) + abs(round(HEIGHT / 10)),
-                                      round((HEIGHT / 2) / 10) * 10 + abs(round(HEIGHT / 10)), 10)
+        self.x = random.choice(self.x_start_range)
+        self.y = random.choice(self.y_range)
+        self.x_end = random.choice(self.x_end_range)
+        self.y_end = random.choice(self.y_range)
 
     def set_targets_pedestrian(self, x, y, x_end, y_end):
         self.x = x
