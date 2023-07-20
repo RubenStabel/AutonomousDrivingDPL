@@ -9,7 +9,18 @@ from traffic_simulation.defs import *
 
 class SpeedZone:
     def __init__(self):
-        self.x = 280
+        self.x = ROAD.get_width()/2 + 100
+        if NUMBER_INTERSECTIONS == 2:
+            range_1 = np.arange(0, INTER_2_START - 30, 10, dtype=int).tolist()
+            range_2 = np.arange(INTER_2_END + 10, INTER_1_START - 30, 10, dtype=int).tolist()
+            range_3 = np.arange(INTER_1_END + 10, HEIGHT - 30, 10, dtype=int).tolist()
+            self.y_range = [range_1, range_2, range_3]
+        elif NUMBER_INTERSECTIONS == 1:
+            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_1_START - 30, 10, dtype=int).tolist()
+            range_2 = np.arange(INTER_1_END + 10, HEIGHT - 30, 10, dtype=int).tolist()
+            self.y_range = [range_1, range_2]
+        else:
+            self.y_range = [np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.car_height * 2, 10, dtype=int).tolist()]
         self.y = None
         self.length = None
         self.speed_zone = 8
@@ -44,7 +55,8 @@ class SpeedZone:
                                                             self.length))
 
     def reset(self):
-        self.length = random.randrange(100, random.randrange(FINISH_POSITION[1] + 150, START_POS_CAR[1] - 50, 150) - FINISH_POSITION[1], 10)
-        self.y = random.randrange(FINISH_POSITION[1], START_POS_CAR[1] - 50 - self.length, 10)
+        zone = random.choice(self.y_range)
+        self.length = random.randrange(100, zone[-1] - zone[0], 20)
+        self.y = random.randrange(zone[0], zone[-1] - self.length, 10)
         self.speed_zone_dynamics()
 
