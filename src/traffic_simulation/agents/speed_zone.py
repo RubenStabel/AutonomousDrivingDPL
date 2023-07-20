@@ -20,7 +20,7 @@ class SpeedZone:
             range_2 = np.arange(INTER_1_END + 10, HEIGHT - 30, 10, dtype=int).tolist()
             self.y_range = [range_1, range_2]
         else:
-            self.y_range = [np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.car_height * 2, 10, dtype=int).tolist()]
+            self.y_range = [np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - 60, 10, dtype=int).tolist()]
         self.y = None
         self.length = None
         self.speed_zone = 8

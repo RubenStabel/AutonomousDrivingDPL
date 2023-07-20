@@ -15,8 +15,20 @@ class TrafficLight:
         self.orange_time = None
         self.red_time = None
         self.counter = 0
-        self.x = 320
+        self.x = ROAD.get_width()/2 + 135
         self.y = None
+        if NUMBER_INTERSECTIONS == 2:
+            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_2_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+            range_2 = np.arange(INTER_2_END + 10, INTER_1_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+            range_3 = np.arange(INTER_1_END + 10, HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+            self.y_range = range_1 + range_2 + range_3
+        elif NUMBER_INTERSECTIONS == 1:
+            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_1_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+            range_2 = np.arange(INTER_1_END + 10, HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+            self.y_range = range_1 + range_2
+        else:
+            self.y_range = np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+
         self.lights = ['green', 'orange', 'red']
         self.reset()
 
@@ -66,13 +78,13 @@ class TrafficLight:
     def draw(self, win, x_offset, y_offset):
         if self.img is not None:
             win.blit(self.img, (self.x - x_offset, self.y - y_offset))
-            pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH/2 + ROAD_BORDER.get_width()/20 - x_offset,
+            pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH/2 + 5 - x_offset,
                                                                self.y + self.height - y_offset,
-                                                               ROAD_BORDER.get_width()/2 - ROAD_BORDER.get_width()/10,
-                                                               5))
+                                                               45,
+                                                               3))
 
     def reset(self):
         self.set_light(random.choice(self.lights))
         self.set_light_times()
         self.counter = self.get_light_time()
-        self.y = random.randrange(FINISH_POSITION[1]+FINISH.get_height(), START_POS_CAR[1] - 2*self.height, 2*self.height)
+        self.y = random.choice(self.y_range)

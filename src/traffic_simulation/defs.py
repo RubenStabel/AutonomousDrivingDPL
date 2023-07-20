@@ -11,17 +11,17 @@ if EXTENDED_ROAD:
     ROAD = scale_image(pygame.image.load(path + "road_extended.png"), 0.9)
     ROAD_BORDER = scale_image(pygame.image.load(path + "road_border_extended.png"), 0.9)
     ROAD_BORDER_POSITION = (125, 0)
-    ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD)
+    ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD_BORDER)
 elif NUMBER_INTERSECTIONS == 1:
     ROAD = scale_image(pygame.image.load(path + "1_intersection.png"), 0.9)
     ROAD_BORDER = scale_image(pygame.image.load(path + "1_intersections_border.png"), 0.9)
     ROAD_BORDER_POSITION = (0, 0)
-    ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD)
+    ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD_BORDER)
 elif NUMBER_INTERSECTIONS == 2:
     ROAD = scale_image(pygame.image.load(path + "2_intersection.png"), 0.9)
     ROAD_BORDER = scale_image(pygame.image.load(path + "2_intersections_border.png"), 0.9)
     ROAD_BORDER_POSITION = (0, 0)
-    ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD)
+    ROAD_BORDER_MASK = pygame.mask.from_surface(ROAD_BORDER)
 else:
     ROAD = scale_image(pygame.image.load(path + "road.png"), 0.9)
     ROAD_BORDER = scale_image(pygame.image.load(path + "road_border.png"), 0.9)
