@@ -45,6 +45,7 @@ GREY_CAR = scale_image(pygame.image.load(path+"grey-car.png"), 0.8)
 PURPLE_CAR = scale_image(pygame.image.load(path+"purple-car.png"), 0.8)
 WHITE_CAR = scale_image(pygame.image.load(path+"white-car.png"), 0.8)
 CAR_ARRAY = [RED_CAR, GREY_CAR, GREY_CAR, PURPLE_CAR, WHITE_CAR]
+
 if DYNAMIC_SIMULATION:
     START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, ROAD.get_height() - RED_CAR.get_height())
 else:
@@ -65,7 +66,7 @@ PEDESTRIAN_MASK = pygame.mask.from_surface(PEDESTRIAN)
 PEDESTRIAN_START_POS = (random.randrange(280, 350, 10), random.randrange(350, 700, 10))
 PEDESTRIAN_END_POS = (random.randrange(10, 70, 10), random.randrange(10, 500, 10))
 
-
+STOP_SIGN = scale_image(pygame.image.load(path+"stop_sign.png"), 0.1)
 
 # COLORS
 WHITE = (0, 0, 0)
