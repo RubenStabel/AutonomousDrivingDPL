@@ -4,7 +4,7 @@ import time
 from traffic_simulation.agents.pedestrian import Pedestrian
 from traffic_simulation.agents.speed_zone import SpeedZone
 from traffic_simulation.agents.speed_zones import SpeedZones
-from traffic_simulation.agents.stop_sign import StopSign
+from traffic_simulation.agents.traffic_sign import TrafficSign
 from traffic_simulation.defs import *
 from traffic_simulation.driving.version_1_speed_zones_rule_based_self_driving import version_1_speed_zones_based_self_driving, danger_pedestrian_1_speed_zones
 from traffic_simulation.simulation_settings import *
@@ -28,7 +28,7 @@ from data.pre_processing import reset_img_data, reset_output_data
 from traffic_simulation.driving.version_3_rule_based_self_driving import version_3_rule_based_self_driving
 
 
-def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traffic_lights: TrafficLights, pedestrians:Pedestrians, speed_zones: SpeedZones, stop_sign: StopSign):
+def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traffic_lights: TrafficLights, pedestrians:Pedestrians, speed_zones: SpeedZones, traffic_signs: TrafficSign):
     if DYNAMIC_SIMULATION:
         x = player_car.x - DYNAMIC_X/2 - player_car.IMG.get_width()/2
         y = player_car.y - DYNAMIC_Y + player_car.IMG.get_height()
@@ -38,9 +38,9 @@ def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traf
     for img, pos in images:
         win.blit(img, (pos[0] - x, pos[1] - y))
 
-    stop_sign.draw(win, x, y)
     static_cars.draw(win, x, y)
     speed_zones.draw(win, x, y)
+    traffic_signs.draw(win, x, y)
     traffic_lights.draw(win, x, y)
     player_car.draw(win, x, y)
     pedestrians.draw(win, x, y, player_car, static_cars)
@@ -102,7 +102,7 @@ def reset_traffic_simulation(infraction: int):
     pedestrians.reset(static_cars.get_static_cars_rect())
     traffic_lights.reset()
     speed_zones.reset()
-    stop_sign.reset()
+    traffic_signs.reset()
 
 
 run = True
@@ -133,9 +133,9 @@ static_cars = StaticCars(NUMBER_STATIC_CARS)
 static_cars.create_static_cars()
 # pedestrian = Pedestrian(1, static_cars.get_static_cars_rect())
 pedestrians = Pedestrians(NUMBER_PEDESTRIANS, static_cars.get_static_cars_rect())
-traffic_lights = TrafficLights(NUMBER_TRAFFIC_LIGHTS)
+traffic_lights = TrafficLights(NUMBER_TRAFFIC_LIGHTS, TRAFFIC_LIGHT_INTERSECTION)
 speed_zones = SpeedZones(NUMBER_SPEED_ZONES)
-stop_sign = StopSign(NUMBER_STOP_SIGNS)
+traffic_signs = TrafficSign(NUMBER_TRAFFIC_SIGNS)
 
 self_driving = None
 ped = None
@@ -156,7 +156,7 @@ while run and iteration < NUMBER_ITERATIONS:
 
     text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), ''), False, (0, 0, 0))
 
-    draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians, speed_zones, stop_sign)
+    draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians, speed_zones, traffic_signs)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

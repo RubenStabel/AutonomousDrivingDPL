@@ -11,31 +11,27 @@ class StaticCars:
         self.x_range = [ROAD.get_width()/2 - 65 - RED_CAR.get_width(), ROAD.get_width()/2 + 65]
         if NUMBER_INTERSECTIONS == 2:
             range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_2_START - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
-            range_2 = np.arange(INTER_2_END + 10, INTER_1_START - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
-            range_3 = np.arange(INTER_1_END + 10, HEIGHT - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
+            range_2 = np.arange(INTER_2_END + 100, INTER_1_START - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
+            range_3 = np.arange(INTER_1_END + 100, HEIGHT - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
             self.y_range = range_1 + range_2 + range_3
         elif NUMBER_INTERSECTIONS == 1:
             range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_1_START - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
-            range_2 = np.arange(INTER_1_END + 10, HEIGHT - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
+            range_2 = np.arange(INTER_1_END + 100, HEIGHT - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
             self.y_range = range_1 + range_2
         else:
             self.y_range = np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.car_height, self.car_height + 15, dtype=int).tolist()
 
-# 0 - 424
-# 553 - 1043
-# 1173 - ...
-#
-# 0 - 1043
-# 1173 - ...
-
     def create_static_cars(self):
         self.cars = []
         self.cars_rect = []
+        pos_occupied = set()
         for _ in range(self.number_of_cars):
             pos = (random.choice(self.x_range), random.choice(self.y_range))
-            car_color = random.choice(CAR_ARRAY)
-            self.cars.append((car_color, pos))
-            self.cars_rect.append(pygame.Rect(*pos, self.car_width, self.car_height))
+            if pos not in pos_occupied:
+                pos_occupied.add(pos)
+                car_color = random.choice(CAR_ARRAY)
+                self.cars.append((car_color, pos))
+                self.cars_rect.append(pygame.Rect(*pos, self.car_width, self.car_height))
 
     def get_static_cars(self):
         return self.cars
