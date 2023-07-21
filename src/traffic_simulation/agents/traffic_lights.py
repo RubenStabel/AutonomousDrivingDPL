@@ -2,11 +2,11 @@ from traffic_simulation.agents.traffic_light import TrafficLight
 
 
 class TrafficLights:
-    def __init__(self, n):
+    def __init__(self, n, only_intersection_traffic_light=False):
         self.number_of_traffic_lights = n
         self.traffic_lights: list[TrafficLight] = []
         for i in range(self.number_of_traffic_lights):
-            self.traffic_lights.append(TrafficLight())
+            self.traffic_lights.append(TrafficLight(only_intersection_traffic_light))
 
         self.unique_traffic_lights = []
         self.seen = set()

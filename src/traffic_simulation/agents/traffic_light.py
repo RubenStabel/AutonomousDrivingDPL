@@ -6,7 +6,7 @@ from traffic_simulation.defs import *
 
 
 class TrafficLight:
-    def __init__(self):
+    def __init__(self, only_intersection_traffic_light=False):
         self.width = GREEN_LIGHT.get_width()
         self.height = GREEN_LIGHT.get_height()
         self.img = None
@@ -17,18 +17,27 @@ class TrafficLight:
         self.counter = 0
         self.x = ROAD.get_width()/2 + 135
         self.y = None
-        if NUMBER_INTERSECTIONS == 2:
-            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_2_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
-            range_2 = np.arange(INTER_2_END + 10, INTER_1_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
-            range_3 = np.arange(INTER_1_END + 10, HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
-            self.y_range = range_1 + range_2 + range_3
-        elif NUMBER_INTERSECTIONS == 1:
-            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_1_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
-            range_2 = np.arange(INTER_1_END + 10, HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
-            self.y_range = range_1 + range_2
+        if only_intersection_traffic_light:
+            if NUMBER_INTERSECTIONS == 2:
+                self.y_range = [INTER_2_END + 10, INTER_1_END + 10]
+            elif NUMBER_INTERSECTIONS == 1:
+                self.y_range = [INTER_1_END + 10]
+            else:
+                self.y_range = np.arange(FINISH_POSITION[1] + FINISH.get_height(),
+                                         HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15,
+                                         dtype=int).tolist()
         else:
-            self.y_range = np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
-
+            if NUMBER_INTERSECTIONS == 2:
+                range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_2_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+                range_2 = np.arange(INTER_2_END + 10, INTER_1_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+                range_3 = np.arange(INTER_1_END + 10, HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+                self.y_range = range_1 + range_2 + range_3
+            elif NUMBER_INTERSECTIONS == 1:
+                range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_1_START - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+                range_2 = np.arange(INTER_1_END + 10, HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
+                self.y_range = range_1 + range_2
+            else:
+                self.y_range = np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
         self.lights = ['green', 'orange', 'red']
         self.reset()
 
