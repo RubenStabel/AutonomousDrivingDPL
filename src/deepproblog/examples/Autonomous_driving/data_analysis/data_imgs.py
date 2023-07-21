@@ -18,7 +18,7 @@ def show_transformed_img(img_path, transform=None):
 
 transform = transforms.Compose([
                     transforms.ToTensor(),
-                    transforms.Resize((128, 128), antialias=True),
+                    transforms.Resize((64, 64), antialias=True),
                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                 ])
-show_transformed_img('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_2_env_2/medium/2/0_iter15frame19.png', transform)
+show_transformed_img('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/version_3_dev/2/0_iter0frame12.png', transform)
