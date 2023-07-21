@@ -60,13 +60,24 @@ ORANGE_LIGHT = scale_image(pygame.image.load(path+"orange_light.png"), 0.08)
 RED_LIGHT = scale_image(pygame.image.load(path+"red_light.png"), 0.08)
 
 
-# PEDESTRIAN = scale_image(pygame.image.load("imgs/pedastrian.png"), 0.9)
-PEDESTRIAN = scale_image(pygame.image.load(path+"yellow-rect.png"), 0.03)
+PEDESTRIAN = scale_image(pygame.image.load("imgs/pedastrian.png"), 0.9)
+# PEDESTRIAN = scale_image(pygame.image.load(path+"yellow-rect.png"), 0.03)
 PEDESTRIAN_MASK = pygame.mask.from_surface(PEDESTRIAN)
 PEDESTRIAN_START_POS = (random.randrange(280, 350, 10), random.randrange(350, 700, 10))
 PEDESTRIAN_END_POS = (random.randrange(10, 70, 10), random.randrange(10, 500, 10))
 
 STOP_SIGN = scale_image(pygame.image.load(path+"stop_sign.png"), 0.1)
+PRIORITY_ALL = scale_image(pygame.image.load(path+"priority_all.png"), 0.11)
+PRIORITY_RIGHT = scale_image(pygame.image.load(path+"priority_right.png"), 0.11)
+PRIORITY_INTERSECTION = scale_image(pygame.image.load(path+"priority_intersection.png"), 0.11)
+
+BUSH = scale_image(pygame.image.load(path+"Bush.png"), 0.7)
+TREE_1 = scale_image(pygame.image.load(path+"tree_1.png"), 1.1)
+TREE_2 = scale_image(pygame.image.load(path+"tree_2.png"), 1.1)
+TREE_3 = scale_image(pygame.image.load(path+"tree_3.png"), 1.1)
+TREE_4 = scale_image(pygame.image.load(path+"tree_4.png"), 1.1)
+
+
 
 # COLORS
 WHITE = (0, 0, 0)
