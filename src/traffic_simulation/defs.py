@@ -69,15 +69,15 @@ PEDESTRIAN_END_POS = (random.randrange(10, 70, 10), random.randrange(10, 500, 10
 STOP_SIGN = scale_image(pygame.image.load(path+"stop_sign.png"), 0.1)
 PRIORITY_ALL = scale_image(pygame.image.load(path+"priority_all.png"), 0.11)
 PRIORITY_RIGHT = scale_image(pygame.image.load(path+"priority_right.png"), 0.11)
-PRIORITY_INTERSECTION = scale_image(pygame.image.load(path+"priority_intersection.png"), 0.11)
+PRIORITY_INTERSECTION = scale_image(pygame.image.load(path+"priority_intersection.png"), 0.04)
+TRAFFIC_SIGNS = [PRIORITY_ALL, PRIORITY_RIGHT, PRIORITY_INTERSECTION]
 
-BUSH = scale_image(pygame.image.load(path+"Bush.png"), 0.7)
+BUSH = scale_image(pygame.image.load(path+"bush.png"), 0.9)
 TREE_1 = scale_image(pygame.image.load(path+"tree_1.png"), 1.1)
 TREE_2 = scale_image(pygame.image.load(path+"tree_2.png"), 1.1)
 TREE_3 = scale_image(pygame.image.load(path+"tree_3.png"), 1.1)
 TREE_4 = scale_image(pygame.image.load(path+"tree_4.png"), 1.1)
-
-
+SCENERY = [BUSH, TREE_1, TREE_2, TREE_3, TREE_4]
 
 # COLORS
 WHITE = (0, 0, 0)
@@ -97,6 +97,8 @@ BLOCK_SIZE = 10  # Set the size of the grid block
 # GAME SETTINGS
 FPS = 60
 
+
+# print(PRIORITY_ALL.get_width(), PRIORITY_ALL.get_height())
 # print(ROAD.get_width(), ROAD_BORDER.get_width())
 # print(FINISH.get_width())
 # print(WIDTH, HEIGHT)
