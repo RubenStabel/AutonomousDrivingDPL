@@ -7,13 +7,14 @@ from traffic_simulation.defs import *
 class DynamicCars:
     def __init__(self, n):
         self.number_of_dynamic_cars = n
-        self.max_vel = [3, 4, 5, 6]
+        self.max_vel = [3, 4, 5]
+        self.active_dynamic_cars: list[DynamicCar] = []
         self.dynamic_cars: list[DynamicCar] = []
         for i in range(self.number_of_dynamic_cars):
             self.dynamic_cars.append(DynamicCar(random.choice(self.max_vel), 4, 0, (0, 0)))
         self.start_angle = [-90, 90]
-        x_range_1 = np.arange(10, WIDTH/2 - RED_CAR.get_height()*2, RED_CAR.get_height()*2, dtype=int).tolist()
-        x_range_2 = np.arange(WIDTH/2 + RED_CAR.get_height()*2, WIDTH - RED_CAR.get_height() - 10, RED_CAR.get_height()*2, dtype=int).tolist()
+        x_range_1 = np.arange(20, WIDTH/2 - RED_CAR.get_height()*2, RED_CAR.get_height()*2, dtype=int).tolist()
+        x_range_2 = np.arange(WIDTH/2 + RED_CAR.get_height()*2, WIDTH - RED_CAR.get_height()*2, RED_CAR.get_height()*2, dtype=int).tolist()
         self.positions_left = []
         self.positions_right = []
         self.all_pos = set()
@@ -33,14 +34,15 @@ class DynamicCars:
         self.reset()
 
     def get_dynamic_cars(self):
-        return self.dynamic_cars
+        return self.active_dynamic_cars
 
     def draw(self, win, x_offset, y_offset):
-        for car in self.dynamic_cars:
+        for car in self.active_dynamic_cars:
             car.draw(win, x_offset, y_offset)
 
     def reset(self):
         self.all_pos = set()
+        self.active_dynamic_cars = []
         for car in self.dynamic_cars:
             start_angle = random.choice(self.start_angle)
             if start_angle == self.start_angle[0] or len(self.positions_left) < 1:
@@ -49,6 +51,7 @@ class DynamicCars:
                 start_pos = random.choice(self.positions_right)
             if start_pos not in self.all_pos:
                 self.all_pos.add(start_pos)
+                self.active_dynamic_cars.append(car)
                 car.reset(start_angle, start_pos)
 
     def move(self):
