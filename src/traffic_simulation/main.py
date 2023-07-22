@@ -2,12 +2,14 @@ import math
 import time
 
 from traffic_simulation.agents.dynamic_cars import DynamicCars
+from traffic_simulation.agents.dynamic_cars_traffic_lights import DynamicTrafficLights
 from traffic_simulation.agents.pedestrian import Pedestrian
 from traffic_simulation.agents.scenery import Scenery
 from traffic_simulation.agents.speed_zone import SpeedZone
 from traffic_simulation.agents.speed_zones import SpeedZones
 from traffic_simulation.agents.traffic_sign import TrafficSign
 from traffic_simulation.defs import *
+from traffic_simulation.driving.dynamic_car_rule_based_agent import dynamic_car_rule_based_self_driving
 from traffic_simulation.driving.version_1_speed_zones_rule_based_self_driving import version_1_speed_zones_based_self_driving, danger_pedestrian_1_speed_zones
 from traffic_simulation.simulation_settings import *
 from traffic_simulation.agents.pedestrians import Pedestrians
@@ -30,7 +32,7 @@ from data.pre_processing import reset_img_data, reset_output_data
 from traffic_simulation.driving.version_3_rule_based_self_driving import version_3_rule_based_self_driving
 
 
-def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traffic_lights: TrafficLights, pedestrians:Pedestrians, speed_zones: SpeedZones, traffic_signs: TrafficSign, scenery: Scenery, dynamic_cars: DynamicCars):
+def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traffic_lights: TrafficLights, pedestrians:Pedestrians, speed_zones: SpeedZones, traffic_signs: TrafficSign, scenery: Scenery, dynamic_cars: DynamicCars, dynamic_cars_traffic_lights: DynamicTrafficLights):
     if DYNAMIC_SIMULATION:
         x = player_car.x - DYNAMIC_X/2 - player_car.IMG.get_width()/2
         y = player_car.y - DYNAMIC_Y + player_car.IMG.get_height()
@@ -46,6 +48,7 @@ def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traf
     traffic_signs.draw(win, x, y)
     traffic_lights.draw(win, x, y)
     dynamic_cars.draw(win, x, y)
+    dynamic_cars_traffic_lights.draw(win, x, y)
     player_car.draw(win, x, y)
     pedestrians.draw(win, x, y, player_car, static_cars)
     if not (DATA_ANALYSIS or COLLECT_DATA):
@@ -108,6 +111,7 @@ def reset_traffic_simulation(infraction: int):
     speed_zones.reset()
     traffic_signs.reset()
     dynamic_cars.reset()
+    dynamic_cars_traffic_lights.reset()
     scenery.reset()
 
 
@@ -144,6 +148,7 @@ speed_zones = SpeedZones(NUMBER_SPEED_ZONES)
 traffic_signs = TrafficSign(NUMBER_TRAFFIC_SIGNS)
 scenery = Scenery(NUMBER_SCENERY)
 dynamic_cars = DynamicCars(NUMBER_DYNAMIC_CARS)
+dynamic_cars_traffic_lights = DynamicTrafficLights()
 
 self_driving = None
 ped = None
@@ -164,7 +169,7 @@ while run and iteration < NUMBER_ITERATIONS:
 
     text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), ''), False, (0, 0, 0))
 
-    draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians, speed_zones, traffic_signs, scenery, dynamic_cars)
+    draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians, speed_zones, traffic_signs, scenery, dynamic_cars, dynamic_cars_traffic_lights)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -203,6 +208,8 @@ while run and iteration < NUMBER_ITERATIONS:
 
     pedestrians.move()
     traffic_lights.traffic_light_dynamics()
+    dynamic_car_rule_based_self_driving(dynamic_cars, dynamic_cars_traffic_lights)
+    dynamic_cars_traffic_lights.traffic_light_dynamics()
 
     if frame % 5 == 0 and player_car.y - IMAGE_DIM + player_car.IMG.get_height() > 0 and \
             player_car.y + player_car.IMG.get_height() < HEIGHT and COLLECT_DATA:
