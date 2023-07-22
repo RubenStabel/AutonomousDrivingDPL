@@ -37,10 +37,15 @@ class DynamicTrafficLight:
     def get_light(self):
         return self.color_id
 
-    def set_light_times(self):
-        self.green_time = random.randrange(100, 200, 10)
-        self.orange_time = random.randrange(50, 70, 10)
-        self.red_time = random.randrange(300, 350, 10)
+    def set_light_times(self, times=None):
+        if times is None:
+            self.green_time = random.randrange(100, 200, 10)
+            self.orange_time = random.randrange(50, 70, 10)
+            self.red_time = random.randrange(300, 350, 10)
+        else:
+            self.green_time = times[0]
+            self.orange_time = times[1]
+            self.red_time = times[2]
 
     def get_light_time(self):
         match self.get_light():
@@ -79,7 +84,13 @@ class DynamicTrafficLight:
             #                                                        3,
             #                                                        45))
 
-    def reset(self):
-        self.set_light(random.choice(self.lights))
-        self.set_light_times()
-        self.counter = self.get_light_time()
+    def reset(self, light=None, times=None, counter=None):
+        if light is None:
+            self.set_light(random.choice(self.lights))
+        else:
+            self.set_light(light)
+        self.set_light_times(times)
+        if counter is None:
+            self.counter = self.get_light_time()
+        else:
+            self.counter = counter

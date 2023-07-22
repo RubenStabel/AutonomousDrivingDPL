@@ -111,7 +111,7 @@ def reset_traffic_simulation(infraction: int):
     speed_zones.reset()
     traffic_signs.reset()
     dynamic_cars.reset()
-    dynamic_cars_traffic_lights.reset()
+    dynamic_cars_traffic_lights.reset(traffic_lights)
     scenery.reset()
 
 
@@ -148,7 +148,7 @@ speed_zones = SpeedZones(NUMBER_SPEED_ZONES)
 traffic_signs = TrafficSign(NUMBER_TRAFFIC_SIGNS)
 scenery = Scenery(NUMBER_SCENERY)
 dynamic_cars = DynamicCars(NUMBER_DYNAMIC_CARS)
-dynamic_cars_traffic_lights = DynamicTrafficLights()
+dynamic_cars_traffic_lights = DynamicTrafficLights(traffic_lights)
 
 self_driving = None
 ped = None

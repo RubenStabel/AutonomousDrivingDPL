@@ -81,14 +81,11 @@ def traffic_light_handler(current_car: DynamicCar, traffic_lights: list[DynamicT
     pixel_margin = 20
 
     if x_rel < pixels_brake + pixel_margin:
-        if traffic_light_id == 1:
-            return 0
+        if x_rel < pixel_margin-1 or speed > 0:
+            return 3
         else:
-            if x_rel < pixel_margin-1 or speed > 0:
-                return 3
-            else:
-                return 2
-    elif x_rel < pixels_idle + pixel_margin and traffic_light_id == 1:
+            return 2
+    elif x_rel < pixels_idle + pixel_margin:
         return 2
     else:
         return 0

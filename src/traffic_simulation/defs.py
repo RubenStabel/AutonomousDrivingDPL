@@ -48,6 +48,8 @@ CAR_ARRAY = [RED_CAR, GREY_CAR, GREY_CAR, PURPLE_CAR, WHITE_CAR]
 
 if DYNAMIC_SIMULATION:
     START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, ROAD.get_height() - RED_CAR.get_height())
+    START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, INTER_1_END - RED_CAR.get_height() + 150)
+
 else:
     START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, ROAD.get_height() - 120)
 

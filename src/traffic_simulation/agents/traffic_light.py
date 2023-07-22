@@ -6,7 +6,7 @@ from traffic_simulation.defs import *
 
 
 class TrafficLight:
-    def __init__(self, only_intersection_traffic_light=False):
+    def __init__(self, only_intersection_traffic_light=False, intersection=0):
         self.width = GREEN_LIGHT.get_width()
         self.height = GREEN_LIGHT.get_height()
         self.img = None
@@ -18,9 +18,9 @@ class TrafficLight:
         self.x = ROAD.get_width()/2 + 135
         self.y = None
         if only_intersection_traffic_light:
-            if NUMBER_INTERSECTIONS == 2:
-                self.y_range = [INTER_2_END + 10, INTER_1_END + 10]
-            elif NUMBER_INTERSECTIONS == 1:
+            if intersection == 1:
+                self.y_range = [INTER_2_END + 10]
+            elif intersection == 0:
                 self.y_range = [INTER_1_END + 10]
             else:
                 self.y_range = np.arange(FINISH_POSITION[1] + FINISH.get_height(),
@@ -57,9 +57,9 @@ class TrafficLight:
         return self.color_id
 
     def set_light_times(self):
-        self.green_time = random.randrange(100, 160, 10)
+        self.green_time = random.randrange(150, 200, 10)
         self.orange_time = random.randrange(50, 70, 10)
-        self.red_time = random.randrange(100, 160, 10)
+        self.red_time = random.randrange(150, 200, 10)
 
     def get_light_time(self):
         match self.get_light():
