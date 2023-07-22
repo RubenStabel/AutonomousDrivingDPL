@@ -18,21 +18,33 @@ from traffic_simulation.simulation_settings import NUMBER_TRAFFIC_LIGHTS
 
 def get_danger_zone(car: DynamicCar, obstacle: DynamicCar, speed):
 
-    if car.y != obstacle.y:
+    if car.y != obstacle.y or car.angle != obstacle.angle:
         return 0
 
-    if car.orientation == 0:
-        f = (car.x - obstacle.x)
+    if car.angle == -90:
+        x_rel = obstacle.x - car.x - car.img.get_height()
+
     else:
-        f = (obstacle.x - car.x)
+        x_rel = car.x - obstacle.x - car.img.get_height()
 
-    if f < 0:
+    if x_rel < 0:
         return 0
-    elif f**2 < 100*speed/3:
+
+    acc = car.acceleration
+
+    frames_brake = speed / (2 * acc)
+    pixels_brake = (-(2 * acc) * frames_brake ** 2) / 2 + speed * frames_brake
+
+    frames_idle = speed / (acc / 2)
+    pixels_idle = (-(acc / 2) * frames_idle ** 2) / 2 + speed * frames_idle
+
+    pixel_margin = 15
+
+    if x_rel < pixels_brake + pixel_margin:
         return 3
-    elif f**2 < 140*speed/3:
+    elif x_rel < pixels_idle + pixel_margin:
         return 2
-    elif f**2 < 170*speed/3:
+    elif x_rel == pixel_margin + 5:
         return 1
     else:
         return 0
@@ -40,17 +52,17 @@ def get_danger_zone(car: DynamicCar, obstacle: DynamicCar, speed):
 
 def traffic_light_handler(current_car: DynamicCar, traffic_lights: list[DynamicTrafficLight], speed):
 
-    if current_car.angle == -90:
-        traffic_lights = [tl for tl in traffic_lights if tl.angle == 90 and abs(tl.y - current_car.y) < 200]
-    else:
+    if current_car.angle == 90:
         traffic_lights = [tl for tl in traffic_lights if tl.angle == -90 and abs(tl.y - current_car.y) < 200]
+        positive_distances = [current_car.x - tl.x for tl in traffic_lights if current_car.x - tl.x > 0]
+    else:
+        traffic_lights = [tl for tl in traffic_lights if tl.angle == 90 and abs(tl.y - current_car.y) < 200]
+        positive_distances = [tl.x - current_car.x for tl in traffic_lights if tl.x - current_car.x > 0]
 
-    positive_distances = [current_car.x - tl.x for tl in traffic_lights if current_car.x - tl.x > 0]
-    # print(positive_distances)
     if positive_distances:
         traffic_light = traffic_lights[positive_distances.index(min(positive_distances))]
     else:
-        traffic_light = traffic_lights[0]
+        return 0
 
     traffic_light_id = traffic_light.get_light()
 
@@ -58,7 +70,7 @@ def traffic_light_handler(current_car: DynamicCar, traffic_lights: list[DynamicT
         return 0
 
     acc = current_car.acceleration
-    x_rel = abs(current_car.x - traffic_light.x - traffic_light.img.get_height())
+    x_rel = abs(current_car.x - traffic_light.x)
 
     frames_brake = speed/(2*acc)
     pixels_brake = (-(2*acc)*frames_brake**2)/2 + speed*frames_brake
@@ -66,15 +78,13 @@ def traffic_light_handler(current_car: DynamicCar, traffic_lights: list[DynamicT
     frames_idle = speed/(acc/2)
     pixels_idle = (-(acc/2) * frames_idle ** 2) / 2 + speed * frames_idle
 
-    pixel_margin = 1
+    pixel_margin = 20
 
     if x_rel < pixels_brake + pixel_margin:
         if traffic_light_id == 1:
             return 0
         else:
-            if x_rel < pixel_margin-1:
-                return 3
-            elif speed > 0:
+            if x_rel < pixel_margin-1 or speed > 0:
                 return 3
             else:
                 return 2

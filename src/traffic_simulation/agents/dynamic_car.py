@@ -14,7 +14,7 @@ class DynamicCar:
         self.angle = start_angle
         self.x, self.y = start_pos
         self.acceleration = 0.1
-        if start_angle == -90:
+        if self.angle == -90:
             self.orientation = 0
         else:
             self.orientation = 1
