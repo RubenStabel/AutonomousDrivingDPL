@@ -168,7 +168,7 @@ start_time = time.time()
 while run and iteration < NUMBER_ITERATIONS:
     clock.tick(FPS)
 
-    text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), ''), False, (0, 0, 0))
+    text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), output.index(1)), False, (0, 0, 0))
 
     draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians, speed_zones, traffic_signs, scenery, dynamic_cars, dynamic_cars_traffic_lights)
 

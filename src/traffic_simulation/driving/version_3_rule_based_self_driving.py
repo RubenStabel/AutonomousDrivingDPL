@@ -51,12 +51,12 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
     if NUMBER_TRAFFIC_LIGHTS == 0:
         return 0
 
-    positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y > 0]
-    # print(positive_distances)
+    positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y - 20 > 0]
+
     if positive_distances:
         traffic_light = traffic_lights[[player_car.y - x.y for x in traffic_lights].index(min(positive_distances))]
     else:
-        traffic_light = traffic_lights[0]
+        return 0
 
     traffic_light_id = traffic_light.get_light()
 
@@ -75,20 +75,14 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
     pixel_margin = 20
 
     if y_rel < pixels_brake + pixel_margin:
-        if traffic_light_id == 1:
-            return 0
+        if y_rel < pixel_margin-1 or speed > 0.2:
+            return 3
         else:
-            if y_rel < pixel_margin-1:
-                return 3
-            elif speed > 0:
-                return 3
-            else:
-                return 2
+            return 2
     elif y_rel < pixels_idle + pixel_margin and traffic_light_id == 1:
         return 2
     else:
         return 0
-
 
 def speed_zone_handler(player_car: PlayerCar, speed_zones: SpeedZones, speed):
     speed_zone = speed_zones.get_current_speed_zone(player_car)

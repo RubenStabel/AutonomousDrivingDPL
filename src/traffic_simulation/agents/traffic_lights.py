@@ -1,13 +1,17 @@
 from traffic_simulation.agents.traffic_light import TrafficLight
-from traffic_simulation.simulation_settings import NUMBER_INTERSECTIONS
+from traffic_simulation.simulation_settings import NUMBER_INTERSECTIONS, TRAFFIC_LIGHT_INTERSECTION, NUMBER_TRAFFIC_LIGHTS
 
 
 class TrafficLights:
     def __init__(self, n, only_intersection_traffic_light=False):
         self.number_of_traffic_lights = n
         self.traffic_lights: list[TrafficLight] = []
-        for i in range(NUMBER_INTERSECTIONS):
-            self.traffic_lights.append(TrafficLight(only_intersection_traffic_light, i))
+        if TRAFFIC_LIGHT_INTERSECTION:
+            for i in range(NUMBER_INTERSECTIONS):
+                self.traffic_lights.append(TrafficLight(only_intersection_traffic_light, i))
+        else:
+            for i in range(NUMBER_TRAFFIC_LIGHTS):
+                self.traffic_lights.append(TrafficLight())
 
         self.unique_traffic_lights = []
         self.seen = set()
