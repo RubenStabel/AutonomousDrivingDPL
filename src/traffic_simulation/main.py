@@ -13,6 +13,7 @@ from traffic_simulation.driving.dynamic_car_rule_based_agent import dynamic_car_
 from traffic_simulation.driving.version_1_speed_zones_rule_based_self_driving import version_1_speed_zones_based_self_driving, danger_pedestrian_1_speed_zones
 from traffic_simulation.driving.version_4_rule_based_self_driving import version_4_rule_based_self_driving
 from traffic_simulation.driving.version_5_rule_based_self_driving import version_5_rule_based_self_driving
+from traffic_simulation.driving.version_6_rule_based_self_driving import version_6_rule_based_self_driving
 from traffic_simulation.simulation_settings import *
 from traffic_simulation.agents.pedestrians import Pedestrians
 from traffic_simulation.agents.traffic_light import TrafficLight
@@ -212,6 +213,8 @@ while run and iteration < NUMBER_ITERATIONS:
                 output = version_4_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights, dynamic_cars)
             case 9:
                 output = version_5_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights, dynamic_cars, traffic_signs)
+            case 10:
+                output = version_6_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights, dynamic_cars, traffic_signs)
 
     pedestrians.move()
     traffic_lights.traffic_light_dynamics()

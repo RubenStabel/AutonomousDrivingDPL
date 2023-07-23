@@ -52,7 +52,7 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
 
 
 def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLight], speed):
-    if NUMBER_TRAFFIC_LIGHTS == 0:
+    if NUMBER_TRAFFIC_LIGHTS == 0 and not TRAFFIC_LIGHT_INTERSECTION:
         return 0
 
     positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y - 30 > 0]
@@ -141,9 +141,13 @@ def intersection_handler(player_car: PlayerCar, dynamic_car: DynamicCar, speed, 
         return 0
 
 
-def traffic_sign_handler(player_car: PlayerCar, dynamic_cars: DynamicCars, traffic_sign: TrafficSign, speed):
+def traffic_sign_handler(player_car: PlayerCar, dynamic_cars: DynamicCars, traffic_sign: TrafficSign, traffic_lights: TrafficLights, speed):
+
+    if not traffic_sign_valid(player_car, traffic_lights):
+        return 0
 
     positive_distances = [player_car.y - ts[1][1] for ts in traffic_sign.get_traffic_signs() if player_car.y - ts[1][1] > 0 and ts[1][0] > WIDTH/2]
+
     if positive_distances:
         current_traffic_sign = traffic_sign.get_traffic_signs()[[player_car.y - ts[1][1] for ts in traffic_sign.get_traffic_signs()].index(min(positive_distances))]
     else:
@@ -154,20 +158,41 @@ def traffic_sign_handler(player_car: PlayerCar, dynamic_cars: DynamicCars, traff
     elif current_traffic_sign[0] == PRIORITY_RIGHT or min(positive_distances) > IMAGE_DIM:
         actions = []
         for dynamic_car in dynamic_cars.get_dynamic_cars():
-            actions.append(intersection_handler(player_car, dynamic_car, player_car.get_vel()))
+            actions.append(intersection_handler(player_car, dynamic_car, speed))
         return max(actions)
     elif current_traffic_sign[0] == PRIORITY_ALL:
         actions = []
         for dynamic_car in dynamic_cars.get_dynamic_cars():
-            actions.append(intersection_handler(player_car, dynamic_car, player_car.get_vel(), 1))
+            actions.append(intersection_handler(player_car, dynamic_car, speed, 1))
         return max(actions)
+
+
+def traffic_sign_valid(player_car: PlayerCar, traffic_lights: list[TrafficLight]):
+
+    if INTER_1_END > player_car.y > INTER_1_START - player_car.img.get_height() and NUMBER_INTERSECTIONS > 0:
+        return False
+    elif INTER_2_END > player_car.y > INTER_2_START - player_car.img.get_height() and NUMBER_INTERSECTIONS > 1:
+        return False
+
+    positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y + 50 > 0]
+    if positive_distances:
+        traffic_light = traffic_lights[[player_car.y - x.y for x in traffic_lights].index(min(positive_distances))]
+    else:
+        return True
+
+    traffic_light_id = traffic_light.get_light()
+
+    if traffic_light_id == 1:
+        return True
+    else:
+        return False
 
 
 def get_action(actions: list):
     return max(actions)
 
 
-def version_5_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedestrians,  speed_zones: SpeedZones, traffic_lights: TrafficLights, dynamic_cars: DynamicCars, traffic_signs: TrafficSign):
+def version_6_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedestrians,  speed_zones: SpeedZones, traffic_lights: TrafficLights, dynamic_cars: DynamicCars, traffic_signs: TrafficSign):
     actions = []
     for pedestrian in pedestrians.get_pedestrians():
         actions.append(get_danger_zone(player_car, pedestrian, player_car.get_vel()))
@@ -175,7 +200,7 @@ def version_5_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedest
     actions.append(traffic_light_handler(player_car, traffic_lights.unique_traffic_lights, player_car.get_vel()))
     # for dynamic_car in dynamic_cars.get_dynamic_cars():
     #     actions.append(intersection_handler(player_car, dynamic_car, player_car.get_vel()))
-    actions.append(traffic_sign_handler(player_car, dynamic_cars, traffic_signs, player_car.get_vel()))
+    actions.append(traffic_sign_handler(player_car, dynamic_cars, traffic_signs, traffic_lights.unique_traffic_lights, player_car.get_vel()))
 
     match get_action(actions):
         case 0:
