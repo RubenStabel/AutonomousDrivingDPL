@@ -47,7 +47,6 @@ WHITE_CAR = scale_image(pygame.image.load(path+"white-car.png"), 0.8)
 CAR_ARRAY = [RED_CAR, GREY_CAR, GREY_CAR, PURPLE_CAR, WHITE_CAR]
 
 DYNAMIC_CAR_MASK = pygame.mask.from_surface(rotate_img(RED_CAR, -90))
-print(DYNAMIC_CAR_MASK)
 
 if DYNAMIC_SIMULATION:
     START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, ROAD.get_height() - RED_CAR.get_height())

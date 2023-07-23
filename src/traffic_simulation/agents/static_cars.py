@@ -10,12 +10,12 @@ class StaticCars:
         self.number_of_cars = number_of_cars
         self.x_range = [ROAD.get_width()/2 - 65 - RED_CAR.get_width(), ROAD.get_width()/2 + 65]
         if NUMBER_INTERSECTIONS == 2:
-            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_2_START - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
-            range_2 = np.arange(INTER_2_END + 100, INTER_1_START - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
+            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_2_START - self.car_height - 70, self.car_height + 15, dtype=int).tolist()
+            range_2 = np.arange(INTER_2_END + 100, INTER_1_START - self.car_height - 70, self.car_height + 15, dtype=int).tolist()
             range_3 = np.arange(INTER_1_END + 100, HEIGHT - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
             self.y_range = range_1 + range_2 + range_3
         elif NUMBER_INTERSECTIONS == 1:
-            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_1_START - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
+            range_1 = np.arange(FINISH_POSITION[1] + FINISH.get_height(), INTER_1_START - self.car_height - 70, self.car_height + 15, dtype=int).tolist()
             range_2 = np.arange(INTER_1_END + 100, HEIGHT - self.car_height - 10, self.car_height + 15, dtype=int).tolist()
             self.y_range = range_1 + range_2
         else:
