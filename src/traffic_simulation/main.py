@@ -11,6 +11,8 @@ from traffic_simulation.agents.traffic_sign import TrafficSign
 from traffic_simulation.defs import *
 from traffic_simulation.driving.dynamic_car_rule_based_agent import dynamic_car_rule_based_self_driving
 from traffic_simulation.driving.version_1_speed_zones_rule_based_self_driving import version_1_speed_zones_based_self_driving, danger_pedestrian_1_speed_zones
+from traffic_simulation.driving.version_4_rule_based_self_driving import version_4_rule_based_self_driving
+from traffic_simulation.driving.version_5_rule_based_self_driving import version_5_rule_based_self_driving
 from traffic_simulation.simulation_settings import *
 from traffic_simulation.agents.pedestrians import Pedestrians
 from traffic_simulation.agents.traffic_light import TrafficLight
@@ -112,7 +114,7 @@ def reset_traffic_simulation(infraction: int):
     speed_zones.reset()
     traffic_signs.reset()
     dynamic_cars.reset()
-    dynamic_cars_traffic_lights.reset(traffic_lights)
+    dynamic_cars_traffic_lights.reset(traffic_lights, traffic_signs)
     scenery.reset()
 
 
@@ -149,7 +151,7 @@ speed_zones = SpeedZones(NUMBER_SPEED_ZONES)
 traffic_signs = TrafficSign(NUMBER_TRAFFIC_SIGNS)
 scenery = Scenery(NUMBER_SCENERY)
 dynamic_cars = DynamicCars(NUMBER_DYNAMIC_CARS)
-dynamic_cars_traffic_lights = DynamicTrafficLights(traffic_lights)
+dynamic_cars_traffic_lights = DynamicTrafficLights(traffic_lights, traffic_signs)
 
 self_driving = None
 ped = None
@@ -168,7 +170,7 @@ start_time = time.time()
 while run and iteration < NUMBER_ITERATIONS:
     clock.tick(FPS)
 
-    text_surface = my_font.render("{}   {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), output.index(1)), False, (0, 0, 0))
+    text_surface = my_font.render("{}    {}    {}".format(speed_zones.get_current_speed_zone(player_car).get_speed_zone(), output.index(1), player_car.y), False, (0, 0, 0))
 
     draw(WIN, images, player_car, static_cars, text_surface, traffic_lights, pedestrians, speed_zones, traffic_signs, scenery, dynamic_cars, dynamic_cars_traffic_lights)
 
@@ -206,6 +208,10 @@ while run and iteration < NUMBER_ITERATIONS:
                 danger_level, ped = danger_pedestrian_2(player_car, pedestrians)
             case 7:
                 output = version_3_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights)
+            case 8:
+                output = version_4_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights, dynamic_cars)
+            case 9:
+                output = version_5_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights, dynamic_cars, traffic_signs)
 
     pedestrians.move()
     traffic_lights.traffic_light_dynamics()
