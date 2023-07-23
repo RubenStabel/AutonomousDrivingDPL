@@ -44,19 +44,36 @@ class TrafficSign:
 
     def draw(self, win, x_offset, y_offset):
         for sign, pos in self.traffic_signs:
-            win.blit(sign, (pos[0] - x_offset, pos[1] - y_offset))
-            if NUMBER_TRAFFIC_LIGHTS == 0 and NUMBER_INTERSECTIONS > 0 and not TRAFFIC_LIGHT_INTERSECTION:
-                if pos[0] == self.x_range[0]:
-                    pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH / 2 - 50 - x_offset,
-                                                                       pos[1] + sign.get_height() - y_offset,
-                                                                       45,
-                                                                       3))
+            if TRAFFIC_SIGNS_LEFT:
+                win.blit(sign, (pos[0] - x_offset, pos[1] - y_offset))
+                if NUMBER_TRAFFIC_LIGHTS == 0 and NUMBER_INTERSECTIONS > 0 and not TRAFFIC_LIGHT_INTERSECTION:
+                    if pos[0] == self.x_range[0]:
+                        pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH / 2 - 50 - x_offset,
+                                                                           pos[1] + sign.get_height() - y_offset,
+                                                                           45,
+                                                                           3))
 
-                else:
-                    pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH / 2 + 5 - x_offset,
-                                                                       pos[1] - y_offset,
-                                                                       45,
-                                                                       3))
+                    else:
+                        pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH / 2 + 5 - x_offset,
+                                                                           pos[1] - y_offset,
+                                                                           45,
+                                                                           3))
+
+            else:
+                if pos[1] > WIDTH/2:
+                    win.blit(sign, (pos[0] - x_offset, pos[1] - y_offset))
+                    if NUMBER_TRAFFIC_LIGHTS == 0 and NUMBER_INTERSECTIONS > 0 and not TRAFFIC_LIGHT_INTERSECTION:
+                        if pos[0] == self.x_range[0]:
+                            pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH / 2 - 50 - x_offset,
+                                                                               pos[1] + sign.get_height() - y_offset,
+                                                                               45,
+                                                                               3))
+
+                        else:
+                            pygame.draw.rect(win, [255, 255, 255], pygame.Rect(WIDTH / 2 + 5 - x_offset,
+                                                                               pos[1] - y_offset,
+                                                                               45,
+                                                                               3))
 
     def reset(self):
         self.traffic_signs_rect = []
