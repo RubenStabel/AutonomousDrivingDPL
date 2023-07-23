@@ -62,4 +62,3 @@ class TrafficSign:
         self.traffic_signs_rect = []
         self.traffic_signs = []
         self.create_traffic_signs()
-
