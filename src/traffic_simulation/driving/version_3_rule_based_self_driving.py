@@ -51,7 +51,7 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
     if NUMBER_TRAFFIC_LIGHTS == 0:
         return 0
 
-    positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y - 20 > 0]
+    positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y - 30 > 0]
 
     if positive_distances:
         traffic_light = traffic_lights[[player_car.y - x.y for x in traffic_lights].index(min(positive_distances))]
@@ -64,7 +64,7 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
         return 0
 
     acc = player_car.acceleration
-    y_rel = abs(player_car.y - traffic_light.y - traffic_light.img.get_height())
+    y_rel = abs(player_car.y - traffic_light.y) - traffic_light.img.get_height()
 
     frames_brake = speed/(2*acc)
     pixels_brake = (-(2*acc)*frames_brake**2)/2 + speed*frames_brake
@@ -72,7 +72,7 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
     frames_idle = speed/(acc/2)
     pixels_idle = (-(acc/2) * frames_idle ** 2) / 2 + speed * frames_idle
 
-    pixel_margin = 20
+    pixel_margin = 15
 
     if y_rel < pixels_brake + pixel_margin:
         if y_rel < pixel_margin-1 or speed > 0.2:
@@ -84,6 +84,7 @@ def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLig
     else:
         return 0
 
+
 def speed_zone_handler(player_car: PlayerCar, speed_zones: SpeedZones, speed):
     speed_zone = speed_zones.get_current_speed_zone(player_car)
 
@@ -93,6 +94,7 @@ def speed_zone_handler(player_car: PlayerCar, speed_zones: SpeedZones, speed):
         return 1
     else:
         return 0
+
 
 def get_action(actions: list):
     return max(actions)

@@ -9,6 +9,7 @@ from deepproblog.examples.Autonomous_driving.version_2.networks.network_baseline
     AD_V2_baseline_net_0, AD_V2_baseline_net_2
 
 """
+MODE:
 0 --> Drive sim with keys
 1 --> DEV [Currently - Advanced rule based driving]
 2 --> NeSy self driving
@@ -18,7 +19,7 @@ from deepproblog.examples.Autonomous_driving.version_2.networks.network_baseline
 6 --> Version 2 rule based self driving
 7 --> Version 3 rule based self driving
 """
-MODE = 7
+MODE = 9
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
@@ -28,17 +29,18 @@ SCENARIO_MODE = False
 DATA_FOLDER = "general/version_2_env_1"
 PREFIX = '0'
 ENV = 'env_1'
-NUMBER_STATIC_CARS = 6
-NUMBER_PEDESTRIANS = 1
-NUMBER_TRAFFIC_LIGHTS = 3
+NUMBER_STATIC_CARS = 15
+NUMBER_PEDESTRIANS = 0
+NUMBER_TRAFFIC_LIGHTS = 0
 TRAFFIC_LIGHT_INTERSECTION = False
-NUMBER_SPEED_ZONES = 1
-NUMBER_INTERSECTIONS = 0
+NUMBER_SPEED_ZONES = 0
+NUMBER_INTERSECTIONS = 2
 NUMBER_TRAFFIC_SIGNS = 0
-NUMBER_DYNAMIC_CARS = 0
-DYNAMIC_CARS_TRAFFIC_LIGHTS = False
+TRAFFIC_SIGNS_LEFT = False
+NUMBER_DYNAMIC_CARS = 15
+DYNAMIC_CARS_TRAFFIC_LIGHTS = True
 NUMBER_SCENERY = 0
-DYNAMIC_SIMULATION = False
+DYNAMIC_SIMULATION = True
 EXTENDED_ROAD = False
 SIMULATION_METRICS = False
 NUMBER_ITERATIONS = 100
