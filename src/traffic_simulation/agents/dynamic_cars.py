@@ -7,7 +7,7 @@ from traffic_simulation.defs import *
 class DynamicCars:
     def __init__(self, n):
         self.number_of_dynamic_cars = n
-        self.max_vel = [3, 4, 5]
+        self.max_vel = [3, 4]
         self.active_dynamic_cars: list[DynamicCar] = []
         self.dynamic_cars: list[DynamicCar] = []
         for i in range(self.number_of_dynamic_cars):
