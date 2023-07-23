@@ -36,7 +36,7 @@ class DynamicTrafficLights:
             traffic_light.draw(win, x_offset, y_offset)
 
     def reset(self, traffic_lights: TrafficLights, traffic_signs: TrafficSign):
-        if TRAFFIC_LIGHT_INTERSECTION:
+        if TRAFFIC_LIGHT_INTERSECTION and not TRAFFIC_LIGHT_ORANGE:
             for i, traffic_light in enumerate(self.traffic_lights):
                 if i % 2 == 0 and NUMBER_INTERSECTIONS == 2:
                     green_time = traffic_lights.traffic_lights[1].red_time - traffic_lights.traffic_lights[1].orange_time

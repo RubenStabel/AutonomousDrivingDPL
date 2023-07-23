@@ -52,6 +52,9 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
 
 
 def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLight], speed):
+    if traffic_sign_valid(player_car, traffic_lights):
+        return 0
+
     if NUMBER_TRAFFIC_LIGHTS == 0 and not TRAFFIC_LIGHT_INTERSECTION:
         return 0
 

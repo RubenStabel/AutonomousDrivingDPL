@@ -57,9 +57,14 @@ class TrafficLight:
         return self.color_id
 
     def set_light_times(self):
-        self.green_time = random.randrange(150, 200, 10)
-        self.orange_time = random.randrange(50, 70, 10)
-        self.red_time = random.randrange(150, 200, 10)
+        if TRAFFIC_LIGHT_ORANGE:
+            self.green_time = 0
+            self.orange_time = 30000
+            self.red_time = 0
+        else:
+            self.green_time = random.randrange(150, 200, 10)
+            self.orange_time = random.randrange(50, 70, 10)
+            self.red_time = random.randrange(150, 200, 10)
 
     def get_light_time(self):
         match self.get_light():
@@ -93,7 +98,13 @@ class TrafficLight:
                                                                3))
 
     def reset(self):
-        self.set_light(random.choice(self.lights))
-        self.set_light_times()
-        self.counter = self.get_light_time()
-        self.y = random.choice(self.y_range)
+        if TRAFFIC_LIGHT_ORANGE:
+            self.set_light('orange')
+            self.set_light_times()
+            self.counter = self.get_light_time()
+            self.y = random.choice(self.y_range)
+        else:
+            self.set_light(random.choice(self.lights))
+            self.set_light_times()
+            self.counter = self.get_light_time()
+            self.y = random.choice(self.y_range)
