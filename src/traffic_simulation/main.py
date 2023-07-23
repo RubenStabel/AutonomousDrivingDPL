@@ -51,6 +51,7 @@ def draw(win, images, player_car: PlayerCar, static_cars: StaticCars, text, traf
     dynamic_cars_traffic_lights.draw(win, x, y)
     player_car.draw(win, x, y)
     pedestrians.draw(win, x, y, player_car, static_cars)
+
     if not (DATA_ANALYSIS or COLLECT_DATA):
         win.blit(text, (10, 10))
 
@@ -226,7 +227,13 @@ while run and iteration < NUMBER_ITERATIONS:
     for pedestrian in pedestrians.get_pedestrians():
         pedestrian_poi_collide = player_car.collide(PEDESTRIAN_MASK, pedestrian.x, pedestrian.y)
         if pedestrian_poi_collide is not None:
-            print("COLLISION")
+            print("COLLISION PEDESTRIAN")
+            reset_traffic_simulation(1)
+
+    for dynamic_car in dynamic_cars.get_dynamic_cars():
+        dynamic_car_poi_collide = player_car.collide(DYNAMIC_CAR_MASK, dynamic_car.x - 15, dynamic_car.y + 15)
+        if dynamic_car_poi_collide is not None:
+            print("COLLISION DYANMIC CAR")
             reset_traffic_simulation(1)
 
     road_border_poi_collide = player_car.collide(ROAD_BORDER_MASK, *ROAD_BORDER_POSITION)

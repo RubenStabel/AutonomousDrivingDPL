@@ -2,7 +2,7 @@ import pygame
 import random
 
 from traffic_simulation.simulation_settings import *
-from traffic_simulation.utils import scale_image, blit_rotate_center
+from traffic_simulation.utils import scale_image, blit_rotate_center, rotate_img
 path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/traffic_simulation/imgs/'
 # IMAGES
 GRASS = pygame.image.load(path+"grass.jpg")
@@ -46,10 +46,12 @@ PURPLE_CAR = scale_image(pygame.image.load(path+"purple-car.png"), 0.8)
 WHITE_CAR = scale_image(pygame.image.load(path+"white-car.png"), 0.8)
 CAR_ARRAY = [RED_CAR, GREY_CAR, GREY_CAR, PURPLE_CAR, WHITE_CAR]
 
+DYNAMIC_CAR_MASK = pygame.mask.from_surface(rotate_img(RED_CAR, -90))
+print(DYNAMIC_CAR_MASK)
+
 if DYNAMIC_SIMULATION:
     START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, ROAD.get_height() - RED_CAR.get_height())
-    START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, INTER_1_END - RED_CAR.get_height() + 150)
-
+    # START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, INTER_1_END - RED_CAR.get_height() + 150)
 else:
     START_POS_CAR = (ROAD.get_width()/2 + RED_CAR.get_width()/2, ROAD.get_height() - 120)
 

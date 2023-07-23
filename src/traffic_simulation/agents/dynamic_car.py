@@ -1,5 +1,7 @@
 import math
 
+import pygame
+
 from traffic_simulation.agents.abstract_car import AbstractCar
 from traffic_simulation.defs import *
 
