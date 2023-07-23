@@ -71,7 +71,7 @@ class DynamicTrafficLight:
             self.counter -= 1
 
     def draw(self, win, x_offset, y_offset):
-        if self.img is not None and DYNAMIC_CARS_PRIORITY == 2:
+        if self.img is not None and DYNAMIC_CARS_PRIORITY == 3:
             blit_rotate_center(win, self.img, (self.x - x_offset, self.y - y_offset), self.angle)
             # if self.angle == -90:
             #     pygame.draw.rect(win, [255, 255, 255], pygame.Rect(self.x + self.height - 10 - x_offset,
@@ -93,6 +93,15 @@ class DynamicTrafficLight:
             self.set_light('green')
             self.set_light_times([3000, 0, 0])
             self.counter = self.get_light_time()
+        elif DYNAMIC_CARS_PRIORITY == 2:
+            if self.x < WIDTH/2:
+                self.set_light('red')
+                self.set_light_times([0, 0, 3000])
+                self.counter = self.get_light_time()
+            else:
+                self.set_light('green')
+                self.set_light_times([3000, 0, 0])
+                self.counter = self.get_light_time()
         else:
             if light is None:
                 self.set_light(random.choice(self.lights))
