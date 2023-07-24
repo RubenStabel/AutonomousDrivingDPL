@@ -57,9 +57,13 @@ class NNSelfDriving:
         img = img.swapaxes(0, 1)
 
         if MODE == 2:
-            # result = int(get_nn_output(img, self.model))
-            result = int(predict_action_img_speed(img, round(self.player_car.get_vel(), 1), self.model))
-            # result = int(predict_action_img_mnist_speed(img, self.speed_zones.get_speed_zone_img_idx(self.player_car), round(self.player_car.get_vel(), 1), self.model))
+            match NN_INPUTS:
+                case 1:
+                    result = int(get_nn_output(img, self.model))
+                case 2:
+                    result = int(predict_action_img_speed(img, round(self.player_car.get_vel(), 1), self.model))
+                case 3:
+                    result = int(predict_action_img_mnist_speed(img, self.speed_zones.get_speed_zone_img_idx(self.player_car), round(self.player_car.get_vel(), 1), self.model))
 
         elif MODE == 3:
             result = int(get_baseline_output(img, self.model))

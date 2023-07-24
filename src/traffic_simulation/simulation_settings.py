@@ -18,32 +18,60 @@ MODE:
 5 --> Version 1 rule based self driving
 6 --> Version 2 rule based self driving
 7 --> Version 3 rule based self driving
+8 --> Version 4 rule based self driving
+9 --> Version 5 rule based self driving
+10 --> Version 6 rule based self driving
+11 --> Version 7 rule based self driving
 """
 MODE = 10
+NN_INPUTS = 1
+
+"""
+GAMEPLAY SETTINGS
+"""
 MAX_VEL = 8
 OCCLUDED_OBJ_VISIBLE = True
 IMAGE_DIM = 360
+
+"""
+DATA COLLECTION
+"""
 COLLECT_DATA = False
 DATA_ANALYSIS = False
-SCENARIO_MODE = False
-DATA_FOLDER = "general/version_2_env_1"
+SIMULATION_METRICS = False
+
 PREFIX = '0'
+DATA_FOLDER = "general/version_2_env_1"
 ENV = 'env_1'
+
+NUMBER_ITERATIONS = 100
+
+"""
+ENVIRONMENT SETTINGS
+"""
 NUMBER_STATIC_CARS = 15
 NUMBER_PEDESTRIANS = 0
 NUMBER_TRAFFIC_LIGHTS = 0
 TRAFFIC_LIGHT_INTERSECTION = True
+TRAFFIC_LIGHT_ORANGE = False
 NUMBER_SPEED_ZONES = 0
 NUMBER_INTERSECTIONS = 2
-NUMBER_TRAFFIC_SIGNS = 2
-TRAFFIC_SIGNS_LEFT = False
+NUMBER_TRAFFIC_SIGNS = 4
+TRAFFIC_SIGNS_LEFT = True
 NUMBER_DYNAMIC_CARS = 15
 DYNAMIC_CARS_TRAFFIC_LIGHTS = True
 NUMBER_SCENERY = 0
-DYNAMIC_SIMULATION = True
 EXTENDED_ROAD = False
-SIMULATION_METRICS = False
-NUMBER_ITERATIONS = 100
+
+"""
+DISPLAY SETTINGS
+"""
+DYNAMIC_SIMULATION = True
+
+"""
+TESTING
+"""
+SCENARIO_MODE = False
 
 SCENARIO = {
     'low pass': [(30, 70), (29, 69), (28, 68), (27, 67), (26, 66), (25, 65), (24, 64), (23, 63), (22, 62), (21, 61), (20, 61), (19, 60), (18, 59), (17, 58), (16, 57), (15, 57), (14, 56), (13, 56), (12, 55), (11, 54), (10, 53), (9, 52), (8, 51), (7, 50)],
