@@ -7,6 +7,7 @@ from deepproblog.examples.Autonomous_driving.version_2.networks.network_NeSy imp
     AD_V2_NeSy_2_net_y_rel, AD_V2_NeSy_1_net_ped, AD_V2_NeSy_1_net_speed_zone
 from deepproblog.examples.Autonomous_driving.version_2.networks.network_baseline import AD_V2_baseline_net_1, \
     AD_V2_baseline_net_0, AD_V2_baseline_net_2
+from deepproblog.examples.Autonomous_driving.version_3.networks.network_baseline import AD_V3_baseline_net_0
 
 """
 MODE:
@@ -23,8 +24,8 @@ MODE:
 10 --> Version 6 rule based self driving
 11 --> Version 7 rule based self driving
 """
-MODE = 7
-NN_INPUTS = 2
+MODE = 2
+NN_INPUTS = 3
 
 """
 DISPLAY SETTINGS
@@ -40,12 +41,12 @@ OCCLUDED_OBJ_VISIBLE = True
 """
 DATA COLLECTION
 """
-COLLECT_DATA = True
+COLLECT_DATA = False
 DATA_ANALYSIS = False
 SIMULATION_METRICS = False
 
 PREFIX = '0'
-DATA_FOLDER = "general/version_3_env_3"
+DATA_FOLDER = "general/version_4_env_4"
 ENV = 'env_3'
 
 IMAGE_DIM = 360
@@ -56,8 +57,8 @@ ENVIRONMENT SETTINGS
 """
 NUMBER_PEDESTRIANS = 1
 NUMBER_STATIC_CARS = 6
-NUMBER_SPEED_ZONES = 1
-NUMBER_TRAFFIC_LIGHTS = 1
+NUMBER_SPEED_ZONES = 0
+NUMBER_TRAFFIC_LIGHTS = 0
 TRAFFIC_LIGHT_INTERSECTION = False
 TRAFFIC_LIGHT_ORANGE = False
 NUMBER_INTERSECTIONS = 0
@@ -102,12 +103,12 @@ SCENARIO = {
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/train/autonomous_driving_baseline_0_complete_env_1_0.pth'
 # NN_NAME = ['perc_net_version_2_baseline_0']
 
-# V2 - baseline_1
-MODEL_NAME = "NeSy"
-NETWORK = [AD_V2_baseline_net_1()]
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_baseline_1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/train/autonomous_driving_baseline_1_complete_env_1_0.pth'
-NN_NAME = ['perc_net_version_2_baseline_1']
+# # V2 - baseline_1
+# MODEL_NAME = "NeSy"
+# NETWORK = [AD_V2_baseline_net_1()]
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_baseline_1.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/train/autonomous_driving_baseline_1_complete_env_1_0.pth'
+# NN_NAME = ['perc_net_version_2_baseline_1']
 
 # # V2 - baseline_2
 # MODEL_NAME = "NeSy"
@@ -129,6 +130,14 @@ NN_NAME = ['perc_net_version_2_baseline_1']
 # MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_NeSy_3.pl'
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/neuro_symbolic/train/autonomous_driving_NeSy_3_complete_env_1_0.pth'
 # NN_NAME = ['perc_net_version_2_NeSy_x_rel', 'perc_net_version_2_NeSy_y_rel']
+
+# V3 - baseline_0
+MODEL_NAME = "NeSy"
+NETWORK = [AD_V3_baseline_net_0()]
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/models/autonomous_driving_baseline_0.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/snapshot/baseline/test/autonomous_driving_baseline_0_medium_env_3_0.pth'
+NN_NAME = ['perc_net_version_3_baseline_0']
+
 
 # # # Baseline PyTorch
 # NETWORK = [AD_V1_net()]

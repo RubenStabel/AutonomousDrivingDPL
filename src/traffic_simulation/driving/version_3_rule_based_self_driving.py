@@ -6,7 +6,7 @@ from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.speed_zones import SpeedZones
 from traffic_simulation.agents.traffic_light import TrafficLight
 from traffic_simulation.agents.traffic_lights import TrafficLights
-from traffic_simulation.simulation_settings import NUMBER_TRAFFIC_LIGHTS
+from traffic_simulation.simulation_settings import NUMBER_TRAFFIC_LIGHTS, IMAGE_DIM
 
 
 def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
@@ -47,15 +47,13 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
         return 0
 
 
-def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLight], speed):
+def traffic_light_handler(player_car: PlayerCar, traffic_lights: TrafficLights, speed):
     if NUMBER_TRAFFIC_LIGHTS == 0:
         return 0
 
-    positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y - 30 > 0]
+    traffic_light = traffic_lights.get_current_traffic_light(player_car)
 
-    if positive_distances:
-        traffic_light = traffic_lights[[player_car.y - x.y for x in traffic_lights].index(min(positive_distances))]
-    else:
+    if traffic_light is None:
         return 0
 
     traffic_light_id = traffic_light.get_light()
@@ -105,7 +103,7 @@ def version_3_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedest
     for pedestrian in pedestrians.get_pedestrians():
         actions.append(get_danger_zone(player_car, pedestrian, player_car.get_vel()))
     actions.append(speed_zone_handler(player_car, speed_zones, player_car.get_vel()))
-    actions.append(traffic_light_handler(player_car, traffic_lights.unique_traffic_lights, player_car.get_vel()))
+    actions.append(traffic_light_handler(player_car, traffic_lights, player_car.get_vel()))
 
     # print(actions)
 
@@ -128,3 +126,18 @@ def version_3_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedest
             output = [1, 0, 0, 0]
 
     return output
+
+
+def danger_pedestrian_3(player_car: PlayerCar, pedestrians: Pedestrians):
+    detected_levels = []
+    for pedestrian in pedestrians.get_pedestrians():
+        detected_levels.append((get_danger_zone(player_car, pedestrian, player_car.get_vel()), pedestrian))
+
+    action = -1
+    ped = None
+    for (a, p) in detected_levels:
+        if a > action:
+            action = a
+            ped = p
+
+    return action, ped
