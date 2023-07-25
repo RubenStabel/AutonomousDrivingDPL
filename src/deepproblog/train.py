@@ -32,6 +32,8 @@ class TrainObject(object):
         self.timing = [0, 0, 0]
         self.accuracy = 0.0
         self.test_set = None
+        self.high_accuracy_model = 0.0
+        self.save_best_model = None
 
     def get_loss(self, batch: List[Query], backpropagate_loss: Callable) -> float:
         """
@@ -91,6 +93,7 @@ class TrainObject(object):
         loader: DataLoader,
         stop_criterion: Union[int, StopCondition],
         test_set: AD_Dataset = None,
+        save_best_model: str = None,
         verbose: int = 1,
         loss_function_name: str = "cross_entropy",
         with_negatives: bool = False,
@@ -98,11 +101,12 @@ class TrainObject(object):
         initial_test: bool = True,
         **kwargs
     ) -> Logger:
-
         self.previous_handler = signal.getsignal(signal.SIGINT)
         loss_function = getattr(self.model.solver.semiring, loss_function_name)
 
         self.accuracy = 0.0
+        self.high_accuracy_model = 0.0
+        self.save_best_model = save_best_model
         self.test_set = test_set
 
         self.accumulated_loss = 0
@@ -171,6 +175,10 @@ class TrainObject(object):
         if verbose and self.i % log_iter == 0:
             if self.test_set is not None:
                 self.accuracy = get_confusion_matrix(self.model, self.test_set, verbose=0).accuracy()
+                if self.save_best_model is not None:
+                    if self.accuracy > self.high_accuracy_model:
+                        self.high_accuracy_model = self.accuracy
+                        self.model.save_state(self.save_best_model)
                 print(
                     "Iteration: ",
                     self.i,
