@@ -4,6 +4,7 @@ import torchvision
 from torchvision import transforms
 from pathlib import Path
 
+from torchvision.transforms import InterpolationMode
 
 from deepproblog.dataset import Dataset
 
@@ -36,13 +37,21 @@ MNIST_eval = MNIST_Images("MNIST")
 
 
 class AD_Eval_Image(Dataset):
-    def __init__(self, image, mnist_idx, speed, eval_name, transform=None):
+    def __init__(self, image, mnist_idx, speed, eval_name, env, transform=None):
         if transform is None:
-            self.transform = transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Resize((32, 32), antialias=True),
-                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-            ])
+            match env:
+                case 2:
+                    self.transform = transforms.Compose([
+                        transforms.ToTensor(),
+                        transforms.Resize((32, 32), antialias=True),
+                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                    ])
+                case 3:
+                    self.transform = transforms.Compose([
+                        transforms.ToTensor(),
+                        transforms.Resize((64, 64), antialias=True, interpolation=InterpolationMode.BICUBIC),
+                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                    ])
         else:
             self.transform = transform
         self.eval_name = eval_name
@@ -81,9 +90,9 @@ class AD_Eval_Images(object):
         return self.datasets[self.subset][int(item[0])][0]
 
 
-def predict_action_img_mnist_speed(img, mnist_idx, speed, model):
+def predict_action_img_mnist_speed(img, mnist_idx, speed, model, env):
     datasets = {
-        "eval_image": AD_Eval_Image(img, mnist_idx, speed, "eval_image"),  # test transforms are applied
+        "eval_image": AD_Eval_Image(img, mnist_idx, speed, "eval_image", int(env[-1])),  # test transforms are applied
     }
 
     AD_eval_image = AD_Eval_Images("eval_image", datasets)
