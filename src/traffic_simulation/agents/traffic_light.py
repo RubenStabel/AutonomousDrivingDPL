@@ -37,7 +37,7 @@ class TrafficLight:
                 range_2 = np.arange(INTER_1_END + 10, HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 15, dtype=int).tolist()
                 self.y_range = range_1 + range_2
             else:
-                self.y_range = np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 70, dtype=int).tolist()
+                self.y_range = np.arange(FINISH_POSITION[1] + FINISH.get_height(), HEIGHT - self.height - RED_CAR.get_height() - 15, self.height + 150, dtype=int).tolist()
         self.lights = ['green', 'orange', 'red']
         self.reset()
 
@@ -55,6 +55,9 @@ class TrafficLight:
 
     def get_light(self):
         return self.color_id
+
+    def get_light_color(self):
+        return self.lights[self.color_id]
 
     def set_light_times(self):
         if TRAFFIC_LIGHT_ORANGE:

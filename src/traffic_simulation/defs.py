@@ -63,8 +63,8 @@ ORANGE_LIGHT = scale_image(pygame.image.load(path+"orange_light.png"), 0.08)
 RED_LIGHT = scale_image(pygame.image.load(path+"red_light.png"), 0.08)
 
 
-PEDESTRIAN = scale_image(pygame.image.load("imgs/pedastrian.png"), 0.9)
-# PEDESTRIAN = scale_image(pygame.image.load(path+"yellow-rect.png"), 0.03)
+# PEDESTRIAN = scale_image(pygame.image.load("imgs/pedastrian.png"), 0.9)
+PEDESTRIAN = scale_image(pygame.image.load(path+"yellow-rect.png"), 0.03)
 PEDESTRIAN_MASK = pygame.mask.from_surface(PEDESTRIAN)
 PEDESTRIAN_START_POS = (random.randrange(280, 350, 10), random.randrange(350, 700, 10))
 PEDESTRIAN_END_POS = (random.randrange(10, 70, 10), random.randrange(10, 500, 10))
@@ -100,7 +100,7 @@ BLOCK_SIZE = 10  # Set the size of the grid block
 # GAME SETTINGS
 FPS = 60
 
-
+# print(RED_LIGHT.get_height())
 # print(PRIORITY_ALL.get_width(), PRIORITY_ALL.get_height())
 # print(ROAD.get_width(), ROAD_BORDER.get_width())
 # print(FINISH.get_width())

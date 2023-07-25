@@ -1,5 +1,7 @@
+from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.traffic_light import TrafficLight
-from traffic_simulation.simulation_settings import NUMBER_INTERSECTIONS, TRAFFIC_LIGHT_INTERSECTION, NUMBER_TRAFFIC_LIGHTS
+from traffic_simulation.simulation_settings import NUMBER_INTERSECTIONS, TRAFFIC_LIGHT_INTERSECTION, \
+    NUMBER_TRAFFIC_LIGHTS, IMAGE_DIM
 
 
 class TrafficLights:
@@ -34,3 +36,15 @@ class TrafficLights:
     def traffic_light_dynamics(self):
         for traffic_light in self.unique_traffic_lights:
             traffic_light.traffic_light_dynamics()
+
+    def get_current_traffic_light(self, player_car: PlayerCar):
+        positive_distances = [player_car.y - tl.y for tl in self.unique_traffic_lights if player_car.y - tl.y > 0]
+
+        if positive_distances:
+            traffic_light = self.unique_traffic_lights[[player_car.y - tl.y for tl in self.unique_traffic_lights].index(min(positive_distances))]
+            if player_car.y - traffic_light.y + player_car.IMG.get_height() > IMAGE_DIM:
+                return None
+            else:
+                return traffic_light
+        else:
+            return None
