@@ -1,0 +1,132 @@
+% Perception
+nn(perc_net_version_4_NeSy_danger_pedestrian,[Img,Speed],X,[0,1,2,3]) :: cell_danger_pedestrian(Img,Speed,X).
+nn(perc_net_version_4_NeSy_speed_zone,[MNIST],SZ,[1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0]) :: cell_speed_zone(MNIST,SZ).
+nn(perc_net_version_4_NeSy_traffic_light,[Img],X,[green, orange, red]) :: cell_traffic_light(Img,X).
+nn(perc_net_version_4_NeSy_danger_distance,[Img,Speed,Yb,Yi],X,[0,2,3]) :: cell_danger_distance(Img,Speed,Yb,Yi,X).
+nn(perc_net_version_4_NeSy_intersection,[Img],X,[nothing,danger]) :: cell_danger_intersection(Img,X).
+
+
+%%%%    TRAFFIC RULES    %%%%
+% Rules - speed zone
+speed_zone_brake(MNIST,Speed) :-
+    cell_speed_zone(MNIST,SZ),
+    Speed > SZ.
+
+speed_zone_follow(MNIST,Speed) :-
+    cell_speed_zone(MNIST,SZ),
+    round(Speed) == SZ.
+
+speed_zone_accelerate(MNIST,Speed) :-
+    cell_speed_zone(MNIST,SZ),
+    round(Speed) < SZ.
+
+
+% Rules - distance
+brake_dist(Y,Speed) :-
+    Acc = 0.1,
+    Frames_brake = Speed/(2*Acc),
+    Y is (-(2*Acc)*Frames_brake**2)/2 + Speed*Frames_brake.
+
+idle_dist(Y,Speed) :-
+    Acc = 0.1,
+    Frames_idle = Speed/(Acc/2),
+    Y is (-(Acc/2) * Frames_idle ** 2) / 2 + Speed * Frames_idle.
+
+
+% Rules - traffic light
+traffic_light_brake(Img,MNIST,Speed) :-
+    cell_traffic_light(Img,C),
+    brake_dist(Yb,Speed),
+    idle_dist(Yi,Speed),
+    cell_danger_distance(Img,Speed,Yb,Yi,D),
+    (C = red ; C = orange),
+    D = 3,
+    Speed > 0.2.
+
+traffic_light_idle(Img,MNIST,Speed) :-
+    cell_traffic_light(Img,C),
+    brake_dist(Yb,Speed),
+    idle_dist(Yi,Speed),
+    cell_danger_distance(Img,Speed,Yb,Yi,D),
+    ((D = 3, (C = red ; C = orange), Speed =< 0.2);
+    (D = 2, (C = orange))).
+
+traffic_light_accelerate(Img,MNIST,Speed) :-
+    cell_traffic_light(Img,C),
+    brake_dist(Yb,Speed),
+    idle_dist(Yi,Speed),
+    cell_danger_distance(Img,Speed,Yb,Yi,D),
+    (C = green; D = 0).
+
+
+% Rules - intersection
+intersection_brake(Img,Speed,Player_y,Intersection_y) :-
+    Margin = 20,
+    Yr is Player_y - Intersection_y,
+    Yr >= 0,
+    brake_dist(Yb,Speed),
+    Yb_margin is Yb + Margin,
+    Yr < Yb_margin,
+    Mb is Margin - 1,
+    (Speed > 0.2 ; Yr < Mb),
+    cell_danger_intersection(Img,danger).
+
+
+intersection_idle(Img,Speed,Player_y,Intersection_y) :-
+    Margin = 20,
+    Yr is Player_y - Intersection_y,
+    Yr >= 0,
+    Yr < 300,
+    ((brake_dist(Yb,Speed),
+    Yb_margin is Yb + Margin,
+    Yr < Yb_margin,
+    Mb is Margin - 1,
+    (Speed =< 0.2 ; Yr >= Mb),
+    cell_danger_intersection(Img,danger))
+    ;
+    (idle_dist(Yi,Speed),
+    Yi_margin is Yi + Margin,
+    Yr < Yi_margin,
+    cell_danger_intersection(Img,danger))).
+
+intersection_accelerate(Img,Speed,Player_y,Intersection_y) :-
+    Yr is Player_y - Intersection_y,
+    (Yr < 0
+    ;
+    (Yr < 300,
+    brake_dist(Yb,Speed),
+    idle_dist(Yi,Speed),
+    Yr >= Yb,
+    Yr >= Yi)
+    ;
+    cell_danger_intersection(Img,nothing)).
+
+% Control
+% 0 --> accelerate
+% 1 --> break
+% 2 --> idle
+% 3 --> keep pace
+
+action(Img,MNIST,Speed,Player_y,Intersection_y,1) :-
+    cell_danger_pedestrian(Img,Speed,3);
+    speed_zone_brake(MNIST,Speed);
+    traffic_light_brake(Img,MNIST,Speed);
+    intersection_brake(Img,Speed,Player_y,Intersection_y).
+action(Img,MNIST,Speed,Player_y,Intersection_y,2) :-
+    (cell_danger_pedestrian(Img,Speed,2);
+    traffic_light_idle(Img,MNIST,Speed);
+    intersection_idle(Img,Speed,Player_y,Intersection_y)),
+    \+ action(Img,MNIST,Speed,Player_y,Intersection_y,1).
+action(Img,MNIST,Speed,Player_y,Intersection_y,3) :-
+    (cell_danger_pedestrian(Img,Speed,1);
+    speed_zone_follow(MNIST,Speed)),
+    \+ action(Img,MNIST,Speed,Player_y,Intersection_y,1),
+    \+ action(Img,MNIST,Speed,Player_y,Intersection_y,2).
+action(Img,MNIST,Speed,Player_y,Intersection_y,0) :-
+    (cell_danger_pedestrian(Img,Speed,0);
+    traffic_light_accelerate(Img,MNIST,Speed);
+    speed_zone_accelerate(MNIST,Speed);
+    intersection_accelerate(Img,Speed,Player_y,Intersection_y)),
+    \+ action(Img,MNIST,Speed,Player_y,Intersection_y,1),
+    \+ action(Img,MNIST,Speed,Player_y,Intersection_y,2),
+    \+ action(Img,MNIST,Speed,Player_y,Intersection_y,3).
