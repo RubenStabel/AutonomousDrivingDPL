@@ -98,7 +98,7 @@ pygame.display.set_caption("Traffic simulation")
 BLOCK_SIZE = 10  # Set the size of the grid block
 
 # GAME SETTINGS
-FPS = 60
+FPS = 120
 
 # print(RED_LIGHT.get_height())
 # print(PRIORITY_ALL.get_width(), PRIORITY_ALL.get_height())

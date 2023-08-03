@@ -12,9 +12,12 @@ from traffic_simulation.defs import *
 from traffic_simulation.driving.dynamic_car_rule_based_agent import dynamic_car_rule_based_self_driving
 from traffic_simulation.driving.version_1_speed_zones_rule_based_self_driving import \
     version_1_speed_zones_based_self_driving, danger_pedestrian_1_speed_zones
-from traffic_simulation.driving.version_4_rule_based_self_driving import version_4_rule_based_self_driving
+from traffic_simulation.driving.version_4_rule_based_self_driving import version_4_rule_based_self_driving, \
+    danger_pedestrian_4
 from traffic_simulation.driving.version_5_rule_based_self_driving import version_5_rule_based_self_driving
-from traffic_simulation.driving.version_6_rule_based_self_driving import version_6_rule_based_self_driving
+from traffic_simulation.driving.version_6_rule_based_self_driving import version_6_rule_based_self_driving, \
+    danger_pedestrian_6
+from traffic_simulation.driving.version_7_rule_based_self_driving import version_7_rule_based_self_driving
 from traffic_simulation.simulation_settings import *
 from traffic_simulation.agents.pedestrians import Pedestrians
 from traffic_simulation.agents.traffic_light import TrafficLight
@@ -117,7 +120,82 @@ def collect_data(output, player_car, danger_level, ped: Pedestrian, speed_zones:
                                                                        player_car).get_speed_zone(),
                                                                    speed_zones.get_speed_zone_img_idx(player_car),
                                                                    traffic_light_color))
-
+        case 'env_4':
+            traffic_light = traffic_lights.get_current_traffic_light(player_car)
+            traffic_light_color = 'nothing'
+            if traffic_light:
+                traffic_light_color = traffic_light.get_light_color()
+            f.write("{};{};{};{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output,
+                                                                   get_speed_level(player_car.get_vel()), danger_level,
+                                                                   player_car.x, player_car.y, ped.x, ped.y,
+                                                                   speed_zones.get_current_speed_zone(
+                                                                       player_car).get_speed_zone(),
+                                                                   speed_zones.get_speed_zone_img_idx(player_car),
+                                                                   traffic_light_color))
+        case 'env_5':
+            traffic_light = traffic_lights.get_current_traffic_light(player_car)
+            traffic_light_color = 'nothing'
+            if traffic_light:
+                traffic_light_color = traffic_light.get_light_color()
+            f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output,
+                                                                            get_speed_level(player_car.get_vel()),
+                                                                            danger_level,
+                                                                            player_car.x, player_car.y, ped.x, ped.y,
+                                                                            speed_zones.get_current_speed_zone(
+                                                                                player_car).get_speed_zone(),
+                                                                            speed_zones.get_speed_zone_img_idx(
+                                                                                player_car),
+                                                                            traffic_light_color,
+                                                                            traffic_signs.get_current_traffic_sign(
+                                                                                player_car),
+                                                                            dynamic_cars.cars_left(player_car),
+                                                                            dynamic_cars.cars_right(player_car)))
+        case 'env_6':
+            traffic_light = traffic_lights.get_current_traffic_light(player_car)
+            traffic_light_color = 'nothing'
+            if traffic_light:
+                traffic_light_color = traffic_light.get_light_color()
+            ped_x = 0
+            ped_y = 0
+            if ped:
+                ped_x = ped.x
+                ped_y = ped.y
+            f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output,
+                                                                            get_speed_level(player_car.get_vel()),
+                                                                            danger_level,
+                                                                            player_car.x, player_car.y, ped_x, ped_y,
+                                                                            speed_zones.get_current_speed_zone(
+                                                                                player_car).get_speed_zone(),
+                                                                            speed_zones.get_speed_zone_img_idx(
+                                                                                player_car),
+                                                                            traffic_light_color,
+                                                                            traffic_signs.get_current_traffic_sign(
+                                                                                player_car),
+                                                                            dynamic_cars.cars_left(player_car),
+                                                                            dynamic_cars.cars_right(player_car)))
+        case 'env_7':
+            traffic_light = traffic_lights.get_current_traffic_light(player_car)
+            traffic_light_color = 'nothing'
+            if traffic_light:
+                traffic_light_color = traffic_light.get_light_color()
+            ped_x = 0
+            ped_y = 0
+            if ped:
+                ped_x = ped.x
+                ped_y = ped.y
+            f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output,
+                                                                            get_speed_level(player_car.get_vel()),
+                                                                            danger_level,
+                                                                            player_car.x, player_car.y, ped_x, ped_y,
+                                                                            speed_zones.get_current_speed_zone(
+                                                                                player_car).get_speed_zone(),
+                                                                            speed_zones.get_speed_zone_img_idx(
+                                                                                player_car),
+                                                                            traffic_light_color,
+                                                                            traffic_signs.get_current_traffic_sign(
+                                                                                player_car),
+                                                                            dynamic_cars.cars_left(player_car),
+                                                                            dynamic_cars.cars_right(player_car)))
     f.close()
 
     image_frame += 1
@@ -172,29 +250,69 @@ if DATA_ANALYSIS:
             MODEL_NAME), 4)
 
 if COLLECT_DATA:
-    reset_img_data(
-        '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(DATA_FOLDER),
-        4)
-    f = open(
-        "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}_{}.txt".format(
-            MODE, ENV), "w")
-    match ENV:
-        case 'env_1':
-            f.write("{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
-                                                                'danger_level', 'player_car_x', 'player_car_y',
-                                                                'pedestrian_x', 'pedestrian_y', 'speed_zone',
-                                                                'speed_zone_img_idx'))
-        case 'env_2':
-            f.write("{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
-                                                                'danger_level', 'player_car_x', 'player_car_y',
-                                                                'pedestrian_x', 'pedestrian_y', 'speed_zone',
-                                                                'speed_zone_img_idx'))
-        case 'env_3':
-            f.write("{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
-                                                                   'danger_level', 'player_car_x', 'player_car_y',
-                                                                   'pedestrian_x', 'pedestrian_y', 'speed_zone',
-                                                                   'speed_zone_img_idx', 'traffic_light_color'))
-    f.close()
+    if PREFIX == '0':
+        reset_img_data(
+            '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/{}'.format(
+                DATA_FOLDER),
+            4)
+        f = open(
+            "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_{}_{}.txt".format(
+                MODE, ENV), "w")
+        match ENV:
+            case 'env_1':
+                f.write("{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
+                                                                    'danger_level', 'player_car_x', 'player_car_y',
+                                                                    'pedestrian_x', 'pedestrian_y', 'speed_zone',
+                                                                    'speed_zone_img_idx'))
+            case 'env_2':
+                f.write("{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
+                                                                    'danger_level', 'player_car_x', 'player_car_y',
+                                                                    'pedestrian_x', 'pedestrian_y', 'speed_zone',
+                                                                    'speed_zone_img_idx'))
+            case 'env_3':
+                f.write("{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
+                                                                       'danger_level', 'player_car_x', 'player_car_y',
+                                                                       'pedestrian_x', 'pedestrian_y', 'speed_zone',
+                                                                       'speed_zone_img_idx', 'traffic_light_color'))
+            case 'env_4':
+                f.write("{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
+                                                                       'danger_level', 'player_car_x', 'player_car_y',
+                                                                       'pedestrian_x', 'pedestrian_y', 'speed_zone',
+                                                                       'speed_zone_img_idx', 'traffic_light_color'))
+            case 'env_5':
+                f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output',
+                                                                                'speed',
+                                                                                'danger_level', 'player_car_x',
+                                                                                'player_car_y',
+                                                                                'pedestrian_x', 'pedestrian_y',
+                                                                                'speed_zone',
+                                                                                'speed_zone_img_idx',
+                                                                                'traffic_light_color',
+                                                                                'traffic_sign', 'inter_danger_left',
+                                                                                'intersection_danger_right'))
+            case 'env_6':
+                f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output',
+                                                                                'speed',
+                                                                                'danger_level', 'player_car_x',
+                                                                                'player_car_y',
+                                                                                'pedestrian_x', 'pedestrian_y',
+                                                                                'speed_zone',
+                                                                                'speed_zone_img_idx',
+                                                                                'traffic_light_color',
+                                                                                'traffic_sign', 'inter_danger_left',
+                                                                                'intersection_danger_right'))
+            case 'env_7':
+                f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output',
+                                                                                'speed',
+                                                                                'danger_level', 'player_car_x',
+                                                                                'player_car_y',
+                                                                                'pedestrian_x', 'pedestrian_y',
+                                                                                'speed_zone',
+                                                                                'speed_zone_img_idx',
+                                                                                'traffic_light_color',
+                                                                                'traffic_sign', 'inter_danger_left',
+                                                                                'intersection_danger_right'))
+        f.close()
 
 if SIMULATION_METRICS:
     f = open(
@@ -228,7 +346,7 @@ output = [1]
 
 frame = 0
 image_frame = 0
-iteration = 0
+iteration = 200
 start_time = time.time()
 
 while run and iteration < NUMBER_ITERATIONS:
@@ -279,11 +397,16 @@ while run and iteration < NUMBER_ITERATIONS:
             case 8:
                 output = version_4_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights,
                                                            dynamic_cars)
+                danger_level, ped = danger_pedestrian_4(player_car, pedestrians)
             case 9:
                 output = version_5_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights,
                                                            dynamic_cars, traffic_signs)
             case 10:
                 output = version_6_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights,
+                                                           dynamic_cars, traffic_signs)
+                danger_level, ped = danger_pedestrian_6(player_car, pedestrians)
+            case 11:
+                output = version_7_rule_based_self_driving(player_car, pedestrians, speed_zones, traffic_lights,
                                                            dynamic_cars, traffic_signs)
 
     pedestrians.move()

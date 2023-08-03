@@ -1,3 +1,4 @@
+from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.defs import *
 
 
@@ -41,6 +42,19 @@ class TrafficSign:
 
     def get_traffic_signs(self):
         return self.traffic_signs
+
+    def get_current_traffic_sign(self, player_car: PlayerCar):
+        current_sign = 'nothing'
+        for sign in self.traffic_signs:
+            if sign[1][0] > WIDTH/2:
+                if player_car.y - sign[1][1] > 0:
+                    if sign[0] == PRIORITY_RIGHT:
+                        current_sign = 'pr'
+                    if sign[0] == PRIORITY_ALL:
+                        current_sign = 'pa'
+                    if sign[0] == PRIORITY_INTERSECTION:
+                        current_sign = 'pi'
+        return current_sign
 
     def draw(self, win, x_offset, y_offset):
         for sign, pos in self.traffic_signs:

@@ -32,12 +32,12 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
     f3 = (x_rel / (60 + s * a)) ** 4 + (y_rel / ((s*b)+70)) ** 4 - 1
 
     if f3 < 0:
-        if overlapping_y and speed > 4:
+        if overlapping_y and speed > 6:
             return 0
         else:
             return 3
     elif f2 < 0:
-        if overlapping_y and speed > 3:
+        if overlapping_y and speed > 4:
             return 0
         else:
             return 2
@@ -50,15 +50,13 @@ def get_danger_zone(player_car: PlayerCar, obstacle: Pedestrian, speed):
         return 0
 
 
-def traffic_light_handler(player_car: PlayerCar, traffic_lights: list[TrafficLight], speed):
+def traffic_light_handler(player_car: PlayerCar, traffic_lights: TrafficLights, speed):
     if NUMBER_TRAFFIC_LIGHTS == 0:
         return 0
 
-    positive_distances = [player_car.y - x.y for x in traffic_lights if player_car.y - x.y - 30 > 0]
+    traffic_light = traffic_lights.get_current_traffic_light(player_car)
 
-    if positive_distances:
-        traffic_light = traffic_lights[[player_car.y - x.y for x in traffic_lights].index(min(positive_distances))]
-    else:
+    if traffic_light is None:
         return 0
 
     traffic_light_id = traffic_light.get_light()
@@ -100,10 +98,13 @@ def speed_zone_handler(player_car: PlayerCar, speed_zones: SpeedZones, speed):
 
 
 def intersection_handler(player_car: PlayerCar, dynamic_car: DynamicCar, speed):
+    if NUMBER_INTERSECTIONS == 0:
+        return 0
+
     if dynamic_car.x < WIDTH/2 - dynamic_car.img.get_height() or dynamic_car.angle == -90:
         return 0
 
-    if dynamic_car.x - player_car.x > IMAGE_DIM/2 or player_car.y - dynamic_car.y - dynamic_car.img.get_width() + player_car.img.get_height() > IMAGE_DIM:
+    if dynamic_car.x - player_car.x > IMAGE_DIM / 2 or player_car.y - dynamic_car.y - dynamic_car.img.get_width() + player_car.img.get_height() > IMAGE_DIM or player_car.y - dynamic_car.y - dynamic_car.img.get_width() + player_car.img.get_height() < 0:
         return 0
 
     y_rel = player_car.y - INTER_1_END
@@ -141,7 +142,7 @@ def version_4_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedest
     for pedestrian in pedestrians.get_pedestrians():
         actions.append(get_danger_zone(player_car, pedestrian, player_car.get_vel()))
     actions.append(speed_zone_handler(player_car, speed_zones, player_car.get_vel()))
-    actions.append(traffic_light_handler(player_car, traffic_lights.unique_traffic_lights, player_car.get_vel()))
+    actions.append(traffic_light_handler(player_car, traffic_lights, player_car.get_vel()))
     for dynamic_car in dynamic_cars.get_dynamic_cars():
         actions.append(intersection_handler(player_car, dynamic_car, player_car.get_vel()))
 
@@ -166,3 +167,18 @@ def version_4_rule_based_self_driving(player_car: PlayerCar, pedestrians: Pedest
             output = [1, 0, 0, 0]
 
     return output
+
+
+def danger_pedestrian_4(player_car: PlayerCar, pedestrians: Pedestrians):
+    detected_levels = []
+    for pedestrian in pedestrians.get_pedestrians():
+        detected_levels.append((get_danger_zone(player_car, pedestrian, player_car.get_vel()), pedestrian))
+
+    action = -1
+    ped = None
+    for (a, p) in detected_levels:
+        if a > action:
+            action = a
+            ped = p
+
+    return action, ped

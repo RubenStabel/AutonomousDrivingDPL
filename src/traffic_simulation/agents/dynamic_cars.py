@@ -1,6 +1,7 @@
 import random
 
 from traffic_simulation.agents.dynamic_car import DynamicCar
+from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.defs import *
 
 
@@ -39,6 +40,20 @@ class DynamicCars:
     def draw(self, win, x_offset, y_offset):
         for car in self.active_dynamic_cars:
             car.draw(win, x_offset, y_offset)
+
+    def cars_left(self, player_car: PlayerCar):
+        for car in self.dynamic_cars:
+            if not (car.x - player_car.x > IMAGE_DIM / 2 or player_car.x - car.x - car.img.get_height() > IMAGE_DIM / 2 or player_car.y - car.y - car.img.get_width() + player_car.img.get_height() > IMAGE_DIM or player_car.y - car.y - car.img.get_width() + player_car.img.get_height() < 0):
+                if car.x + car.img.get_width() < WIDTH/2:
+                    return 1
+        return 0
+
+    def cars_right(self, player_car: PlayerCar):
+        for car in self.dynamic_cars:
+            if not (car.x - player_car.x > IMAGE_DIM / 2 or player_car.x - car.x - car.img.get_height() > IMAGE_DIM / 2 or player_car.y - car.y - car.img.get_width() + player_car.img.get_height() > IMAGE_DIM or player_car.y - car.y - car.img.get_width() + player_car.img.get_height() < 0):
+                if car.x >= WIDTH/2:
+                    return 1
+        return 0
 
     def reset(self):
         self.all_pos = set()
