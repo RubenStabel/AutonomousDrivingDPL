@@ -19,7 +19,7 @@ def show_transformed_img(img_path, transform=None):
 
 transform = transforms.Compose([
                     transforms.ToTensor(),
-                    transforms.Resize((32, 32), antialias=False, interpolation=InterpolationMode.NEAREST_EXACT),
+                    transforms.Resize((80, 80), antialias=True, interpolation=InterpolationMode.BILINEAR),
                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                 ])
-show_transformed_img('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_3_env_3/medium/2/0_iter7frame23.png', transform)
+show_transformed_img('/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_5_env_5/complete/1/0_iter6frame49.png', transform)
