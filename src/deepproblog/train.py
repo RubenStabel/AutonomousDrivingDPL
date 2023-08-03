@@ -1,3 +1,5 @@
+import numpy as np
+
 from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import AD_Dataset
 import signal
 import time
@@ -43,6 +45,7 @@ class TrainObject(object):
         :return: The average loss over the batch
         """
         total_loss = 0
+        # print(batch)
         result = self.model.solve(batch)
         for r in result:
             self.timing[0] += r.ground_time / len(batch)
@@ -51,10 +54,12 @@ class TrainObject(object):
         result = [
             (result[i], batch[i]) for i in range(len(batch)) if len(result[i]) > 0
         ]
+        # print(result)
         for r, q in result:
             total_loss += backpropagate_loss(
                 r, q.p, weight=1 / len(result), q=q.substitute().query
             )
+        # print(total_loss)
         return total_loss
 
     def get_loss_with_negatives(

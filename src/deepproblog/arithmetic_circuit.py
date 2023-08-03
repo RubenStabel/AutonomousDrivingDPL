@@ -54,6 +54,7 @@ class ArithmeticCircuit(object):
             to_evaluate = self.extract_neural()
             to_evaluate = [(e[0], e[1].apply_term(substitution)) for e in to_evaluate]
             values = model.evaluate_nn(to_evaluate)
+            # print(values)
         self.re_evaluate = True
         semiring = self.semiring(model, substitution, values)
         start = time()
