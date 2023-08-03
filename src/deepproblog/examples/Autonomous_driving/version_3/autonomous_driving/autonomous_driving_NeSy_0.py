@@ -14,15 +14,15 @@ from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.Autonomous_driving.version_3.data.AD_generate_datasets_NeSy_0 import get_dataset, MNIST_train
 
 N = 0
-folder = "test/"
-data_size = "medium"
+folder = "train/"
+data_size = "complete"
 env = "env_3"
 
 name = "autonomous_driving_NeSy_0_{}_{}_{}".format(data_size, env, N)
 
 train_set, AD_train = get_dataset("train")
-valid_set, AD_valid = get_dataset("valid")
-test_set, AD_test = get_dataset("test")
+valid_set, AD_valid = get_dataset("train")
+test_set, AD_test = get_dataset("train")
 
 print("###############    LOADING NETWORK    ###############")
 network_1 = AD_V3_NeSy_0_net_danger_pedestrian()
@@ -49,10 +49,9 @@ model.add_tensor_source("valid", AD_valid)
 model.add_tensor_source("test", AD_test)
 model.add_tensor_source("MNIST", MNIST_train)
 
-
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 10, test_set=valid_set, log_iter=5, profile=0)
+train = train_model(model, loader, 5, test_set=valid_set, log_iter=5, profile=0, save_best_model='/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/snapshot/neuro_symbolic/best_train/{}'.format(name + '.pth'))
 model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")

@@ -15,16 +15,17 @@ speed_zone_follow(SZ,S) :-
 
 % Rules - traffic light
 traffic_light_brake(red,3,S) :- S > 0.2.
-%traffic_light_brake(orange,3,S) :- S > 0.2.
+traffic_light_brake(orange,3,S) :- S > 0.2.
 
 traffic_light_idle(red,3,S) :- S =< 0.2.
+traffic_light_idle(orange,3,S) :- S =< 0.2.
 traffic_light_idle(orange,2,S).
-%traffic_light_idle(orange,3,S) :- S =< 0.2.
 
 traffic_light_accelerate(green,3).
 traffic_light_accelerate(green,2).
 traffic_light_accelerate(green,0).
 traffic_light_accelerate(orange,0).
+traffic_light_accelerate(red,0).
 
 
 % Control
