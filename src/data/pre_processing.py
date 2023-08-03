@@ -3,7 +3,10 @@ import glob
 import shutil
 import random
 
+import pandas as pd
+from Cython import typeof
 from pandas.core.common import flatten
+from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets_NeSy_0 import test_image_path, output_data_path
 
 
 def reset_data(path):
@@ -52,9 +55,51 @@ def generate_balanced_dataset(train_path, balanced_path, number_of_classes, size
             shutil.copy(srcpath, balanced_path + '/{}'.format(i))
 
 
-# generate_balanced_dataset('img/general/version_3_env_3', 'img/balanced/version_3_env_3/complete', 4)
-# generate_balanced_dataset('img/general/version_3_env_3', 'img/balanced/version_3_env_3/medium', 4, 0.5)
-# generate_balanced_dataset('img/general/version_3_env_3', 'img/balanced/version_3_env_3/small', 4, 0.1)
+def data_2_pd_speed(output_data_path):
+    data = pd.read_csv(output_data_path, delimiter=';')
+    data.columns = ['iteration', 'image_frame', 'output',
+                    'speed',
+                    'danger_level', 'player_car_x',
+                    'player_car_y',
+                    'pedestrian_x', 'pedestrian_y',
+                    'speed_zone',
+                    'speed_zone_img_idx',
+                    'traffic_light_color',
+                    'traffic_sign', 'inter_danger_left',
+                    'intersection_danger_right']
+    return data
+
+
+def class_to_idx(classes):
+    idx_to_class = {i: j for i, j in enumerate(classes)}
+    return {value: key for key, value in idx_to_class.items()}
+
+
+def check_img_file(image_data_path: str, df):
+    image_name = image_data_path.split('/')[-1]
+    image_id = image_name.split('_')[-1].split('.')[0]
+    iter_image = image_id.split('frame')[0].split('iter')[-1]
+    frame = image_id.split('frame')[-1]
+
+    player_y = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['player_car_y'].values[0]
+    vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
+    output = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['output'].values[0]
+    if float(vel) == 7.9 and output == '[1, 0, 0, 0]':
+        print(image_data_path)
+        os.remove(image_data_path)
+
+
+def remove_bug_img(img_folder_1, output_data_path):
+    df = data_2_pd_speed(output_data_path)
+    for img in img_folder_1:
+        check_img_file(img, df)
+
+
+remove_bug_img(test_image_path, output_data_path)
+
+# generate_balanced_dataset('img/general/version_5_env_7', 'img/balanced/version_5_env_7/complete', 4)
+# generate_balanced_dataset('img/general/version_5_env_7', 'img/balanced/version_5_env_7/medium', 4, 0.5)
+# generate_balanced_dataset('img/general/version_5_env_7', 'img/balanced/version_5_env_7/small', 4, 0.1)
 
 # generate_balanced_dataset('img/general/version_1_env_1_new_ped', 'img/balanced/version_1_env_1_new_ped/complete', 3)
 # generate_balanced_dataset('img/general/version_1_env_1_new_ped', 'img/balanced/version_1_env_1_new_ped/medium', 3, 0.5)
