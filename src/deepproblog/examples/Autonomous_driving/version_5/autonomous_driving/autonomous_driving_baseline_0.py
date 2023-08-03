@@ -13,8 +13,8 @@ from deepproblog.examples.Autonomous_driving.version_5.networks.network_baseline
 
 N = 0
 folder = "test/"
-data_size = "small"
-env = "env_6"
+data_size = "complete"
+env = "env_7"
 
 name = "autonomous_driving_baseline_0_{}_{}_{}".format(data_size, env, N)
 
@@ -38,7 +38,7 @@ model.add_tensor_source("MNIST", MNIST_train)
 
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 15, test_set=valid_set, log_iter=5, profile=0, save_best_model='/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/baseline/best_test/{}'.format(name + '.pth'))
+train = train_model(model, loader, 10, test_set=valid_set, log_iter=10, profile=0, save_best_model='/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/baseline/best_test/{}'.format(name + '.pth'))
 model.save_state("../snapshot/baseline/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")

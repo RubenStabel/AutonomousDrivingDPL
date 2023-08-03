@@ -6,7 +6,7 @@ import random
 import pandas as pd
 from Cython import typeof
 from pandas.core.common import flatten
-from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets_NeSy_0 import test_image_path, output_data_path
+from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets_NeSy_0_0 import test_image_path, output_data_path
 
 
 def reset_data(path):
@@ -84,7 +84,7 @@ def check_img_file(image_data_path: str, df):
     player_y = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['player_car_y'].values[0]
     vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
     output = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['output'].values[0]
-    if float(vel) == 7.9 and output == '[1, 0, 0, 0]':
+    if (float(vel) >= 7.9 and output == '[1, 0, 0, 0]') or (float(vel) < 0.0 and output == '[0, 0, 0, 1]'):
         print(image_data_path)
         os.remove(image_data_path)
 

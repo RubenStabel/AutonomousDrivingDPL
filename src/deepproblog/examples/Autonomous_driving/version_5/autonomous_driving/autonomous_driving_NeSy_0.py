@@ -16,7 +16,7 @@ from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets
 N = 0
 folder = "test/"
 data_size = "complete"
-env = "env_5"
+env = "env_7"
 
 name = "autonomous_driving_NeSy_0_{}_{}_{}".format(data_size, env, N)
 
