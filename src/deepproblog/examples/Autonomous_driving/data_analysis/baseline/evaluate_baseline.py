@@ -10,7 +10,7 @@ from deepproblog.utils.confusion_matrix import ConfusionMatrix
 DATA_FILE_PATH = '/deepproblog/examples/Autonomous_driving/data_analysis/errors/false_predictions_baseline'
 
 
-def generate_confusion_matrix_baseline(model, dataset, verbose: int = 0) -> ConfusionMatrix:
+def generate_confusion_matrix_baseline(model, dataset, verbose: int = 0, nn_name=None) -> ConfusionMatrix:
     """
     :param model: The model to evaluate.
     :param dataset: The dataset to evaluate the model on.
@@ -20,11 +20,28 @@ def generate_confusion_matrix_baseline(model, dataset, verbose: int = 0) -> Conf
     """
     confusion_matrix = ConfusionMatrix()
 
-    for i, (inputs, label) in enumerate(dataset, 0):
-        output = model(inputs)  # Feed Network
-
-        predicted = str((torch.max(torch.exp(output), 1)[1]).data.cpu().numpy().item())
-        actual = str(label.data.cpu().numpy().item())
+    for i, (img, spd, label) in enumerate(dataset, 0):
+        if nn_name == 'perc_net_version_5_NeSy_danger_pedestrian':
+            output = model(img, spd)
+            predicted = str((torch.max(torch.exp(output), -1)[1]).data.cpu().numpy().item())
+            if label == -1:
+                label = 0
+            actual = str(label)
+            confusion_matrix.add_item(predicted, actual)
+        elif nn_name == 'perc_net_version_5_NeSy_intersection':
+            for j in [0.0, 1.0]:
+                pos = torch.tensor([j], dtype=torch.float32)
+                output = model(img[0], pos)
+                predicted = str((torch.max(torch.exp(output), -1)[1]).data.cpu().numpy().item())
+                actual = str(label[int(j)].item())
+                confusion_matrix.add_item(predicted, actual)
+        else:
+            output = model(img.to(torch.float32))
+            predicted = str((torch.max(torch.exp(output), -1)[1]).data.cpu().numpy().item())
+            if label == -1:
+                label = 0
+            actual = str(label.item())
+            confusion_matrix.add_item(predicted, actual)
 
         if verbose > 1 and predicted != actual:
             # print("Probability of {}: ".format(torch.argmax(output.data[0]).item()), torch.max(output.data[0]).item())
@@ -39,7 +56,7 @@ def generate_confusion_matrix_baseline(model, dataset, verbose: int = 0) -> Conf
             ))
             f.close()
 
-        confusion_matrix.add_item(predicted, actual)
+
 
     if verbose > 0:
         print(confusion_matrix)

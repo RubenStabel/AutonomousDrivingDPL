@@ -41,13 +41,13 @@ OCCLUDED_OBJ_VISIBLE = True
 """
 DATA COLLECTION
 """
-COLLECT_DATA = True
+COLLECT_DATA = False
 DATA_ANALYSIS = False
 SIMULATION_METRICS = False
 
-PREFIX = '2'
-DATA_FOLDER = "general/version_5_env_7"
-ENV = 'env_7'
+PREFIX = '0'
+DATA_FOLDER = "general/version_5_env_8"
+ENV = 'env_8'
 
 IMAGE_DIM = 360
 NUMBER_ITERATIONS = 250
