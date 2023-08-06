@@ -134,11 +134,11 @@ from data.pre_processing import reset_img_data
 
 # V5 - NeSy_0
 MODEL_NAME = "NeSy"
-ENV = 6
+ENV = 5
 NETWORK = [AD_V5_NeSy_0_net_danger_pedestrian(), AD_V5_NeSy_0_net_speed_zone(), AD_V5_NeSy_0_net_traffic_light(), AD_V5_NeSy_0_net_danger_distance(), AD_V5_NeSy_0_net_danger_intersection(), AD_V5_NeSy_0_net_traffic_sign()]
-OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_6.txt'
+OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_5.txt'
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/models/autonomous_driving_NeSy_0.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/neuro_symbolic/best_test/autonomous_driving_NeSy_0_complete_env_6_0.pth'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/neuro_symbolic/best_test/autonomous_driving_NeSy_0_small_env_5_0.pth'
 NN_NAME = ['perc_net_version_5_NeSy_danger_pedestrian', 'perc_net_version_5_NeSy_speed_zone', 'perc_net_version_5_NeSy_traffic_light', 'perc_net_version_5_NeSy_danger_distance', 'perc_net_version_5_NeSy_intersection', 'perc_net_version_5_NeSy_traffic_sign']
 
 

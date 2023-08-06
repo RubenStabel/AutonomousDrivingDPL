@@ -6,7 +6,7 @@ import random
 import pandas as pd
 from Cython import typeof
 from pandas.core.common import flatten
-# from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets_NeSy_0_0 import test_image_path, output_data_path
+# from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets_NeSy_0 import test_image_path, output_data_path
 
 
 def reset_data(path):
@@ -97,14 +97,14 @@ def remove_bug_img(img_folder_1, output_data_path):
 
 # remove_bug_img(test_image_path, output_data_path)
 
-# generate_balanced_dataset('img/general/pretrain/pedestrian', 'img/balanced/version_5_env_7/complete', 4)
-# generate_balanced_dataset('img/general/pretrain/pedestrian', 'img/balanced/version_5_env_7/medium', 4, 0.5)
-# generate_balanced_dataset('img/general/pretrain/pedestrian', 'img/balanced/version_5_env_7/small', 4, 0.1)
+# generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/dev/medium', 4, 0.3)
+# generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/version_5_env_7/medium', 4, 0.5)
+# generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/version_5_env_7/small', 4, 0.1)
 
-# generate_balanced_dataset('img/general/pretrain/pedestrian', 'img/balanced/pretrain/pedestrian', 4, 0.5)
+# generate_balanced_dataset('img/general/pretrain/pedestrian', 'img/balanced/pretrain/pedestrian', 4, 0.8)
 # generate_balanced_dataset('img/general/pretrain/speed_zone', 'img/balanced/pretrain/speed_zone', 4, 1)
 # generate_balanced_dataset('img/general/pretrain/traffic_light', 'img/balanced/pretrain/traffic_light', 4, 0.1)
-# generate_balanced_dataset('img/general/pretrain/intersection', 'img/balanced/pretrain/intersection', 4, 0.7)
+# generate_balanced_dataset('img/general/pretrain/intersection', 'img/balanced/pretrain/intersection', 4, 1)
 # generate_balanced_dataset('img/general/pretrain/traffic_sign', 'img/balanced/pretrain/traffic_sign', 4, 1)
 
 # generate_balanced_dataset('img/general/version_1_env_1_new_ped', 'img/balanced/version_1_env_1_new_ped/complete', 3)

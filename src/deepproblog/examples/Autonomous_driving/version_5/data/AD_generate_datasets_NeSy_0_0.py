@@ -16,9 +16,13 @@ from deepproblog.dataset import Dataset
 from deepproblog.query import Query
 from traffic_simulation.defs import INTER_1_END
 
-train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_5_env_7/medium'
-test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_5_env_7/complete'
-output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_7.txt'
+# train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_5_env_5/small'
+test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_5_env_5/complete'
+
+train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/biased_version_5_env_5_5:1'
+# test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/biased_version_5_env_5'
+
+output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_5.txt'
 
 ####################################################
 #       Create Train, Valid and Test sets
