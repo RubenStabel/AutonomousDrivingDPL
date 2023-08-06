@@ -16,8 +16,8 @@ from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets
 N = 1
 folder = "test/"
 data_size = "small"
-env = "env_5"
-pretrain = True
+env = "env_5_biased_5:1"
+pretrain = False
 
 name = "autonomous_driving_NeSy_0_{}_{}_{}".format(data_size, env, N)
 
@@ -71,11 +71,12 @@ model.add_tensor_source("MNIST", MNIST_train)
 
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-# ,save_best_model='/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/neuro_symbolic/best_test/{}'.format(name + '.pth')
-train = train_model(model, loader, 5, test_set=valid_set, log_iter=10, profile=0)
-# model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
+# test_set=valid_set,
+# , save_best_model='/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/neuro_symbolic/best_test/{}'.format(name + '.pth')
+train = train_model(model, loader, 10,  log_iter=10, profile=0)
+model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")
 train.logger.comment(dumps(model.get_hyperparameters()))
 train.logger.comment("Accuracy {}".format(get_confusion_matrix(model, test_set, verbose=1).accuracy()))
-# train.logger.write_to_file("../log/neuro_symbolic/" + folder + name)
+train.logger.write_to_file("../log/neuro_symbolic/" + folder + name)

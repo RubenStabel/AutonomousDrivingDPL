@@ -18,7 +18,7 @@ N = 0
 
 folder = "test/"
 # NN_NAME = ['perc_net_version_5_NeSy_danger_pedestrian', 'perc_net_version_5_NeSy_speed_zone', 'perc_net_version_5_NeSy_traffic_light', 'perc_net_version_5_NeSy_intersection', 'perc_net_version_5_NeSy_traffic_sign']
-NN_NAME = ['perc_net_version_5_NeSy_speed_zone']
+NN_NAME = ['perc_net_version_5_NeSy_danger_pedestrian']
 
 
 def pretrain_networks():
@@ -44,7 +44,7 @@ def pretrain_networks():
                 model = None
                 num_classes = 0
 
-        optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
+        optimizer = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
         criterion = nn.CrossEntropyLoss()
 
         train_image_paths, valid_image_paths, test_image_path, classes = get_paths(nn_name)
@@ -60,7 +60,7 @@ def pretrain_networks():
         valid_loader = torch.utils.data.DataLoader(valid_set, batch_size=1, shuffle=False)
         test_loader = torch.utils.data.DataLoader(test_set, batch_size=1, shuffle=False)
 
-        epochs = 10
+        epochs = 5
         running_loss = 0.0
 
         start = time.time()
@@ -72,7 +72,6 @@ def pretrain_networks():
 
                 # get the inputs; data is a list of [inputs, labels]
                 img, spd, labels = data
-
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
