@@ -12,10 +12,11 @@ from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import get_dataset
 from deepproblog.examples.Autonomous_driving.version_1.networks.network_NeSy import AD_V1_NeSy_1_net_y, AD_V1_NeSy_1_net_x
 
-N = 1
+N = 0
 folder = "test/"
 data_size = "complete"
-env = "env_1"
+env = "env_1_pretrain"
+pretrain = True
 
 name = "autonomous_driving_NeSy_2_{}_{}_{}".format(data_size, env, N)
 
@@ -25,10 +26,14 @@ test_set, AD_test = get_dataset("test")
 
 print("###############    LOADING NETWORK    ###############")
 network_1 = AD_V1_NeSy_1_net_x()
+if pretrain:
+    network_1.load_state_dict(torch.load("../pretrain/perc_net_version_1_NeSy_x_0.pth"))
 net_x = Network(network_1, "perc_net_version_1_NeSy_x", batching=True)
 net_x.optimizer = torch.optim.Adam(network_1.parameters(), lr=1e-3)
 
 network_2 = AD_V1_NeSy_1_net_y()
+if pretrain:
+    network_2.load_state_dict(torch.load("../pretrain/perc_net_version_1_NeSy_y_0.pth"))
 net_y = Network(network_2, "perc_net_version_1_NeSy_y", batching=True)
 net_y.optimizer = torch.optim.Adam(network_2.parameters(), lr=1e-3)
 
@@ -41,7 +46,8 @@ model.add_tensor_source("test", AD_test)
 
 print("###############    TRAINING MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 20, test_set=valid_set, log_iter=5, profile=0)
+# test_set=valid_set,
+train = train_model(model, loader, 5, test_set=valid_set, log_iter=5, profile=0)
 model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA    ###############")

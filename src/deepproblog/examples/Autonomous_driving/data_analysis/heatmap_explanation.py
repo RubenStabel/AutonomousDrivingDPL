@@ -198,9 +198,6 @@ def generate_heatmap_2d(model, simulation_data_path, img_path, save_path=None):
     probs_x = generate_probs_heatmap(get_nn_prediction_probs(img_path, model)[0])
     probs_y = generate_probs_heatmap(get_nn_prediction_probs(img_path, model)[1], x=False)
 
-    print(probs_x)
-    print(probs_y)
-
     danger_zones_x = accuracy_on_predicates_x(simulation_data_path)
     points_x = get_points(danger_zones_x)
     danger_zones_y = accuracy_on_predicates_y(simulation_data_path)
@@ -257,6 +254,14 @@ IMG_PATH_1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivi
 IMG_PATH_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/2/0_iter20frame26.png'
 
 IMG_ER = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/0/0_iter8frame40.png'
+
+
+# IMG_PATH_0 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/0/0_iter5frame20.png'
+# IMG_PATH_1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/1/0_iter19frame12.png'
+# IMG_PATH_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/2/0_iter37frame13.png'
+#
+# IMG_ER = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/0/0_iter8frame40.png'
+
 
 generate_heatmap_2d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_0)
 generate_heatmap_2d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_1)

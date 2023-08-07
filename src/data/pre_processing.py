@@ -7,6 +7,7 @@ import pandas as pd
 from Cython import typeof
 from pandas.core.common import flatten
 # from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets_NeSy_0 import test_image_path, output_data_path
+# from deepproblog.examples.Autonomous_driving.version_1.pretrain.AD_generate_datasets_NeSy_pretrain import get_paths, output_data_path
 
 
 def reset_data(path):
@@ -95,9 +96,43 @@ def remove_bug_img(img_folder_1, output_data_path):
         check_img_file(img, df)
 
 
+def data_2_pd_speed_V1(output_data_path):
+    data = pd.read_csv(output_data_path, delimiter=';')
+    data.columns = ['iteration', 'image_frame', 'output',
+                    'speed',
+                    'danger_level', 'player_car_x',
+                    'player_car_y',
+                    'pedestrian_x', 'pedestrian_y']
+    return data
+
+
+def copy_img_file(image_data_path: str, df):
+    image_name = image_data_path.split('/')[-1]
+    image_id = image_name.split('_')[-1].split('.')[0]
+    iter_image = image_id.split('frame')[0].split('iter')[-1]
+    frame = image_id.split('frame')[-1]
+
+    car_x = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['player_car_x'].values[0]
+    ped_x = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['pedestrian_x'].values[0]
+    if ped_x - car_x <= -29 or ped_x - car_x >= 100:
+        print(image_data_path)
+        shutil.copyfile(image_data_path, '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/pretrain/version_1_env_1_x/0/{}'.format(image_name))
+
+
+def copy_img_pretrain(img_folder_1, output_data_path):
+    df = data_2_pd_speed_V1(output_data_path)
+    for img in img_folder_1:
+        copy_img_file(img, df)
+
+
+# train_image_paths, valid_image_paths, test_image_path, classes = get_paths()
+# copy_img_pretrain(test_image_path, output_data_path)
+
 # remove_bug_img(test_image_path, output_data_path)
 
-# generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/dev/medium', 4, 0.3)
+# generate_balanced_dataset('img/general/version_1_env_1', 'img/pretrain/test', 3, 0.15)
+
+# generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/version_5_env_5/complete', 4, 1)
 # generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/version_5_env_7/medium', 4, 0.5)
 # generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/version_5_env_7/small', 4, 0.1)
 

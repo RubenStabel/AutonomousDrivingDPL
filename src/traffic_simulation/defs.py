@@ -107,3 +107,4 @@ FPS = 120
 # print(WIDTH, HEIGHT)
 # print(RED_CAR.get_width(), RED_CAR.get_height())
 # print(PEDESTRIAN.get_width(), PEDESTRIAN.get_height())
+# print(PEDESTRIAN.get_width())
