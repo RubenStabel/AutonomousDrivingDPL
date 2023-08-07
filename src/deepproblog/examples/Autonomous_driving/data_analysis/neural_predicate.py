@@ -67,10 +67,11 @@ def get_nn_prediction_probs(data, model):
     answer = model.solve([test_query])[0]
 
     NN_outputs = ""
+    NN_prediction_probabilities = []
     for j in range(len(model.networks)):
         # NN_name = str(list(answer.semiring.values.items())[j][0][0])
         # NN_prediction_class = str(torch.argmax(list(answer.semiring.values.values())[j]).item())
-        NN_prediction_probabilities = list(answer.semiring.values.values())[j].tolist()
+        NN_prediction_probabilities.append(list(answer.semiring.values.values())[j].tolist())
         # NN_outputs = NN_outputs + NN_name + '  ' + NN_prediction_probabilities + '::' + NN_prediction_class
 
         if j < len(model.networks) - 1:
