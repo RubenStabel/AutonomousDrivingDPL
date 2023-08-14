@@ -12,9 +12,9 @@ from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.Autonomous_driving.version_1.data.AD_generate_datasets_NeSy import get_dataset
 from deepproblog.examples.Autonomous_driving.version_1.networks.network_NeSy import AD_V1_NeSy_1_net_y, AD_V1_NeSy_1_net_x
 
-N = 0
+N = 2
 folder = "test/"
-data_size = "complete"
+data_size = "small"
 env = "env_1_pretrain"
 pretrain = True
 
@@ -47,7 +47,7 @@ model.add_tensor_source("test", AD_test)
 print("###############    TRAINING MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
 # test_set=valid_set,
-train = train_model(model, loader, 5, test_set=valid_set, log_iter=5, profile=0)
+train = train_model(model, loader, 20, test_set=test_set, log_iter=5, profile=0)
 model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA    ###############")

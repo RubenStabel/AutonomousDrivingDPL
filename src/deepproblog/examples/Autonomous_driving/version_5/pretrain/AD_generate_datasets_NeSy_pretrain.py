@@ -17,7 +17,7 @@ from deepproblog.dataset import Dataset
 from deepproblog.query import Query
 from traffic_simulation.defs import INTER_1_END
 
-output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_6.txt'
+output_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_5_tl_pos.txt'
 
 ####################################################
 #       Create Train, Valid and Test sets
@@ -113,7 +113,7 @@ def data_2_pd_speed():
                     'speed_zone_img_idx',
                     'traffic_light_color',
                     'traffic_sign', 'inter_danger_left',
-                    'intersection_danger_right']
+                    'intersection_danger_right', 'traffic_light_y']
     return data
 
 
@@ -316,8 +316,8 @@ def get_paths(nn_name: str):
             test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/pretrain/intersection'
         case 'perc_net_version_5_NeSy_traffic_sign':
             print(nn_name)
-            train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/pretrain/traffic_sign'
-            test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/pretrain/traffic_sign'
+            train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/pretrain/pr'
+            test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/pretrain/pr'
         case _:
             train_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_5_env_6/small'
             test_data_path = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_5_env_6/small'

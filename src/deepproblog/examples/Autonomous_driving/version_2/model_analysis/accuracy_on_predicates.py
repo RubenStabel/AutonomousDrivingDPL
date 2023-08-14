@@ -78,20 +78,23 @@ def create_predicate_confusion_matrix(model: Model, NN_name: str, dataset: Datas
         # NN predicate
         predicted = int(str(torch.argmax(list(answer.semiring.values.values())[network]).item()))
         p = str(torch.max(list(answer.semiring.values.values())[network]).item())
-        if predicted == 1:
-            predicted = 3
-        elif predicted == 2:
-            predicted = 1
-        elif predicted == 3:
-            predicted = 2
+        # if predicted == 1:
+        #     predicted = 3
+        # elif predicted == 2:
+        #     predicted = 1
+        # elif predicted == 3:
+        #     predicted = 2
 
-        y_pred.append(int(predicted))
-
+        y_pred.append(int(predicted)+1)
 
         # Get actual predicate answer from output data
         image_path = dataset.image_paths[i]
-        actual = image_file_to_danger_level(image_path, df)
+        actual = image_file_to_speed_zone(image_path, df)
         y_true.append(int(actual))
+
+        # if int(predicted)+1 == 8:
+        #     print(list(answer.semiring.values.values())[network])
+        #     print(actual)
 
         # f = open(
         #     "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples"
@@ -136,16 +139,24 @@ def get_nn_model(networks, nn_name, model_path, nn_path):
 
 def generate_confusion_matrices(model, dataset, output_data_path, classes, save_path=None):
     df = pd.DataFrame(output_data_2_pd(output_data_path))
-    NN_name = 'perc_net_version_2_baseline_2'
-    create_predicate_confusion_matrix(model, NN_name, dataset, 0, df, classes, save_path)
+    NN_name = 'perc_net_version_2_NeSy_speed_zone'
+    create_predicate_confusion_matrix(model, NN_name, dataset, 1, df, classes, save_path)
 
+# OUTPUT_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_2.txt'
+# NETWORK = [AD_V2_baseline_net_2()]
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_baseline_2.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/test/autonomous_driving_baseline_2_complete_env_2_0.pth'
+# NN_NAME = ['perc_net_version_2_baseline_2']
+
+# V2 - NeSy_1
+MODEL_NAME = "NeSy"
+NETWORK = [AD_V2_NeSy_1_net_ped(), AD_V2_NeSy_1_net_speed_zone()]
 OUTPUT_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_6_env_2.txt'
-NETWORK = [AD_V2_baseline_net_2()]
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_baseline_2.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/baseline/test/autonomous_driving_baseline_2_complete_env_2_0.pth'
-NN_NAME = ['perc_net_version_2_baseline_2']
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/models/autonomous_driving_NeSy_1.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_small_env_2_0.pth'
+NN_NAME = ['perc_net_version_2_NeSy_ped', 'perc_net_version_2_NeSy_speed_zone']
 
 test_set, _ = get_dataset("test")
 model = get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH)
 
-generate_confusion_matrices(model, test_set, OUTPUT_DATA_PATH, [0, 1, 2, 3])
+generate_confusion_matrices(model, test_set, OUTPUT_DATA_PATH, [1, 2, 3, 4, 5, 6, 7, 8])

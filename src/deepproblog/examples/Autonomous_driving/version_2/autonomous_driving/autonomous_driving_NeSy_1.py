@@ -13,9 +13,9 @@ from deepproblog.evaluate import get_confusion_matrix
 
 from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_NeSy_1 import get_dataset, MNIST_train
 
-N = 0
+N = 1
 folder = "test/"
-data_size = "small"
+data_size = "complete"
 env = "env_2"
 
 name = "autonomous_driving_NeSy_1_{}_{}_{}".format(data_size, env, N)
@@ -44,7 +44,8 @@ model.add_tensor_source("MNIST", MNIST_train)
 
 print("###############    TRAIN MODEL    ###############")
 loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 20, test_set=valid_set, log_iter=5, profile=0)
+# test_set=valid_set,
+train = train_model(model, loader, 10, log_iter=10, profile=0)
 model.save_state("../snapshot/neuro_symbolic/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")

@@ -8,6 +8,8 @@ from Cython import typeof
 from pandas.core.common import flatten
 # from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets_NeSy_0 import test_image_path, output_data_path
 # from deepproblog.examples.Autonomous_driving.version_1.pretrain.AD_generate_datasets_NeSy_pretrain import get_paths, output_data_path
+# from deepproblog.examples.Autonomous_driving.version_2.data.AD_generate_datasets_NeSy_1 import test_image_path, output_data_path
+# from deepproblog.examples.Autonomous_driving.version_5.data.AD_generate_datasets_NeSy_1 import test_image_path, output_data_path
 
 
 def reset_data(path):
@@ -58,6 +60,17 @@ def generate_balanced_dataset(train_path, balanced_path, number_of_classes, size
 
 def data_2_pd_speed(output_data_path):
     data = pd.read_csv(output_data_path, delimiter=';')
+    # data.columns = ['iteration', 'image_frame', 'output',
+    #                 'speed',
+    #                 'danger_level', 'player_car_x',
+    #                 'player_car_y',
+    #                 'pedestrian_x', 'pedestrian_y',
+    #                 'speed_zone',
+    #                 'speed_zone_img_idx',
+    #                 'traffic_light_color',
+    #                 'traffic_sign', 'inter_danger_left',
+    #                 'intersection_danger_right']
+    # data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone', 'speed_zone_img_idx']
     data.columns = ['iteration', 'image_frame', 'output',
                     'speed',
                     'danger_level', 'player_car_x',
@@ -67,7 +80,7 @@ def data_2_pd_speed(output_data_path):
                     'speed_zone_img_idx',
                     'traffic_light_color',
                     'traffic_sign', 'inter_danger_left',
-                    'intersection_danger_right']
+                    'intersection_danger_right', 'traffic_light_y']
     return data
 
 
@@ -85,6 +98,7 @@ def check_img_file(image_data_path: str, df):
     player_y = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['player_car_y'].values[0]
     vel = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
     output = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['output'].values[0]
+    tl = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['traffic_light_color'].values[0]
     if (float(vel) >= 7.9 and output == '[1, 0, 0, 0]') or (float(vel) < 0.0 and output == '[0, 0, 0, 1]'):
         print(image_data_path)
         os.remove(image_data_path)
@@ -98,11 +112,22 @@ def remove_bug_img(img_folder_1, output_data_path):
 
 def data_2_pd_speed_V1(output_data_path):
     data = pd.read_csv(output_data_path, delimiter=';')
+    # data.columns = ['iteration', 'image_frame', 'output',
+    #                 'speed',
+    #                 'danger_level', 'player_car_x',
+    #                 'player_car_y',
+    #                 'pedestrian_x', 'pedestrian_y']
+    # data.columns = ['iteration', 'image_frame', 'output', 'speed', 'danger_level', 'player_car_x', 'player_car_y', 'pedestrian_x', 'pedestrian_y', 'speed_zone', 'speed_zone_img_idx']
     data.columns = ['iteration', 'image_frame', 'output',
                     'speed',
                     'danger_level', 'player_car_x',
                     'player_car_y',
-                    'pedestrian_x', 'pedestrian_y']
+                    'pedestrian_x', 'pedestrian_y',
+                    'speed_zone',
+                    'speed_zone_img_idx',
+                    'traffic_light_color',
+                    'traffic_sign', 'inter_danger_left',
+                    'intersection_danger_right', 'traffic_light_y']
     return data
 
 
@@ -112,11 +137,26 @@ def copy_img_file(image_data_path: str, df):
     iter_image = image_id.split('frame')[0].split('iter')[-1]
     frame = image_id.split('frame')[-1]
 
-    car_x = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['player_car_x'].values[0]
-    ped_x = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['pedestrian_x'].values[0]
-    if ped_x - car_x <= -29 or ped_x - car_x >= 100:
+    inter_y = 1173*0.9
+    p_y = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['player_car_y'].values[0]
+    # spd = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['speed'].values[0]
+    output = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['output'].values[0]
+    ts = df[(df['iteration'] == int(iter_image)) & (df['image_frame'] == int(frame))]['traffic_sign'].values[0]
+
+    if output == '[1, 0, 0, 0]':
+        c = 0
+    elif output == '[0, 1, 0, 0]':
+        c = 1
+    elif output == '[0, 0, 1, 0]':
+        c = 2
+    else:
+        c = 3
+
+    # if sz == 2:
+        # print(float(sz), float(spd))
+    if ts == 'pa' and 0 < p_y - inter_y + 61 < 360:
         print(image_data_path)
-        shutil.copyfile(image_data_path, '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/pretrain/version_1_env_1_x/0/{}'.format(image_name))
+        shutil.copyfile(image_data_path, '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/general/pretrain/pa/{}/{}'.format(c, image_name))
 
 
 def copy_img_pretrain(img_folder_1, output_data_path):
@@ -130,7 +170,7 @@ def copy_img_pretrain(img_folder_1, output_data_path):
 
 # remove_bug_img(test_image_path, output_data_path)
 
-# generate_balanced_dataset('img/general/version_1_env_1', 'img/pretrain/test', 3, 0.15)
+# generate_balanced_dataset('img/balanced/version_5_env_5_tl_pos', 'img/balanced/dev/medium', 4, 0.1)
 
 # generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/version_5_env_5/complete', 4, 1)
 # generate_balanced_dataset('img/general/version_5_env_5', 'img/balanced/version_5_env_7/medium', 4, 0.5)

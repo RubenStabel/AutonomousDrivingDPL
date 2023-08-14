@@ -120,6 +120,20 @@ def collect_data(output, player_car, danger_level, ped: Pedestrian, speed_zones:
                                                                        player_car).get_speed_zone(),
                                                                    speed_zones.get_speed_zone_img_idx(player_car),
                                                                    traffic_light_color))
+        case 'env_3_tl_pos':
+            traffic_light = traffic_lights.get_current_traffic_light(player_car)
+            traffic_light_color = 'nothing'
+            traffic_light_y = -1
+            if traffic_light:
+                traffic_light_color = traffic_light.get_light_color()
+                traffic_light_y = traffic_light.y
+            f.write("{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output,
+                                                                   get_speed_level(player_car.get_vel()), danger_level,
+                                                                   player_car.x, player_car.y, ped.x, ped.y,
+                                                                   speed_zones.get_current_speed_zone(
+                                                                       player_car).get_speed_zone(),
+                                                                   speed_zones.get_speed_zone_img_idx(player_car),
+                                                                   traffic_light_color, traffic_light_y))
         case 'env_4':
             traffic_light = traffic_lights.get_current_traffic_light(player_car)
             traffic_light_color = 'nothing'
@@ -150,6 +164,27 @@ def collect_data(output, player_car, danger_level, ped: Pedestrian, speed_zones:
                                                                                 player_car),
                                                                             dynamic_cars.cars_left(player_car),
                                                                             dynamic_cars.cars_right(player_car)))
+        case 'env_5_tl_pos':
+            traffic_light = traffic_lights.get_current_traffic_light(player_car)
+            traffic_light_color = 'nothing'
+            traffic_light_y = -1
+            if traffic_light:
+                traffic_light_color = traffic_light.get_light_color()
+                traffic_light_y = traffic_light.y
+            f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(iteration, image_frame, output,
+                                                                            get_speed_level(player_car.get_vel()),
+                                                                            danger_level,
+                                                                            player_car.x, player_car.y, ped.x, ped.y,
+                                                                            speed_zones.get_current_speed_zone(
+                                                                                player_car).get_speed_zone(),
+                                                                            speed_zones.get_speed_zone_img_idx(
+                                                                                player_car),
+                                                                            traffic_light_color,
+                                                                            traffic_signs.get_current_traffic_sign(
+                                                                                player_car),
+                                                                            dynamic_cars.cars_left(player_car),
+                                                                            dynamic_cars.cars_right(player_car),
+                                                                            traffic_light_y))
         case 'env_6':
             traffic_light = traffic_lights.get_current_traffic_light(player_car)
             traffic_light_color = 'nothing'
@@ -210,7 +245,7 @@ def collect_simulation_metrics(iter, infraction, start_time):
 
 
 def check_constraints(start_time):
-    return time.time() - start_time < 20
+    return time.time() - start_time < 30
 
 
 def reset_traffic_simulation(infraction: int):
@@ -274,6 +309,12 @@ if COLLECT_DATA:
                                                                        'danger_level', 'player_car_x', 'player_car_y',
                                                                        'pedestrian_x', 'pedestrian_y', 'speed_zone',
                                                                        'speed_zone_img_idx', 'traffic_light_color'))
+            case 'env_3_tl_pos':
+                f.write("{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
+                                                                       'danger_level', 'player_car_x', 'player_car_y',
+                                                                       'pedestrian_x', 'pedestrian_y', 'speed_zone',
+                                                                       'speed_zone_img_idx', 'traffic_light_color',
+                                                                       'traffic_light_y'))
             case 'env_4':
                 f.write("{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output', 'speed',
                                                                        'danger_level', 'player_car_x', 'player_car_y',
@@ -290,6 +331,18 @@ if COLLECT_DATA:
                                                                                 'traffic_light_color',
                                                                                 'traffic_sign', 'inter_danger_left',
                                                                                 'intersection_danger_right'))
+            case 'env_5_tl_pos':
+                f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output',
+                                                                                'speed',
+                                                                                'danger_level', 'player_car_x',
+                                                                                'player_car_y',
+                                                                                'pedestrian_x', 'pedestrian_y',
+                                                                                'speed_zone',
+                                                                                'speed_zone_img_idx',
+                                                                                'traffic_light_color',
+                                                                                'traffic_sign', 'inter_danger_left',
+                                                                                'intersection_danger_right',
+                                                                                'traffic_light_y'))
             case 'env_6':
                 f.write("{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format('iteration', 'image_frame', 'output',
                                                                                 'speed',
@@ -339,14 +392,14 @@ self_driving = None
 ped = None
 danger_level = 0
 if MODE == 2:
-    self_driving = NNSelfDriving(player_car, speed_zones, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
+    self_driving = NNSelfDriving(player_car, speed_zones, traffic_lights, NETWORK, NN_PATH, NN_NAME, MODEL_PATH)
 elif MODE == 3:
     self_driving = NNSelfDriving(player_car, NETWORK, NN_PATH)
 output = [1]
 
 frame = 0
 image_frame = 0
-iteration = 200
+iteration = 0
 start_time = time.time()
 
 while run and iteration < NUMBER_ITERATIONS:
@@ -374,9 +427,6 @@ while run and iteration < NUMBER_ITERATIONS:
             case 1:
                 output = rule_based_driving(player_car, occ, pedestrians)
             case 2:
-                # if pedestrians.get_pedestrians()[0].x < player_car.x - PEDESTRIAN.get_width():
-                #     version_0_rule_based_self_driving(player_car, pedestrians)
-                # else:
                 self_driving.nn_driving(frame)
             case 3:
                 self_driving.nn_driving(frame)

@@ -349,7 +349,7 @@ class AD_V3_NeSy_2_net_danger_pedestrian(nn.Module):
 
 
 class AD_V3_NeSy_2_net_speed_zone(nn.Module):
-    def __init__(self, n=8, with_softmax=True, size=16 * 4 * 4):
+    def __init__(self, n=10, with_softmax=True, size=16 * 4 * 4):
         super(AD_V3_NeSy_2_net_speed_zone, self).__init__()
         self.with_softmax = with_softmax
         self.size = size

@@ -1,11 +1,25 @@
 % Perception
 nn(perc_net_version_3_NeSy_danger_pedestrian,[Img,Speed],X,[0,1,2,3]) :: cell_danger_pedestrian(Img,Speed,X).
-nn(perc_net_version_3_NeSy_speed_zone,[MNIST],SZ,[1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0]) :: cell_speed_zone(MNIST,SZ).
+nn(perc_net_version_3_NeSy_speed_zone,[MNIST],SZ,[0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0]) :: cell_speed_zone(MNIST,SZ).
 nn(perc_net_version_3_NeSy_traffic_light,[Img],X,[green, orange, red]) :: cell_traffic_light(Img,X).
 nn(perc_net_version_3_NeSy_danger,[Img,Speed,Yb,Yi],X,[0,2,3]) :: cell_danger(Img,Speed,Yb,Yi,X).
 
 
 %%%%    TRAFFIC RULES    %%%%
+% Rules - pedestrian
+ped_brake(Img,Speed) :-
+    cell_danger_pedestrian(Img,Speed,D),
+    D = 3.
+ped_idle(Img,Speed) :-
+    cell_danger_pedestrian(Img,Speed,D),
+    D = 2.
+ped_follow(Img,Speed) :-
+    cell_danger_pedestrian(Img,Speed,D),
+    D = 1.
+ped_acc(Img,Speed) :-
+    cell_danger_pedestrian(Img,Speed,D),
+    D = 0.
+
 % Rules - speed zone
 speed_zone_brake(MNIST,Speed) :-
     cell_speed_zone(MNIST,SZ),
@@ -65,22 +79,21 @@ traffic_light_accelerate(Img,MNIST,Speed) :-
 % 3 --> keep pace
 
 action(Img,MNIST,Speed,1) :-
-    cell_danger_pedestrian(Img,Speed,3);
     speed_zone_brake(MNIST,Speed);
-    traffic_light_brake(Img,MNIST,Speed).
+    traffic_light_brake(Img,MNIST,Speed);
+    ped_brake(Img,Speed).
 action(Img,MNIST,Speed,2) :-
-    (cell_danger_pedestrian(Img,Speed,2);
-    traffic_light_idle(Img,MNIST,Speed)),
+    (traffic_light_idle(Img,MNIST,Speed);
+    ped_idle(Img,Speed)),
     \+ action(Img,MNIST,Speed,1).
 action(Img,MNIST,Speed,3) :-
-    (cell_danger_pedestrian(Img,Speed,1);
-    speed_zone_follow(MNIST,Speed)),
+    (speed_zone_follow(MNIST,Speed);
+    ped_follow(Img,Speed)),
     \+ action(Img,MNIST,Speed,1),
     \+ action(Img,MNIST,Speed,2).
 action(Img,MNIST,Speed,0) :-
-    (cell_danger_pedestrian(Img,Speed,0);
-    traffic_light_accelerate(Img,MNIST,Speed);
-    speed_zone_accelerate(MNIST,Speed)),
+    (traffic_light_accelerate(Img,MNIST,Speed);
+    ped_acc(Img,Speed)),
     \+ action(Img,MNIST,Speed,1),
     \+ action(Img,MNIST,Speed,2),
     \+ action(Img,MNIST,Speed,3).

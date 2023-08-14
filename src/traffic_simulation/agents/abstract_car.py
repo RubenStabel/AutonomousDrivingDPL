@@ -6,7 +6,7 @@ class AbstractCar:
     def __init__(self, max_vel, rotation_vel):
         self.img = self.IMG
         self.max_vel = max_vel
-        self.vel = 0
+        self.vel = 2
         self.rotation_vel = rotation_vel
         self.angle = 0
         self.x, self.y = self.START_POS
@@ -62,5 +62,5 @@ class AbstractCar:
     def reset(self):
         self.x, self.y = self.START_POS
         self.angle = 0
-        self.vel = 0
+        self.vel = 2
 

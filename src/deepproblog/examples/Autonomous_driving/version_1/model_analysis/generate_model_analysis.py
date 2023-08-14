@@ -3,7 +3,7 @@ import torch
 from deepproblog.engines import ExactEngine
 from deepproblog.examples.Autonomous_driving.data_analysis.AD_plots import *
 from deepproblog.examples.Autonomous_driving.data_analysis.accuracy_on_predicates import generate_confusion_matrices
-from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets_NeSy import AD_test, get_dataset
+# from deepproblog.examples.Autonomous_driving.version_0.data.AD_generate_datasets_NeSy import AD_test, get_dataset
 from deepproblog.examples.Autonomous_driving.version_0.networks.network_NeSy import AD_V0_NeSy_1_net
 from deepproblog.model import Model
 from deepproblog.network import Network
@@ -67,6 +67,9 @@ def accuracy_on_actions():
     NeSy_2_test_data_medium_1 = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_2_medium_env_1_0.log')
     NeSy_2_test_data_complete_1 = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_2_complete_env_1_0.log')
 
+    NeSy_2_test_data_small_pretrain = data_2_pd_acc('../log/neuro_symbolic/test/autonomous_driving_NeSy_2_small_env_1_pretrain_2.log')
+
+
     # # Train vs test
     # multiple_running_metrics([baseline_train_data, baseline_test_data_complete], ['Train baseline', 'Test baseline'], ['accuracy', 'loss'], 'V1_env_1_train_test_baseline')
     # multiple_running_metrics([NeSy_0_train_data, NeSy_0_test_data_complete], ['Train NeSy_0', 'Test NeSy_0'], ['accuracy', 'loss'], 'V1_env_1_train_test_NeSy_0')
@@ -78,9 +81,9 @@ def accuracy_on_actions():
     # multiple_running_metrics([NeSy_0_test_data_small, NeSy_0_test_data_medium, NeSy_0_test_data_complete], ['NeSy_0 - SMALL', 'NeSy_0 - MEDIUM', 'NeSy_0 - COMPLETE'], ['accuracy'], 'V1_env_1_NeSy_0_data_sizes')
     # multiple_running_metrics([NeSy_1_test_data_small, NeSy_1_test_data_medium, NeSy_1_test_data_complete], ['NeSy_1 - SMALL', 'NeSy_1 - MEDIUM', 'NeSy_1 - COMPLETE'], ['accuracy'], 'V1_env_1_NeSy_1_data_sizes')
     # multiple_running_metrics([NeSy_2_test_data_small, NeSy_2_test_data_medium, NeSy_2_test_data_complete], ['NeSy_2 - SMALL', 'NeSy_2 - MEDIUM', 'NeSy_2 - COMPLETE'], ['accuracy'], 'V1_env_1_NeSy_2_data_sizes')
-    # multiple_running_metrics(
-    #     [baseline_test_data_small, NeSy_0_test_data_small, NeSy_1_test_data_small, NeSy_2_test_data_small],
-    #     ['baseline - SMALL', 'NeSy_0 - SMALL', 'NeSy_1 - SMALL', 'NeSy_2 - SMALL'], ['accuracy'], 'V1_env_1_data_small')
+    multiple_running_metrics(
+        [baseline_test_data_small_1, NeSy_0_test_data_small_1, NeSy_1_test_data_small_1, NeSy_2_test_data_small_1, NeSy_2_test_data_small_pretrain],
+        ['baseline - SMALL', 'NeSy_0 - SMALL', 'NeSy_1 - SMALL', 'NeSy_2 - SMALL', 'NeSy_2 - PRE TRAIN'], ['accuracy'], 'V1_env_1_data_small_pretrain')
     # multiple_running_metrics(
     #     [baseline_test_data_medium, NeSy_0_test_data_medium, NeSy_1_test_data_medium, NeSy_2_test_data_medium],
     #     ['baseline - MEDIUM', 'NeSy_0 - MEDIUM', 'NeSy_1 - MEDIUM', 'NeSy_2 - MEDIUM'], ['accuracy'], 'V1_env_1_data_medium')
@@ -94,10 +97,10 @@ def accuracy_on_actions():
 
     # multiple_running_metrics([NeSy_0_test_data_small, NeSy_0_test_data_small_err], ['NeSy_0 - SMALL', 'NeSy_0 - SMALL (fail)'], ['accuracy'], 'V1_env_0_NeSy_0_acc_diff')
 
-    multiple_running_metrics([baseline_test_data_small, baseline_test_data_small_1], ['baseline env_0', 'baseline env_1'], ['accuracy'], 'V1_env_0_vs_env_1_baseline_small')
-    multiple_running_metrics([NeSy_0_test_data_small, NeSy_0_test_data_small_1], ['NeSy_0 env_0', 'NeSy_0 env_1'], ['accuracy'], 'V1_env_0_vs_env_1_NeSy_0_small')
-    multiple_running_metrics([NeSy_1_test_data_small, NeSy_1_test_data_small_1], ['NeSy_1 env_0', 'NeSy_1 env_1'], ['accuracy'], 'V1_env_0_vs_env_1_NeSy_1_small')
-    multiple_running_metrics([NeSy_2_test_data_small, NeSy_2_test_data_small_1], ['NeSy_2 env_0', 'NeSy_2 env_1'], ['accuracy'], 'V1_env_0_vs_env_1_NeSy_2_small')
+    # multiple_running_metrics([baseline_test_data_small, baseline_test_data_small_1], ['baseline env_0', 'baseline env_1'], ['accuracy'], 'V1_env_0_vs_env_1_baseline_small')
+    # multiple_running_metrics([NeSy_0_test_data_small, NeSy_0_test_data_small_1], ['NeSy_0 env_0', 'NeSy_0 env_1'], ['accuracy'], 'V1_env_0_vs_env_1_NeSy_0_small')
+    # multiple_running_metrics([NeSy_1_test_data_small, NeSy_1_test_data_small_1], ['NeSy_1 env_0', 'NeSy_1 env_1'], ['accuracy'], 'V1_env_0_vs_env_1_NeSy_1_small')
+    # multiple_running_metrics([NeSy_2_test_data_small, NeSy_2_test_data_small_1], ['NeSy_2 env_0', 'NeSy_2 env_1'], ['accuracy'], 'V1_env_0_vs_env_1_NeSy_2_small')
 
 
     # multiple_running_metrics([baseline_test_data_medium, baseline_test_data_medium_1], ['baseline env_0', 'baseline env_1'], ['accuracy'], 'V1_env_0_vs_env_1_baseline_complete')
@@ -105,17 +108,17 @@ def accuracy_on_actions():
     # multiple_running_metrics([NeSy_1_test_data_medium, NeSy_1_test_data_medium_1], ['NeSy_1 env_0', 'NeSy_1 env_1'], ['accuracy'], 'V1_env_0_vs_env_1_NeSy_1_complete')
     # multiple_running_metrics([NeSy_2_test_data_medium, NeSy_2_test_data_medium_1], ['NeSy_2 env_0', 'NeSy_2 env_1'], ['accuracy'], 'V1_env_0_vs_env_1_NeSy_2_complete')
 
-OUTPUT_DATA_PATH = '/data/output_data/output_4_env_0.txt'
-NETWORK = [AD_V0_NeSy_1_net()]
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'
-NN_NAME = ['perc_net_version_0_NeSy_1']
-
-test_set, _ = get_dataset("test")
-model = get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH)
+# OUTPUT_DATA_PATH = '/data/output_data/output_4_env_0.txt'
+# NETWORK = [AD_V0_NeSy_1_net()]
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_0.pth'
+# NN_NAME = ['perc_net_version_0_NeSy_1']
+#
+# test_set, _ = get_dataset("test")
+# model = get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH)
 
 # accuracy_on_actions()
-generate_confusion_matrices(model, test_set, OUTPUT_DATA_PATH, [0, 1, 2])
+# generate_confusion_matrices(model, test_set, OUTPUT_DATA_PATH, [0, 1, 2])
 
 
 

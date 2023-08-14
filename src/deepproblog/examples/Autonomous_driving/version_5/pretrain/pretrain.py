@@ -14,11 +14,11 @@ from deepproblog.examples.Autonomous_driving.version_5.networks.network_NeSy imp
 from deepproblog.examples.Autonomous_driving.data_analysis.baseline.evaluate_baseline import generate_confusion_matrix_baseline
 
 print_rate = 10
-N = 0
+N = 2
 
 folder = "test/"
 # NN_NAME = ['perc_net_version_5_NeSy_danger_pedestrian', 'perc_net_version_5_NeSy_speed_zone', 'perc_net_version_5_NeSy_traffic_light', 'perc_net_version_5_NeSy_intersection', 'perc_net_version_5_NeSy_traffic_sign']
-NN_NAME = ['perc_net_version_5_NeSy_danger_pedestrian']
+NN_NAME = ['perc_net_version_5_NeSy_traffic_sign']
 
 
 def pretrain_networks():
@@ -60,7 +60,7 @@ def pretrain_networks():
         valid_loader = torch.utils.data.DataLoader(valid_set, batch_size=1, shuffle=False)
         test_loader = torch.utils.data.DataLoader(test_set, batch_size=1, shuffle=False)
 
-        epochs = 5
+        epochs = 15
         running_loss = 0.0
 
         start = time.time()
@@ -121,7 +121,7 @@ def pretrain_networks():
         if nn_name == 'perc_net_version_5_NeSy_danger_pedestrian':
             f.write("#Accuracy {}\n".format(generate_confusion_matrix_baseline(model, test_set, verbose=0, nn_name=nn_name).accuracy()))
         else:
-            f.write("#Accuracy {}\n".format(generate_confusion_matrix_baseline(model, test_loader, verbose=0, nn_name=nn_name).accuracy()))
+            f.write("#Accuracy {}\n".format(generate_confusion_matrix_baseline(model, test_loader, verbose=1, nn_name=nn_name).accuracy()))
         f.write("i,time,loss,accuracy\n")
         f.write(log)
         f.close()

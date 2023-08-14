@@ -2,22 +2,28 @@ import torch
 
 from deepproblog.examples.Autonomous_driving.simulation_connector.predict_action_img_mnist_speed import \
     predict_action_img_mnist_speed
+from deepproblog.examples.Autonomous_driving.simulation_connector.predict_action_img_mnist_speed_py_iy_tly import \
+    predict_action_img_mnist_speed_py_iy_tly
 from deepproblog.examples.Autonomous_driving.simulation_connector.predict_action_img_speed import \
     predict_action_img_speed
 from traffic_simulation.agents.player_car import PlayerCar
 from traffic_simulation.agents.speed_zones import SpeedZones
+from traffic_simulation.agents.traffic_lights import TrafficLights
 from traffic_simulation.defs import *
 from traffic_simulation.simulation_settings import *
 from deepproblog.model import Model
 from deepproblog.network import Network
 from deepproblog.engines import ExactEngine
-from deepproblog.examples.Autonomous_driving.simulation_connector.load_model_test import get_nn_output, get_baseline_output
+from deepproblog.examples.Autonomous_driving.simulation_connector.load_model_test import get_nn_output, \
+    get_baseline_output
 
 
 class NNSelfDriving:
-    def __init__(self, player_car: PlayerCar, speed_zones: SpeedZones,network, nn_path, nn_name=None, model_path=None):
+    def __init__(self, player_car: PlayerCar, speed_zones: SpeedZones, traffic_lights: TrafficLights, network, nn_path,
+                 nn_name=None, model_path=None):
         self.player_car = player_car
         self.speed_zones = speed_zones
+        self.traffic_lights = traffic_lights
         self.network = network
         self.model_path = model_path
         self.nn_path = nn_path
@@ -63,13 +69,27 @@ class NNSelfDriving:
                 case 2:
                     result = int(predict_action_img_speed(img, round(self.player_car.get_vel(), 1), self.model))
                 case 3:
-                    result = int(predict_action_img_mnist_speed(img, self.speed_zones.get_speed_zone_img_idx(self.player_car), round(self.player_car.get_vel(), 1), self.model, ENV))
+                    result = int(
+                        predict_action_img_mnist_speed(img, self.speed_zones.get_speed_zone_img_idx(self.player_car),
+                                                       round(self.player_car.get_vel(), 1), self.model, ENV))
+                case 5:
+                    traffic_light = self.traffic_lights.get_current_traffic_light(self.player_car)
+                    traffic_light_y = -1
+                    if traffic_light:
+                        traffic_light_y = traffic_light.y
+
+                    result = int(predict_action_img_mnist_speed_py_iy_tly(img, self.speed_zones.get_speed_zone_img_idx(
+                        self.player_car), round(self.player_car.get_vel(), 2),
+                                                                          traffic_light_y,
+                                                                          self.player_car.y, self.model, ENV))
 
         elif MODE == 3:
             result = int(get_baseline_output(img, self.model))
 
         if DATA_ANALYSIS and frame % 5 == 0:
-            pygame.image.save(sub,"/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/" + MODEL_NAME + "/{}/{}.png".format(result, frame))
+            pygame.image.save(sub,
+                              "/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/driving_test/" + MODEL_NAME + "/{}/{}.png".format(
+                                  result, frame))
 
         match result:
             case 0:
@@ -80,4 +100,3 @@ class NNSelfDriving:
                 self.player_car.reduce_speed()
             case 3:
                 self.player_car.match_speed()
-

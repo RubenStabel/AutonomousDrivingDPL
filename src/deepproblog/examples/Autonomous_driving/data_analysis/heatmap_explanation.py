@@ -89,7 +89,7 @@ def accuracy_on_predicates_x(simulation_data_path):
 
 
 def accuracy_on_predicates_y(simulation_data_path):
-    return [(80, 360), (30, 80), (0, 30)]
+    return [(80, 360), (20, 80), (0, 20)]
 
 
 def get_nn_model(networks, nn_name, model_path, nn_path):
@@ -207,14 +207,14 @@ def generate_heatmap_2d(model, simulation_data_path, img_path, save_path=None):
     y, danger_level_y = get_danger_interpolation(points_y, probs_y)
     create_heatmap_2d(img_path, [x, y], [danger_level_x, danger_level_y], save_path)
 
-#
-# SIM_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4_env_1.txt'
+
+# SIM_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4_env_0.txt'
 # NETWORK = [AD_V0_NeSy_1_net()]
 # MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/models/autonomous_driving_NeSy_1.pl'
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_0/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_complete_env_0_0.pth'
 # NN_NAME = ['perc_net_version_0_NeSy_1']
 
-
+#
 # MODEL_NAME = "NeSy"
 # NETWORK = [AD_V0_NeSy_1_net()]
 # SIM_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_4_env_1.txt'
@@ -230,9 +230,9 @@ def generate_heatmap_2d(model, simulation_data_path, img_path, save_path=None):
 # IMG_ER = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_0_env_0/complete/0/0_iter10frame25.png'
 #
 # generate_heatmap_1d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_O)
-# generate_heatmap(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_1)
-# generate_heatmap(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_2)
-# generate_heatmap(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_ER)
+# generate_heatmap_1d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_1)
+# generate_heatmap_1d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_2)
+# generate_heatmap_1d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_ER)
 
 
 # MODEL_NAME = "NeSy_0"
@@ -246,25 +246,27 @@ MODEL_NAME = "NeSy_2"
 NETWORK = [AD_V1_NeSy_1_net_x(), AD_V1_NeSy_1_net_y()]
 SIM_DATA_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_5_env_1.txt'
 MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_1/models/autonomous_driving_NeSy_2.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_1/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_2_complete_env_1_0.pth'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_1/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_2_small_env_1_pretrain_1.pth'
 NN_NAME = ['perc_net_version_1_NeSy_x', 'perc_net_version_1_NeSy_y']
 
-IMG_PATH_0 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/0/0_iter5frame20.png'
-IMG_PATH_1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/1/0_iter14frame12.png'
-IMG_PATH_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/2/0_iter20frame26.png'
-
-IMG_ER = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/0/0_iter8frame40.png'
-
-
 # IMG_PATH_0 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/0/0_iter5frame20.png'
-# IMG_PATH_1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/1/0_iter19frame12.png'
-# IMG_PATH_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/2/0_iter37frame13.png'
+# IMG_PATH_1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/1/0_iter14frame12.png'
+# IMG_PATH_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/2/0_iter20frame26.png'
 #
 # IMG_ER = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/0/0_iter8frame40.png'
 
+
+IMG_PATH_0 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/small/2/0_iter29frame19.png'
+IMG_PATH_1 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/1/0_iter37frame51.png'
+IMG_PATH_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/2/0_iter37frame13.png'
+
+IMG_ER = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/0/0_iter8frame40.png'
+IMG_ER_2 = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/img/balanced/version_1_env_1/complete/2/0_iter7frame7.png'
 
 generate_heatmap_2d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_0)
 generate_heatmap_2d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_1)
 generate_heatmap_2d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_PATH_2)
 generate_heatmap_2d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_ER)
+generate_heatmap_2d(get_nn_model(NETWORK, NN_NAME, MODEL_PATH, NN_PATH), SIM_DATA_PATH, IMG_ER_2)
+
 

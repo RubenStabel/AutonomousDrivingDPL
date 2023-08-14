@@ -9,7 +9,7 @@ def plot_class_imbalance(acc_baseline, acc_NeSy, imbalance):
     plt.xlabel('Imbalance ratio')
     # plt.yticks(np.arange(0.95, 0.15, step=0.1))
     # plt.xticks(np.arange(0, 1, step=0.1))
-    plt.title('Data imbalance')
+    plt.title('Fraction of noise')
     plt.legend(['baseline', 'neuro-symbolic'])
     plt.show()
 

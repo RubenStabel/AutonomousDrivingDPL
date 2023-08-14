@@ -20,7 +20,7 @@ def generate_confusion_matrix_baseline(model, dataset, verbose: int = 0, nn_name
     """
     confusion_matrix = ConfusionMatrix()
 
-    for i, (img, label) in enumerate(dataset, 0):
+    for i, (img, spd, label) in enumerate(dataset, 0):
         if nn_name == 'perc_net_version_5_NeSy_danger_pedestrian':
             output = model(img)
             predicted = str((torch.max(torch.exp(output), -1)[1]).data.cpu().numpy().item())

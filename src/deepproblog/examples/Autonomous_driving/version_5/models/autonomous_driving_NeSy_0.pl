@@ -162,28 +162,28 @@ traffic_sign_priority_intersection(Img) :-
 % 3 --> keep pace
 
 action(Img,MNIST,Speed,Player_y,Intersection_y,1) :-
-    cell_danger_pedestrian(Img,Speed,3);
     speed_zone_brake(MNIST,Speed);
     traffic_light_brake(Img,MNIST,Speed);
-    intersection_brake(Img,Speed,Player_y,Intersection_y).
+    intersection_brake(Img,Speed,Player_y,Intersection_y);
+    cell_danger_pedestrian(Img,Speed,3).
 
 action(Img,MNIST,Speed,Player_y,Intersection_y,2) :-
-    (cell_danger_pedestrian(Img,Speed,2);
-    traffic_light_idle(Img,MNIST,Speed);
-    intersection_idle(Img,Speed,Player_y,Intersection_y)),
+    (traffic_light_idle(Img,MNIST,Speed);
+    intersection_idle(Img,Speed,Player_y,Intersection_y);
+    cell_danger_pedestrian(Img,Speed,2)),
     \+ action(Img,MNIST,Speed,Player_y,Intersection_y,1).
 
 action(Img,MNIST,Speed,Player_y,Intersection_y,3) :-
-    (cell_danger_pedestrian(Img,Speed,1);
-    speed_zone_follow(MNIST,Speed)),
+    (speed_zone_follow(MNIST,Speed);
+    cell_danger_pedestrian(Img,Speed,1)),
     \+ action(Img,MNIST,Speed,Player_y,Intersection_y,1),
     \+ action(Img,MNIST,Speed,Player_y,Intersection_y,2).
 
 action(Img,MNIST,Speed,Player_y,Intersection_y,0) :-
-    (cell_danger_pedestrian(Img,Speed,0);
-    traffic_light_accelerate(Img,MNIST,Speed);
+    (traffic_light_accelerate(Img,MNIST,Speed);
     speed_zone_accelerate(MNIST,Speed);
-    intersection_accelerate(Img,Speed,Player_y,Intersection_y)),
+    intersection_accelerate(Img,Speed,Player_y,Intersection_y);
+    cell_danger_pedestrian(Img,Speed,0)),
     \+ action(Img,MNIST,Speed,Player_y,Intersection_y,1),
     \+ action(Img,MNIST,Speed,Player_y,Intersection_y,2),
     \+ action(Img,MNIST,Speed,Player_y,Intersection_y,3).

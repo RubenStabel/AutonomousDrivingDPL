@@ -8,6 +8,10 @@ from deepproblog.examples.Autonomous_driving.version_2.networks.network_NeSy imp
 from deepproblog.examples.Autonomous_driving.version_2.networks.network_baseline import AD_V2_baseline_net_1, \
     AD_V2_baseline_net_0, AD_V2_baseline_net_2
 from deepproblog.examples.Autonomous_driving.version_3.networks.network_baseline import AD_V3_baseline_net_0
+from deepproblog.examples.Autonomous_driving.version_5.networks.network_NeSy import AD_V5_NeSy_0_net_danger_pedestrian, \
+    AD_V5_NeSy_0_net_speed_zone, AD_V5_NeSy_0_net_traffic_light, AD_V5_NeSy_0_net_danger_intersection, \
+    AD_V5_NeSy_0_net_traffic_sign, AD_V5_NeSy_0_net_danger_distance
+from deepproblog.examples.Autonomous_driving.version_5.networks.network_baseline import AD_V5_baseline_net_0
 
 """
 MODE:
@@ -25,7 +29,7 @@ MODE:
 11 --> Version 7 rule based self driving
 """
 MODE = 10
-NN_INPUTS = 3
+NN_INPUTS = 5
 
 """
 DISPLAY SETTINGS
@@ -45,12 +49,12 @@ COLLECT_DATA = False
 DATA_ANALYSIS = False
 SIMULATION_METRICS = False
 
-PREFIX = '0'
-DATA_FOLDER = "general/version_5_env_8"
-ENV = 'env_8'
+PREFIX = '1'
+DATA_FOLDER = "general/version_5_env_5_tl_pos"
+ENV = 'env_5'
 
 IMAGE_DIM = 360
-NUMBER_ITERATIONS = 250
+NUMBER_ITERATIONS = 50
 
 """
 ENVIRONMENT SETTINGS
@@ -58,8 +62,8 @@ ENVIRONMENT SETTINGS
 NUMBER_PEDESTRIANS = 1
 NUMBER_STATIC_CARS = 15
 NUMBER_SPEED_ZONES = 1
-NUMBER_TRAFFIC_LIGHTS = 0
-TRAFFIC_LIGHT_INTERSECTION = False
+NUMBER_TRAFFIC_LIGHTS = 1
+TRAFFIC_LIGHT_INTERSECTION = True
 TRAFFIC_LIGHT_ORANGE = False
 NUMBER_INTERSECTIONS = 1
 NUMBER_DYNAMIC_CARS = 8
@@ -132,13 +136,39 @@ SCENARIO = {
 # NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_2/snapshot/neuro_symbolic/train/autonomous_driving_NeSy_3_complete_env_1_0.pth'
 # NN_NAME = ['perc_net_version_2_NeSy_x_rel', 'perc_net_version_2_NeSy_y_rel']
 
-# V3 - baseline_0
-MODEL_NAME = "NeSy"
-NETWORK = [AD_V3_baseline_net_0()]
-MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/models/autonomous_driving_baseline_0.pl'
-NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/snapshot/baseline/test/autonomous_driving_baseline_0_medium_env_3_0.pth'
-NN_NAME = ['perc_net_version_3_baseline_0']
+# # V3 - baseline_0
+# MODEL_NAME = "NeSy"
+# NETWORK = [AD_V3_baseline_net_0()]
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/models/autonomous_driving_baseline_0.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/snapshot/baseline/test/autonomous_driving_baseline_0_medium_env_3_0.pth'
+# NN_NAME = ['perc_net_version_3_baseline_0']
 
+# V5 - NeSy_1
+MODEL_NAME = "NeSy"
+# ENV = 5
+NETWORK = [AD_V5_NeSy_0_net_danger_pedestrian(), AD_V5_NeSy_0_net_speed_zone(), AD_V5_NeSy_0_net_traffic_light(), AD_V5_NeSy_0_net_danger_intersection(), AD_V5_NeSy_0_net_traffic_sign()]
+OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_5_tl_pos.txt'
+MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/models/autonomous_driving_NeSy_1.pl'
+NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_1_medium_env_5_pretrain_4.pth'
+NN_NAME = ['perc_net_version_5_NeSy_danger_pedestrian', 'perc_net_version_5_NeSy_speed_zone', 'perc_net_version_5_NeSy_traffic_light', 'perc_net_version_5_NeSy_intersection', 'perc_net_version_5_NeSy_traffic_sign']
+
+# # V5 - NeSy_0
+# MODEL_NAME = "NeSy"
+# NETWORK = [AD_V5_NeSy_0_net_danger_pedestrian(), AD_V5_NeSy_0_net_speed_zone(), AD_V5_NeSy_0_net_traffic_light(), AD_V5_NeSy_0_net_danger_distance(), AD_V5_NeSy_0_net_danger_intersection(), AD_V5_NeSy_0_net_traffic_sign()]
+# OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_5.txt'
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/models/autonomous_driving_NeSy_0.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/neuro_symbolic/test/autonomous_driving_NeSy_0_complete_env_5_0.pth'
+# NN_NAME = ['perc_net_version_5_NeSy_danger_pedestrian', 'perc_net_version_5_NeSy_speed_zone', 'perc_net_version_5_NeSy_traffic_light', 'perc_net_version_5_NeSy_danger_distance', 'perc_net_version_5_NeSy_intersection', 'perc_net_version_5_NeSy_traffic_sign']
+
+#
+# # V5 - baseline
+# MODEL_NAME = "NeSy"
+# # ENV = 7
+# NETWORK = [AD_V5_baseline_net_0()]
+# OUTPUT_DATA = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/data/output_data/output_10_env_7.txt'
+# MODEL_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/models/autonomous_driving_baseline_0.pl'
+# NN_PATH = '/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_5/snapshot/baseline/test/autonomous_driving_baseline_0_complete_env_7_0.pth'
+# NN_NAME = ['perc_net_version_5_baseline_0']
 
 # # # Baseline PyTorch
 # NETWORK = [AD_V1_net()]

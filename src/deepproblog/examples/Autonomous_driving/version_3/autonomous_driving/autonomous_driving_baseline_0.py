@@ -11,16 +11,16 @@ from deepproblog.train import train_model
 from deepproblog.evaluate import get_confusion_matrix
 from deepproblog.examples.Autonomous_driving.version_3.networks.network_baseline import AD_V3_baseline_net_0
 
-N = 0
-folder = "train/"
+N = 1
+folder = "test/"
 data_size = "complete"
-env = "env_3"
+env = "env_3_tl"
 
 name = "autonomous_driving_baseline_0_{}_{}_{}".format(data_size, env, N)
 
 train_set, AD_train = get_dataset("train")
-valid_set, AD_valid = get_dataset("train")
-test_set, AD_test = get_dataset("train")
+valid_set, AD_valid = get_dataset("valid")
+test_set, AD_test = get_dataset("test")
 
 print("###############    LOADING NETWORK    ###############")
 network = AD_V3_baseline_net_0()
@@ -37,8 +37,10 @@ model.add_tensor_source("MNIST", MNIST_train)
 
 
 print("###############    TRAIN MODEL    ###############")
-loader = DataLoader(train_set, 2, False)
-train = train_model(model, loader, 5, test_set=valid_set, log_iter=5, profile=0, save_best_model='/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/snapshot/baseline/best_train/{}'.format(name + '.pth'))
+loader = DataLoader(train_set, 4, False)
+# test_set=valid_set,
+# , save_best_model='/Users/rubenstabel/Documents/Thesis/Implementation/AutonomousDrivingDPL/src/deepproblog/examples/Autonomous_driving/version_3/snapshot/baseline/best_train/{}'.format(name + '.pth')
+train = train_model(model, loader, 10,  log_iter=10, profile=0)
 model.save_state("../snapshot/baseline/" + folder + name + ".pth")
 
 print("###############    LOGGING DATA MODEL    ###############")

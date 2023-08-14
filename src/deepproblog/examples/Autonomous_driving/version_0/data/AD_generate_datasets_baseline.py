@@ -144,3 +144,6 @@ def get_dataset(name: str):
 
 
 print("###############    DATA LOADING DONE    ###############")
+train_set, _ = get_dataset("train")
+
+print(train_set.to_query(0))
